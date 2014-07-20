@@ -18,25 +18,7 @@ public class BrainF {
 	}
 
 	public static void main(String[] args) {
-		BrainF brain = new BrainF(System.in);
-
-		brain.addCommands("++++++++++[>++++++++++<-]>>++++++++++>->>>>>>>>>>>>>>>>-->+++++++[->++");
-		brain.addCommands("++++++++<]>[->+>+>+>+<<<<]+++>>+++>>>++++++++[-<++++<++++<++++>>>]++++");
-		brain.addCommands("+[-<++++<++++>>]>>-->++++++[->+++++++++++<]>[->+>+>+>+<<<<]+++++>>+>++");
-		brain.addCommands("++++>++++++>++++++++[-<++++<++++<++++>>>]++++++[-<+++<+++<+++>>>]>>-->");
-		brain.addCommands("---+[-<+]-<[+[->+]-<<->>>+>[-]++[-->++]-->+++[---++[--<++]---->>-<+>[+");
-		brain.addCommands("+++[----<++++]--[>]++[-->++]--<]>++[--+[-<+]->>[-]+++++[---->++++]-->[");
-		brain.addCommands("->+<]>>[.>]++[-->++]]-->+++]---+[-<+]->>-[+>>>+[-<+]->>>++++++++++<<[-");
-		brain.addCommands(">+>-[>+>>]>[+[-<+>]>+>>]<<<<<<]>>[-]>>>++++++++++<[->-[>+>>]>[+[-<+>]>");
-		brain.addCommands("+>>]<<<<<]>[-]>>[>++++++[-<++++++++>]<.<<+>+>[-]]<[<[->-<]++++++[->+++");
-		brain.addCommands("+++++<]>.[-]]<<++++++[-<++++++++>]<.[-]<<[-<+>]+[-<+]->>]+[-]<<<.>>>+[");
-		brain.addCommands("-<+]-<<]");
-
-//		brain.runToEnd();
-//		System.out.println(brain.output);
-		
 		BrainFDebug.main(args);
-		
 	}
 
 	private final List<BrainFCommand> commands = new ArrayList<>();
@@ -119,7 +101,6 @@ public class BrainF {
 			case END_WHILE:
 				if (getMemory() != 0) {
 					findMatching(BrainFCommand.WHILE, BrainFCommand.END_WHILE, -1);
-//					commandIndex++;
 				}
 				break;
 			case NEXT:
@@ -140,13 +121,11 @@ public class BrainF {
 			case WHILE:
 				if (getMemory() == 0) {
 					findMatching(BrainFCommand.END_WHILE, BrainFCommand.WHILE, 1);
-//					commandIndex++;
 				}
 				break;
 			case WRITE:
 				char write = (char) getMemory();
 				output.append(write);
-				System.out.println("Writing " + getMemory() + ": " + write);
 				break;
 			case NONE:
 			default:
