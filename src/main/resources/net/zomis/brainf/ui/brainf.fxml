@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<SplitPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.zomis.brainf.ui.MainController">
+   <items>
+      <SplitPane dividerPositions="0.04666666666666667, 0.85" orientation="VERTICAL" prefHeight="600.0" prefWidth="800.0">
+         <items>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#saveCode" text="Save code" />
+                  <Button mnemonicParsing="false" onAction="#step" text="Run Step" />
+                  <Button mnemonicParsing="false" onAction="#repeat" text="Repeat" />
+                  <Button mnemonicParsing="false" onAction="#runToCursor" text="Run to cursor" />
+               </children>
+            </HBox>
+            <SplitPane dividerPositions="0.27625, 0.5075" prefHeight="200.0" prefWidth="200.0">
+               <items>
+                  <TextArea fx:id="memory" prefHeight="200.0" prefWidth="200.0" text="Memory" />
+                  <ListView fx:id="memoryList" prefHeight="200.0" prefWidth="200.0" />
+                  <TextArea fx:id="code" text="++++++++++[&gt;++++++++++&lt;-]&gt; Initialize 100 (number of times to perform FizzBuzz)&#10;&#10;TAPE MEANINGS&#10;255 Start&#10;254 A Fizz or Buzz text to print&#10;253 End of Fizzes and Buzzes&#10;252 Currently processed FizzBuzz calculation&#10;&#10;TAPE OVERVIEW&#10;Remaining Iterations&#10;10 for Line Break&#10;255 Start Marker&#10;Counter&#10;Boolean 1 or 0 for whether or not a fizzbuzz matches current counter&#10;Some empty space for converting counter to string&#10;  Any Number of Sequences of the following&#10;    254 Indicator for FizzBuzz sequence&#10;    Counter&#10;    Countdown until next text output&#10;    Text any number of characters&#10;    Zero&#10;    Zero&#10;254 and 253 marker to indicate the end of sequences&#10;&#10;&#10;&gt;++++++++++                   Line break&#10;&gt;-                            Start marker&#10;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;              Empty space for counter to string conversion&#10;&#10;&#10;SETUP Create the Fizz and Buzz sequences on the tape&#10;&#10;FIZZ&#10;--&gt;                               Create indicator&#10;+++++++[-&gt;++++++++++&lt;]&gt;           Create F&#10;[-&gt;+&gt;+&gt;+&gt;+&lt;&lt;&lt;&lt;]                   Copy 4x F&#10;+++                               Set modulo operator to 3&#10;&gt;&gt;+++&gt;&gt;&gt;                          Adjust second letter to I&#10;++++++++[-&lt;++++&lt;++++&lt;++++&gt;&gt;&gt;]     Make the last three lowercase to Fiff&#10;+++++[-&lt;++++&lt;++++&gt;&gt;]              Modify the last two F to Z by adding 20&#10;&gt;&gt;                                Leave two zeros at the end&#10;&#10;BUZZ&#10;--&gt;                               Create indicator&#10;++++++[-&gt;+++++++++++&lt;]&gt;           Create B&#10;[-&gt;+&gt;+&gt;+&gt;+&lt;&lt;&lt;&lt;]                   Copy 4x B&#10;+++++                             Set modulo operator to 5&#10;&gt;&gt;+&gt;++++++&gt;++++++&gt;                Adjust BBBB to BCHH&#10;++++++++[-&lt;++++&lt;++++&lt;++++&gt;&gt;&gt;]     Make lower case&#10;++++++[-&lt;+++&lt;+++&lt;+++&gt;&gt;&gt;]          Adjust Bchh to Buzz&#10;&gt;&gt;                                Leave two zeros at the end&#10;&#10;&#10;&#10;--&gt;---          Mark the ending with 254 and 253&#10;&#10;END OF SETUP&#10;&#10;ALGORITHM START&#10;&#10;+[-&lt;+]-         Go backwards to the 255 mark&#10;&lt;&#10;&#10;[&#10; +[-&gt;+]-        Go forward to the start position 255 marker&#10; &lt;&lt;-&gt;&gt;          Decrease countdown&#10; &gt;+&#9;&#9;        Increase counter&#10; &gt;[-]           Reset boolean for if we have found a match or not&#10; &#10; ++[--&gt;++]--&gt;   Find next 254 and go one step beyond it&#10; &#10;                Loop through all 254s&#10;    +++[---         Make sure that we are not at 253 (end)&#10;&#9; ++[--&lt;++]--&#9;Find last value 254&#10;&#9; --&#9;&#9;&#9;&#9;Change marker to 252 to indicate that we're processing it&#10;&#9; &gt;&gt;             Go to the countdown&#10;&#9; -&lt;             Decrease fizzbuzz countdown&#10;&#9; +&gt;&#9;&#9;&#9;    Increase fizzbuzz counter&#10;&#9; &#10;&#9; If current marker is NOT zero&#10;&#9; &#9; [&#10;&#9;&#9;     ++++[----&lt;++++]--   Find value 252 and change to 254&#10;             [&gt;]                 Position to a place that is zero to avoid repeat&#10;             ++[--&gt;++]-- &lt;       Find NEXT 254 marker and stop right before it&#10;     &#9; ]&#10;&#9; &#10;&#9; &gt;++&#10;&#9;     Check if we are positioned on a 254 already then if skip this&#10;&#9; &#9; [--&#10; &#10; &#9;&#9; &#9; We have a match so find start position and mark match&#10;&#9;&#9;&#9; &#10;&#9;&#9;&#9; +[-&lt;+]-  &gt;&gt;         Find 255 marker and go to the boolean&#10;&#9;&#9;&#9; [-]+                Set boolean to 1 whatever the previous value is&#10;&#9;&#9;&#9; ++++[----&gt;++++]--   Find value 252 and change to 254&#10;&#9;&#9;&#9; &gt;[-&gt;+&lt;]             Reset the current FizzBuzz countdown&#10;&#9;&#9;&#9; &gt;&gt;[.&gt;]&#9;&#9;&#9;     Print the text&#10;&#9;&#9;&#9; ++[--&gt;++]           Go to next 254 change to 256 to break loop&#10;&#9;&#9; ]&#10;&#9; --&gt;&#10;&#9; &#10;&#9; +++ # Detect if we are at the 253 end&#10;&#9; ]&#10;  ---&#10;&#10;ALL FIZZBUZZES PROCESSED&#10;Use the boolean to check whether or not to print the number&#10;&#10;  &#10;  +[-&lt;+]-     Go back to the 255 marker&#10;  &gt;&gt;          Go to boolean&#10;  -[          If boolean is zero then print the number&#10;         +&gt;&gt;&gt;&#10;         +[-&lt;+]-    Go back to the 255 marker&#10;         &gt;&gt;          We are positioned after the counter&#10;         Code taken from StackOverflow below for printing a number&#10;&gt;++++++++++&lt;&lt;[-&gt;+&gt;-[&gt;+&gt;&gt;]&gt;[+[-&lt;+&gt;]&gt;+&gt;&gt;]&lt;&lt;&lt;&lt;&lt;&lt;]&gt;&gt;[-]&gt;&gt;&gt;++++++++++&lt;[-&gt;-[&gt;+&gt;&gt;]&gt;[+[-&#10;&lt;+&gt;]&gt;+&gt;&gt;]&lt;&lt;&lt;&lt;&lt;]&gt;[-]&gt;&gt;[&gt;++++++[-&lt;++++++++&gt;]&lt;.&lt;&lt;+&gt;+&gt;[-]]&lt;[&lt;[-&gt;-&lt;]++++++[-&gt;++++++++&#10;&lt;]&gt;.[-]]&lt;&lt;++++++[-&lt;++++++++&gt;]&lt;.[-]&lt;&lt;[-&lt;+&gt;]&#10;         End of StackOverflow code&#10;         &#10;         +[-&lt;+]-&gt;&gt;    Locate the 255 marker and goto the boolean&#10;  ]+&#10;  &#10;  Boolean is always one here so print new line&#10;  [-]&lt;&lt;&lt;.&gt;&gt;&gt;     Print new line&#10;  &#10;  +[-&lt;+]-    Go back to the 255 marker&#10;  &lt;&lt;         Go to the countdown to find out if we should go another round&#10;]">
+                     <font>
+                        <Font name="Consolas" size="12.0" />
+                     </font>
+                  </TextArea>
+               </items>
+            </SplitPane>
+            <TextArea fx:id="output" text="Output" />
+         </items>
+      </SplitPane>
+   </items>
+</SplitPane>
