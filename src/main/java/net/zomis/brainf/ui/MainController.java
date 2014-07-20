@@ -79,7 +79,6 @@ public class MainController implements Initializable {
 	}
 
 	private void update() {
-		memory.setText(memoryText(brain));
 		code.selectRange(brain.getCommandIndex(), brain.getCommandIndex() + 1);
 		output.setText(brain.getOutput());
 		
@@ -92,24 +91,6 @@ public class MainController implements Initializable {
 		int value = brain.getMemory(i);
 		char ch = (char) (value < 0 ? 256 + value : value);
 		return Integer.toString(i, 16) + "\t" + value + "\t" + String.valueOf(ch).trim() + "\t" + (brain.getMemoryIndex() == i ? "x" : "");
-	}
-
-	private String memoryText(BrainF brain2) {
-		StringBuilder str = new StringBuilder();
-		
-		for (int i = 0; i < brain2.getMemorySize(); i++) {
-			byte mem = brain2.getMemory(i);
-			
-			str.append(Integer.toString(i, 16));
-			str.append("\t");
-			str.append(mem);
-			if (brain2.getMemoryIndex() == i) {
-				str.append(" <---");
-			}
-			str.append("\n");
-		}
-		
-		return str.toString();
 	}
 
 	@Override
