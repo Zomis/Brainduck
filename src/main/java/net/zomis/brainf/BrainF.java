@@ -1,24 +1,32 @@
 package net.zomis.brainf;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
+import net.zomis.brainf.ui.BrainFDebug;
+
 public class BrainF {
 	public static final int MEMORY_SIZE = 0xfff;
 
+	public BrainF(String code) {
+		this(code, "");
+	}
+	
+	public BrainF(String code, String input) {
+		this(new ByteArrayInputStream(input.getBytes()));
+		this.addCommands(code);
+	}
+	
 	public BrainF() {
-		this.input = null;
+		this("");
 	}
 	
 	public BrainF(InputStream in) {
 		this.input = new Scanner(in);
-	}
-
-	public static void main(String[] args) {
-		BrainFDebug.main(args);
 	}
 
 	private final List<BrainFCommand> commands = new ArrayList<>();
@@ -39,7 +47,6 @@ public class BrainF {
 	}
 
 	private void findMatching(BrainFCommand decrease, BrainFCommand increase, int direction) {
-//		commandIndex += direction;
 		int matching = 1;
 		while (true) {
 			commandIndex += direction;

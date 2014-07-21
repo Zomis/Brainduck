@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import net.zomis.brainf.ui.BrainFDebug;
 import net.zomis.brainf.ui.MainController;
 
 import org.junit.Test;
