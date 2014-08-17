@@ -29,7 +29,7 @@ public class MainController implements Initializable {
 	@FXML
 	private TextArea memory;
 	
-	private final BrainF brain = new BrainF(System.in);
+	private final BrainF brain = BrainF.createUsingSystemInputWithMemorySize(0x1000);
 	
 	public MainController() {
 

@@ -1,38 +1,28 @@
 package net.zomis.brainf;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Scanner;
-
-import net.zomis.brainf.ui.BrainFDebug;
+import java.util.stream.Stream;
 
 public class BrainF {
-	public static final int MEMORY_SIZE = 0xfff;
-
-	public BrainF(String code) {
-		this(code, "");
+	public static final int DEFAULT_MEMORY_SIZE = 0x1000;
+	
+	public BrainF(int memorySize, String code, Stream<Byte> in) {
+		this(memorySize, in);
+		addCommands(code);
 	}
 	
-	public BrainF(String code, String input) {
-		this(new ByteArrayInputStream(input.getBytes()));
-		this.addCommands(code);
-	}
-	
-	public BrainF() {
-		this("");
-	}
-	
-	public BrainF(InputStream in) {
-		this.input = new Scanner(in);
+	public BrainF(int memorySize, Stream<Byte> in) {
+		 memory = new byte[memorySize];
+		 input = in.iterator();
 	}
 
 	private final List<BrainFCommand> commands = new ArrayList<>();
-	private final Scanner input;
+	private final Iterator<Byte> input;
 	private int commandIndex;
-	private final byte[] memory = new byte[MEMORY_SIZE];
+	private final byte[] memory;
 	private final StringBuilder output = new StringBuilder();
 
 	private int memoryIndex;
@@ -42,15 +32,15 @@ public class BrainF {
 	}
 
 	private void changeMemory(int i) {
-		memoryIndexCheck();
-		this.memory[memoryIndex] += i;
+		checkMemoryIndex();
+		memory[memoryIndex] += i;
 	}
 
 	private void findMatching(BrainFCommand decrease, BrainFCommand increase, int direction) {
 		int matching = 1;
 		while (true) {
 			commandIndex += direction;
-			BrainFCommand current = this.commands.get(commandIndex);
+			BrainFCommand current = commands.get(commandIndex);
 
 			if (current == decrease) {
 				matching--;
@@ -65,7 +55,7 @@ public class BrainF {
 	}
 
 	public byte getMemory() {
-		return this.memory[this.memoryIndex];
+		return memory[memoryIndex];
 	}
 
 	public void runToEnd() {
@@ -85,7 +75,7 @@ public class BrainF {
 	}
 
 	public void setMemory(byte value) {
-		this.memory[this.memoryIndex] = value;
+		memory[memoryIndex] = value;
 	}
 
 	public String getOutput() {
@@ -112,14 +102,14 @@ public class BrainF {
 				break;
 			case NEXT:
 				memoryIndex++;
-				memoryIndexCheck();
+				checkMemoryIndex();
 				break;
 			case PREVIOUS:
 				memoryIndex--;
-				memoryIndexCheck();
+				checkMemoryIndex();
 				break;
 			case READ:
-				byte value = input.nextByte();
+				byte value = input.next();
 				setMemory(value);
 				break;
 			case SUBSTRACT:
@@ -140,7 +130,7 @@ public class BrainF {
 		}
 	}
 
-	private void memoryIndexCheck() {
+	private void checkMemoryIndex() {
 		if (memoryIndex < 0) {
 			memoryIndex += memory.length;
 		}
@@ -154,23 +144,55 @@ public class BrainF {
 	}
 
 	public void setCommands(String text) {
-		this.commands.clear();
-		this.addCommands(text);
+		commands.clear();
+		addCommands(text);
 	}
 
 	public void reset() {
 		Arrays.fill(memory, (byte) 0);
-		this.commandIndex = 0;
-		this.memoryIndex = 0;
-		this.output.setLength(0);
+		commandIndex = 0;
+		memoryIndex = 0;
+		output.setLength(0);
 	}
 
 	public int getMemorySize() {
 		return memory.length;
 	}
 
-	public byte getMemory(int i) {
-		return memory[i];
+	public byte getMemory(int index) {
+		return memory[index];
+	}
+
+	public static BrainF createFromCodeAndInput(int memorySize, String code, String input) {
+		return createFromCodeAndInput(memorySize, code, input.chars().mapToObj(i -> (byte) i ));
+	}
+	
+	public static BrainF createFromCodeAndInput(int memorySize, String code, Stream<Byte> inputStream) {
+		return new BrainF(DEFAULT_MEMORY_SIZE, code, inputStream);
+	}
+	
+	public static BrainF createFromCode(String code) {
+		return createFromCodeAndInput(DEFAULT_MEMORY_SIZE, code, "");
+	}
+	
+	public static BrainF createFromCode(int memorySize, String code) {
+		return createFromCodeAndInput(memorySize, code, "");
+	}
+	
+	public static BrainF createWithDefaultSize() {
+		return createUsingSystemInputWithMemorySize(DEFAULT_MEMORY_SIZE);
+	}
+	
+	public static BrainF createUsingSystemInputWithMemorySize(int memorySize) {
+		Stream<Byte> in = Stream.generate(() -> {
+			try {
+				return (byte) System.in.read();
+			}
+			catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		});
+		return new BrainF(memorySize, in);
 	}
 	
 }

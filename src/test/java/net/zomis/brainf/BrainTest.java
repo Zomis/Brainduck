@@ -7,8 +7,8 @@ import org.junit.Test;
 public class BrainTest {
 
 	@Test
-	public void loops2() {
-		BrainF brain = new BrainF();
+	public void gotoCorrectEndWhile() {
+		BrainF brain = BrainF.createWithDefaultSize();
 		brain.addCommands(">+>[-]+   ");
 		brain.addCommands("++[-->++]-->   Find next 254 and go one step beyond it");
 		brain.addCommands("            Loop through all 254s");
@@ -25,8 +25,8 @@ public class BrainTest {
 	}
 
 	@Test
-	public void loops() {
-		BrainF brain = new BrainF();
+	public void simpleLoopMultiplication() {
+		BrainF brain = BrainF.createWithDefaultSize();
 		brain.addCommands("++[>+++<-]>>>");
 		brain.runToEnd();
 		assertArrayEquals(new byte[] { 0, 6, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -34,16 +34,23 @@ public class BrainTest {
 	}
 
 	@Test
-	public void das() {
-		BrainF brain = new BrainF();
+	public void printAlphabet() {
+		BrainF brain = BrainF.createWithDefaultSize();
 		brain.addCommands("++++++[>++++++++++>++++<<-]>+++++>++[-<.+>]");
 		brain.runToEnd();
 		assertEquals("ABCDEFGHIJKLMNOPQRSTUVWXYZ", brain.getOutput());
 	}
 
 	@Test
-	public void abc() {
-		BrainF abc = new BrainF();
+	public void input() {
+		BrainF brain = BrainF.createFromCodeAndInput(BrainF.DEFAULT_MEMORY_SIZE, "+++,.", "a");
+		brain.runToEnd();
+		assertEquals("a", brain.getOutput());
+	}
+	
+	@Test
+	public void simpleCommands() {
+		BrainF abc = BrainF.createWithDefaultSize();
 		abc.addCommands("+>++>+++<");
 		abc.runToEnd();
 		assertEquals(9, abc.getCommandIndex());
