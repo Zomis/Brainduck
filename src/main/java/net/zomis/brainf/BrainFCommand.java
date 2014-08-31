@@ -8,7 +8,7 @@ public enum BrainFCommand {
 	NONE((char) 0), NEXT('>'), PREVIOUS('<'), WRITE('.'), READ(','), ADD('+'), SUBSTRACT('-'), WHILE('['), END_WHILE(']');
 	
 	private final char ch;
-	private static Map<Character, BrainFCommand> commands = new HashMap<>();
+	private static final Map<Character, BrainFCommand> commands = new HashMap<>();
 	
 	static {
 		for (BrainFCommand comm : BrainFCommand.values()) {
