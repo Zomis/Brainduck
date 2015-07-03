@@ -11,7 +11,7 @@ public class BrainFDebug extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		
-        primaryStage.setTitle("BrainF");
+        primaryStage.setTitle("BrainDuck");
         Parent root = FXMLLoader.load(MainController.class.getResource("brainf.fxml"));
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
