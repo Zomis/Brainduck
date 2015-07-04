@@ -112,7 +112,7 @@ public class BrainF {
 				byte value = input.next();
 				setMemory(value);
 				break;
-			case SUBSTRACT:
+			case SUBTRACT:
 				changeMemory(-1);
 				break;
 			case WHILE:

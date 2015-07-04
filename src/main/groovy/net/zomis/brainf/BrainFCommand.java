@@ -5,7 +5,15 @@ import java.util.Map;
 
 public enum BrainFCommand {
 
-	NONE((char) 0), NEXT('>'), PREVIOUS('<'), WRITE('.'), READ(','), ADD('+'), SUBSTRACT('-'), WHILE('['), END_WHILE(']');
+	NONE((char) 0),
+    NEXT('>'),
+    PREVIOUS('<'),
+    WRITE('.'),
+    READ(','),
+    ADD('+'),
+    SUBTRACT('-'),
+    WHILE('['),
+    END_WHILE(']');
 	
 	private final char ch;
 	private static final Map<Character, BrainFCommand> commands = new HashMap<>();
