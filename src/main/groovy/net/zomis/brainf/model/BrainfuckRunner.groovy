@@ -7,7 +7,7 @@ import java.util.stream.Stream
 class BrainfuckRunner {
 
     BrainfuckMemory memory
-    BrainfuckCode code = new BrainfuckCode(null)
+    BrainfuckCode code = new BrainfuckCode()
     private final Iterator<Byte> input;
     private final StringBuilder output = new StringBuilder();
 

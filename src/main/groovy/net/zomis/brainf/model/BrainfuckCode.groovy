@@ -6,11 +6,6 @@ import net.zomis.brainf.BrainFCommand
 class BrainfuckCode {
     private final List<BrainFCommand> commands = new ArrayList<>();
     int commandIndex
-    PrintWriter writer
-
-    BrainfuckCode(PrintWriter writer) {
-        this.writer = writer
-    }
 
     @PackageScope void findMatching(BrainFCommand decrease, BrainFCommand increase, int direction) {
         int matching = 1;
