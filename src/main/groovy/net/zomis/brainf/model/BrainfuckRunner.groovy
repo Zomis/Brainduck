@@ -23,7 +23,7 @@ class BrainfuckRunner {
         return output.toString();
     }
 
-    void runToEnd() {
+    void run() {
         while (code.hasMoreCommands()) {
             step();
         }

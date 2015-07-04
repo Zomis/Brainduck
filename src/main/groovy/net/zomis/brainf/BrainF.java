@@ -8,8 +8,6 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 public class BrainF {
-    // TODO: See http://codereview.stackexchange.com/questions/61651/brainfk-interpreter-in-java
-
 	public static BrainfuckRunner createFromCodeAndInput(int memorySize, String code, String input) {
 		return createFromCodeAndInput(memorySize, code, new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
 	}

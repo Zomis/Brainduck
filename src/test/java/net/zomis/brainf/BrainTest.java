@@ -30,7 +30,7 @@ public class BrainTest {
 	public void simpleLoopMultiplication() {
 		BrainfuckRunner brain = BrainF.createWithDefaultSize();
 		brain.getCode().addCommands("++[>+++<-]>>>");
-		brain.runToEnd();
+		brain.run();
 		assertArrayEquals(new byte[] { 0, 6, 0, 0, 0, 0, 0, 0, 0, 0 },
 				brain.getMemory().getMemoryArray(0, 10));
 	}
@@ -39,14 +39,14 @@ public class BrainTest {
 	public void printAlphabet() {
 		BrainfuckRunner brain = BrainF.createWithDefaultSize();
         brain.getCode().addCommands("++++++[>++++++++++>++++<<-]>+++++>++[-<.+>]");
-		brain.runToEnd();
+		brain.run();
 		assertEquals("ABCDEFGHIJKLMNOPQRSTUVWXYZ", brain.getOutput());
 	}
 
 	@Test
 	public void input() {
 		BrainfuckRunner brain = BrainF.createFromCodeAndInput(BrainfuckMemory.DEFAULT_MEMORY_SIZE, "+++,.", "a");
-		brain.runToEnd();
+		brain.run();
 		assertEquals("a", brain.getOutput());
 	}
 	
@@ -54,7 +54,7 @@ public class BrainTest {
 	public void simpleCommands() {
         BrainfuckRunner abc = BrainF.createWithDefaultSize();
         abc.getCode().addCommands("+>++>+++<");
-		abc.runToEnd();
+		abc.run();
 		assertEquals(9, abc.getCode().getCommandIndex());
 		assertEquals(1, abc.getMemory().getMemoryIndex());
 		assertEquals(2, abc.getMemory().getMemory());
