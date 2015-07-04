@@ -7,7 +7,7 @@ class BrainfuckCode {
     private final List<BrainFCommand> commands = new ArrayList<>();
     int commandIndex
 
-    @PackageScope void findMatching(BrainFCommand decrease, BrainFCommand increase, int direction) {
+    @PackageScope void gotoMatching(BrainFCommand decrease, BrainFCommand increase, int direction) {
         int matching = 1;
         while (true) {
             commandIndex += direction;

@@ -22,12 +22,12 @@ class BrainfuckMemory {
     }
 
     void changeMemory(int i) {
-        checkMemoryIndex();
+        memoryIndexWraparound();
         memory[memoryIndex] += i;
         memoryBoundsCheck()
     }
 
-    @PackageScope void checkMemoryIndex() {
+    @PackageScope void memoryIndexWraparound() {
         if (memoryIndex < 0) {
             memoryIndex += memory.length;
         }

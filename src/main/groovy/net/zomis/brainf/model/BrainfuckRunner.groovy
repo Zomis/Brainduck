@@ -2,8 +2,6 @@ package net.zomis.brainf.model
 
 import net.zomis.brainf.BrainFCommand
 
-import java.util.stream.Stream
-
 class BrainfuckRunner {
 
     BrainfuckMemory memory
@@ -54,16 +52,16 @@ class BrainfuckRunner {
                 break;
             case BrainFCommand.END_WHILE:
                 if (memory.getMemory() != 0) {
-                    code.findMatching(BrainFCommand.WHILE, BrainFCommand.END_WHILE, -1);
+                    code.gotoMatching(BrainFCommand.WHILE, BrainFCommand.END_WHILE, -1);
                 }
                 break;
             case BrainFCommand.NEXT:
                 memory.memoryIndex++;
-                memory.checkMemoryIndex();
+                memory.memoryIndexWraparound();
                 break;
             case BrainFCommand.PREVIOUS:
                 memory.memoryIndex--;
-                memory.checkMemoryIndex();
+                memory.memoryIndexWraparound();
                 break;
             case BrainFCommand.READ:
                 int value = input.read();
@@ -74,7 +72,7 @@ class BrainfuckRunner {
                 break;
             case BrainFCommand.WHILE:
                 if (memory.getMemory() == 0) {
-                    code.findMatching(BrainFCommand.END_WHILE, BrainFCommand.WHILE, 1);
+                    code.gotoMatching(BrainFCommand.END_WHILE, BrainFCommand.WHILE, 1);
                 }
                 break;
             case BrainFCommand.WRITE:
