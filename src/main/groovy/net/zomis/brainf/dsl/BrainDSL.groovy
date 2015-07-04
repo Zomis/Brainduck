@@ -26,8 +26,47 @@ class BrainDSL {
         this
     }
 
+    BrainDSL right() {
+        right 1
+    }
+
     BrainDSL right(int steps) {
+        assert steps >= 0: 'steps cannot be negative'
         addCode('>' * steps)
+    }
+
+    BrainDSL left() {
+        left 1
+    }
+
+    BrainDSL left(int steps) {
+        assert steps >= 0: 'steps cannot be negative'
+        addCode('<' * steps)
+    }
+
+    BrainDSL inc(int count) {
+        assert count >= 0: 'Count cannot be negative'
+        addCode('+' * count)
+    }
+
+    BrainDSL dec(int count) {
+        assert count >= 0: 'Count cannot be negative'
+        addCode('-' * count)
+    }
+
+    BrainDSL change(int count) {
+        return count >= 0 ? inc(count) : dec(-count)
+    }
+
+    BrainDSL reset() {
+        addCode('[-]')
+    }
+
+    BrainDSL loop(Closure closure) {
+        addCode('[')
+        closure.setDelegate(this)
+        closure.call()
+        addCode(']')
     }
 
     BrainDSL set(Object... args) {
@@ -80,6 +119,14 @@ class BrainDSL {
         }
     }
 
+    BrainDSL print() {
+        addCode('.')
+    }
+
+    BrainDSL read() {
+        addCode(',')
+    }
+
     BrainDSL addCode(String s) {
         code.append(s)
         this
@@ -87,6 +134,16 @@ class BrainDSL {
 
     String getCode() {
         code.toString()
+    }
+
+    BrainDSL printNumber() {
+        addCode('''
+Print Number Algorithm
+>++++++++++<<[->+>-[>+>>]>[+[-<+>]>+>>]<<<<<<]>>[-]>>>++++++++++<[->-[>+>>]>[+[-
+<+>]>+>>]<<<<<]>[-]>>[>++++++[-<++++++++>]<.<<+>+>[-]]<[<[->-<]++++++[->++++++++
+<]>.[-]]<<++++++[-<++++++++>]<.[-]<<[-<+>]
+Print Number Algorithm END
+''')
     }
 
 }
