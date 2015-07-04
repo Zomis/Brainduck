@@ -3,16 +3,18 @@ package net.zomis.brainf;
 import net.zomis.brainf.model.BrainfuckMemory;
 import net.zomis.brainf.model.BrainfuckRunner;
 
-import java.util.stream.Stream;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 public class BrainF {
     // TODO: See http://codereview.stackexchange.com/questions/61651/brainfk-interpreter-in-java
 
 	public static BrainfuckRunner createFromCodeAndInput(int memorySize, String code, String input) {
-		return createFromCodeAndInput(memorySize, code, input.chars().mapToObj(i -> (byte) i ));
+		return createFromCodeAndInput(memorySize, code, new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
 	}
 	
-	public static BrainfuckRunner createFromCodeAndInput(int memorySize, String code, Stream<Byte> inputStream) {
+	public static BrainfuckRunner createFromCodeAndInput(int memorySize, String code, InputStream inputStream) {
 		return new BrainfuckRunner(memorySize, code, inputStream);
 	}
 	
@@ -29,15 +31,7 @@ public class BrainF {
 	}
 	
 	public static BrainfuckRunner createUsingSystemInputWithMemorySize(int memorySize) {
-		Stream<Byte> in = Stream.generate(() -> {
-			try {
-				return (byte) System.in.read();
-			}
-			catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		});
-		return new BrainfuckRunner(memorySize, in);
+		return new BrainfuckRunner(memorySize, System.in);
 	}
 	
 }

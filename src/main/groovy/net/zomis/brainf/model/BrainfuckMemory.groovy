@@ -44,15 +44,15 @@ class BrainfuckMemory {
         return memory.length;
     }
 
-    public byte getMemory(int index) {
+    public int getMemory(int index) {
         return memory[index];
     }
 
-    public byte getMemory() {
+    public int getMemory() {
         return memory[memoryIndex];
     }
 
-    public void setMemory(byte value) {
+    public void setMemory(int value) {
         memory[memoryIndex] = value;
         memoryBoundsCheck()
     }

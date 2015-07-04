@@ -8,17 +8,17 @@ class BrainfuckRunner {
 
     BrainfuckMemory memory
     BrainfuckCode code = new BrainfuckCode()
-    private final Iterator<Byte> input;
+    private final InputStream input;
     private final StringBuilder output = new StringBuilder();
 
-    BrainfuckRunner(int memorySize, String code, Stream<Byte> input) {
+    BrainfuckRunner(int memorySize, String code, InputStream input) {
         this(memorySize, input);
         this.code.addCommands(code);
     }
 
-    BrainfuckRunner(int memorySize, Stream<Byte> input) {
+    BrainfuckRunner(int memorySize, InputStream input) {
         memory = new BrainfuckMemory(memorySize);
-        this.input = input.iterator();
+        this.input = input;
     }
 
     String getOutput() {
@@ -66,7 +66,7 @@ class BrainfuckRunner {
                 memory.checkMemoryIndex();
                 break;
             case BrainFCommand.READ:
-                byte value = input.next();
+                int value = input.read();
                 memory.setMemory(value);
                 break;
             case BrainFCommand.SUBTRACT:
