@@ -132,6 +132,20 @@ class BrainDSL {
         this
     }
 
+    Map algo(String algorithm) {
+        CompilerConfiguration cc = new CompilerConfiguration()
+        cc.setScriptBaseClass(DelegatingScript.class.getName())
+        GroovyShell sh = new GroovyShell(cc)
+        DelegatingScript script = (DelegatingScript) sh.parse(getClass().getClassLoader()
+                .getResource('algorithms/' + algorithm + '.algo').toURI())
+        def delegate = new ExternalAlgorithm(algorithm)
+        script.setDelegate(delegate)
+        script.run()
+        [values: {Map<String, Integer> map ->
+            addCode delegate.apply(map)
+        }]
+    }
+
     String getCode() {
         code.toString()
     }

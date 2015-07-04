@@ -1,0 +1,11 @@
+// https://esolangs.org/wiki/Brainfuck_algorithms#x_.3D_y
+
+temp 'temp0'
+variables 'x', 'y'
+
+code '''
+    temp0[-]
+    x[-]
+    y[x+temp0+y-]
+    temp0[y+temp0-]
+'''
