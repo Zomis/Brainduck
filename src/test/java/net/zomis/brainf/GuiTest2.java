@@ -30,10 +30,6 @@ public class GuiTest2 extends GuiTest {
 
 	@Test
 	public void fds() {
-		
-		BrainFDebug.main(new String[0]);
-		
-		
 		assertNotNull(stage);
 	}
 	

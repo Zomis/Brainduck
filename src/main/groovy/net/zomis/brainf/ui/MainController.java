@@ -14,6 +14,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import net.zomis.brainf.BrainF;
 import net.zomis.brainf.BrainFCommand;
+import net.zomis.brainf.model.BrainfuckRunner;
 
 public class MainController implements Initializable {
 
@@ -29,10 +30,9 @@ public class MainController implements Initializable {
 	@FXML
 	private TextArea memory;
 	
-	private final BrainF brain = BrainF.createUsingSystemInputWithMemorySize(0x1000);
+	private final BrainfuckRunner brain = BrainF.createUsingSystemInputWithMemorySize(0x1000);
 	
 	public MainController() {
-
 	}
 	
 	private ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
@@ -48,14 +48,14 @@ public class MainController implements Initializable {
 	
 	@FXML
 	private void saveCode(ActionEvent event) {
-		brain.setCommands(this.code.getText());
+		brain.getCode().setCommands(this.code.getText());
 		brain.reset();
 	}
 	
 	@FXML
 	private void runToCursor(ActionEvent event) {
 		int index = code.getCaretPosition();
-		while (brain.getCommandIndex() < index) {
+		while (brain.getCode().getCommandIndex() < index) {
 			brain.step();
 		}
 		update();
@@ -79,23 +79,23 @@ public class MainController implements Initializable {
 	}
 
 	private void update() {
-		code.selectRange(brain.getCommandIndex(), brain.getCommandIndex() + 1);
+		code.selectRange(brain.getCode().getCommandIndex(), brain.getCode().getCommandIndex() + 1);
 		output.setText(brain.getOutput());
 		
-		for (int i = 0; i < brain.getMemorySize(); i++) {
+		for (int i = 0; i < brain.getMemory().getMemorySize(); i++) {
 			this.memoryList.getItems().set(i, memoryText(i));
 		}
 	}
 
 	private String memoryText(int i) {
-		int value = brain.getMemory(i);
+		int value = brain.getMemory().getMemory(i);
 		char ch = (char) (value < 0 ? 256 + value : value);
-		return Integer.toString(i, 16) + "\t" + value + "\t" + String.valueOf(ch).trim() + "\t" + (brain.getMemoryIndex() == i ? "x" : "");
+		return Integer.toString(i, 16) + "\t" + value + "\t" + String.valueOf(ch).trim() + "\t" + (brain.getMemory().getMemoryIndex() == i ? "x" : "");
 	}
 
 	@Override
 	public void initialize(URL url, ResourceBundle resource) {
-		for (int i = 0; i < brain.getMemorySize(); i++) {
+		for (int i = 0; i < brain.getMemory().getMemorySize(); i++) {
 			memoryList.getItems().add("");
 		}
 	}
