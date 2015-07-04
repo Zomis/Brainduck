@@ -160,4 +160,14 @@ Print Number Algorithm END
 ''')
     }
 
+    BrainDSL moveValueRight(int steps) {
+        addCode('[-' + '>'*steps + '-' + '<' * steps + ']')
+        this
+    }
+
+    BrainDSL moveValueLeft(int steps) {
+        addCode('[-' + '<'*steps + '-' + '>' * steps + ']')
+        this
+    }
+
 }
