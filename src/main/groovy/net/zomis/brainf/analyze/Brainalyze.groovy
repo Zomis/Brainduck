@@ -54,9 +54,42 @@ class Brainalyze implements BrainfuckListener {
         println()
         println 'While loops analysis'
         whileLoopCounts.entrySet().stream().sorted(Comparator.comparingInt({it.key})).forEach({entry ->
-            println "$entry.key $entry.value"
+            print "$entry.key "
+            printCompactList(entry.value)
+            println()
         })
         println()
+    }
+
+    static void printCompactList(List<?> values) {
+        int count = 0
+        Object value = null
+        print '['
+        boolean shouldPrintComma = false
+        for (Object i : values) {
+            if (Objects.equals(i, value)) {
+                count++
+            } else {
+                if (shouldPrintComma) {
+                    print ', '
+                }
+                if (count > 0) {
+                    shouldPrintComma = true
+                    print countString(count, value)
+                }
+                count = 1
+                value = i
+            }
+        }
+        if (shouldPrintComma) {
+            print ', '
+        }
+        print countString(count, value)
+        print ']'
+    }
+
+    static String countString(int count, Object value) {
+        count >= 2 ? "$value * $count" : "$value"
     }
 
     static void printCommands(int[] ints) {

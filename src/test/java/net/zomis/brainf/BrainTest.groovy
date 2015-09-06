@@ -61,6 +61,14 @@ public class BrainTest {
     }
 
     @Test
+    public void fizzBuzz() {
+        BrainfuckRunner brain = BrainF.createWithDefaultSize();
+        brain.getCode().addCommands(BrainfuckRunner.classLoader.getResource('fizzbuzz.bf').text);
+        Brainalyze analyze = Brainalyze.analyze(brain)
+        analyze.print()
+    }
+
+    @Test
     public void input() {
         BrainfuckRunner brain = BrainF.createFromCodeAndInput(BrainfuckMemory.DEFAULT_MEMORY_SIZE, "+++,.", "a");
         brain.run();
