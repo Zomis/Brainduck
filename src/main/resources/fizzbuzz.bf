@@ -25,7 +25,7 @@ Some empty space for converting counter to string
 
 >++++++++++                   Line break
 >-                            Start marker
->>>>>>>>>>>>>>>>              Empty space for counter to string conversion
+>>>>> >>>>> >                 Empty space for counter to string conversion
 
 
 SETUP Create the Fizz and Buzz sequences on the tape
