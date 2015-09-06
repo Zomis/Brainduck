@@ -4,11 +4,14 @@ import net.zomis.brainf.BrainFCommand
 import net.zomis.brainf.model.BrainfuckListener
 import net.zomis.brainf.model.BrainfuckRunner
 
+import java.util.concurrent.atomic.AtomicInteger
+
 class Brainalyze implements BrainfuckListener {
 
     private final int[] times
     private final int[] actionsPerCommand
     private final int[] codeCommands
+    private final Map<Integer, List<Integer>> whileLoopCounts = new HashMap<>()
 
     Brainalyze(BrainfuckRunner runner) {
         this.times = new int[runner.code.commandCount];
@@ -40,7 +43,6 @@ class Brainalyze implements BrainfuckListener {
         printCommands(codeCommands)
         println()
         println times
-        println actionsPerCommand
         println()
     }
 
@@ -58,14 +60,41 @@ class Brainalyze implements BrainfuckListener {
         println "Total: $sum"
     }
 
+    private final Stack<AtomicInteger> enteredLoops = new Stack<>()
+
     @Override
     void beforePerform(BrainfuckRunner runner, BrainFCommand command) {
         this.times[runner.code.commandIndex]++
         actionsPerCommand[command.ordinal()]++
+
+        if (command == BrainFCommand.WHILE) {
+            whileLoopCounts.putIfAbsent(runner.code.commandIndex, new ArrayList<Integer>())
+            int current = runner.memory.getMemory()
+            if (current == 0) {
+                whileLoopCounts.get(runner.code.commandIndex).add(0)
+            } else {
+                enteredLoops.add(new AtomicInteger())
+            }
+        }
+
+        if (command == BrainFCommand.END_WHILE) {
+            enteredLoops.peek().incrementAndGet()
+            int current = runner.memory.getMemory()
+            if (current == 0) {
+                int startPos = runner.code.findMatching(BrainFCommand.WHILE, BrainFCommand.END_WHILE, -1)
+                int count = enteredLoops.pop().get()
+                whileLoopCounts.get(startPos).add(count)
+            }
+        }
     }
 
     @Override
     void afterPerform(BrainfuckRunner runner, BrainFCommand command) {
 
     }
+
+    Map<Integer, List<Integer>> getWhileLoopCounts() {
+        return this.whileLoopCounts
+    }
+
 }
