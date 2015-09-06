@@ -80,7 +80,7 @@ ALGORITHM START
 	 
 	 If current marker is NOT zero
 	 	 [
-		     ++++[----<++++]--   Find value 252 and change to 254
+		     <<++                Go left to value 252 and change to 254
              [>]                 Position to a place that is zero to avoid repeat
              ++[-->++]-- <       Find NEXT 254 marker and stop right before it
      	 ]
