@@ -114,7 +114,7 @@ Use the boolean to check whether or not to print the number
 <]>.[-]]<<++++++[-<++++++++>]<.[-]<<[-<+>]
          End of StackOverflow code
          
-         cursor is now located on the the boolean
+         cursor is now located on the boolean
   ]
   
   Boolean is now zero so just print the new line
