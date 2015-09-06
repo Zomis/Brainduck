@@ -69,7 +69,14 @@ class Brainalyze implements BrainfuckListener {
         println()
         println 'Tape summary'
         int totalUsed = 0
-        for (int i = 0; i < tapeValues.length; i++) {
+        int maxMemory = 0
+        for (int i = tapeValues.length - 1; i >= 0; i--) {
+            if (memoryRead[i] > 0 || memoryWrite[i] > 0) {
+                maxMemory = i
+                break
+            }
+        }
+        for (int i = 0; i <= maxMemory; i++) {
             int value = tapeValues[i]
             String hexAddress = String.format("%04X", i)
             String decAddress = String.format("%06d", i)
