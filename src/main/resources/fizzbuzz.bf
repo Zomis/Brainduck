@@ -65,9 +65,8 @@ ALGORITHM START
 [
  +[->+]-        Go forward to the start position 255 marker
  <<->>          Decrease countdown
- >+		        Increase counter
- >[-]           Reset boolean for if we have found a match or not
- 
+ >+>	        Increase counter
+
  ++[-->++]-->   Find next 254 and go one step beyond it
  
                 Loop through all 254s
