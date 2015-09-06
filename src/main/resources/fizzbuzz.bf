@@ -110,10 +110,8 @@ Use the boolean to check whether or not to print the number
   
   +[-<+]-     Go back to the 255 marker
   >>          Go to boolean
-  -[          If boolean is zero then print the number
-         +>>>
-         +[-<+]-    Go back to the 255 marker
-         >>          We are positioned after the counter
+  -[+         If boolean is zero then print the number
+
          Code taken from StackOverflow below for printing a number
 >++++++++++<<[->+>-[>+>>]>[+[-<+>]>+>>]<<<<<<]>>[-]>>>++++++++++<[->-[>+>>]>[+[-
 <+>]>+>>]<<<<<]>[-]>>[>++++++[-<++++++++>]<.<<+>+>[-]]<[<[->-<]++++++[->++++++++
