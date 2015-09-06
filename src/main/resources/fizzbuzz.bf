@@ -119,8 +119,6 @@ Use the boolean to check whether or not to print the number
   ]
   
   Boolean is now zero so just print the new line
-  <<<.>>>     Print new line
-  
-  +[-<+]-    Go back to the 255 marker
-  <<         Go to the countdown to find out if we should go another round
+  <<<.      Print new line
+  <         Go to the countdown to find out if we should go another round
 ]
