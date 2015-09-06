@@ -12,10 +12,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.AnchorPane;
 import net.zomis.brainf.BrainF;
 import net.zomis.brainf.BrainFCommand;
 import net.zomis.brainf.analyze.Brainalyze;
 import net.zomis.brainf.model.BrainfuckRunner;
+import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.LineNumberFactory;
 
 public class MainController implements Initializable {
 
@@ -25,8 +28,9 @@ public class MainController implements Initializable {
 	@FXML
 	private ListView<String> memoryList;
 	
-	@FXML
-	private TextArea code;
+	private CodeArea codeArea;
+
+    @FXML private AnchorPane codePane;
 	
 	@FXML
 	private TextArea memory;
@@ -49,13 +53,13 @@ public class MainController implements Initializable {
 	
 	@FXML
 	private void saveCode(ActionEvent event) {
-		brain.getCode().setCommands(this.code.getText());
+		brain.getCode().setCommands(this.codeArea.getText());
 		brain.reset();
 	}
 	
 	@FXML
 	private void runToCursor(ActionEvent event) {
-		int index = code.getCaretPosition();
+		int index = codeArea.getCaretPosition();
 		while (brain.getCode().getCommandIndex() < index) {
 			brain.step();
 		}
@@ -86,7 +90,7 @@ public class MainController implements Initializable {
 	}
 
 	private void update() {
-		code.selectRange(brain.getCode().getCommandIndex(), brain.getCode().getCommandIndex() + 1);
+		codeArea.selectRange(brain.getCode().getCommandIndex(), brain.getCode().getCommandIndex() + 1);
 		output.setText(brain.getOutput());
 		
 		for (int i = 0; i < brain.getMemory().getMemorySize(); i++) {
@@ -105,6 +109,16 @@ public class MainController implements Initializable {
 		for (int i = 0; i < brain.getMemory().getMemorySize(); i++) {
 			memoryList.getItems().add("");
 		}
+        this.codeArea = new CodeArea();
+        codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
+        codeArea.replaceText(0, 0, GroovyRead.read("fizzbuzz.bf"));
+        codeArea.setPrefWidth(600);
+        codeArea.setPrefHeight(600);
+        AnchorPane.setTopAnchor(codeArea, 0d);
+        AnchorPane.setRightAnchor(codeArea, 0d);
+        AnchorPane.setLeftAnchor(codeArea, 0d);
+        AnchorPane.setBottomAnchor(codeArea, 0d);
+        codePane.getChildren().add(codeArea);
 	}
 	
 }
