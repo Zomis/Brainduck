@@ -73,10 +73,9 @@ ALGORITHM START
                 Loop through all 254s
     +++[---         Make sure that we are not at 253 (end)
 	 <--        	Go to 254 marker and change to 252 to indicate that we are processing it
-	 >>             Go to the countdown
-	 -<             Decrease fizzbuzz countdown
-	 +>			    Increase fizzbuzz counter
-	 
+	 >+			    Increase fizzbuzz counter
+	 >-             Decrease fizzbuzz countdown
+
 	 If current marker is NOT zero
 	 	 [
 		     <<++                Go left to value 252 and change to 254
