@@ -30,6 +30,13 @@ class Brainalyze implements BrainfuckListener {
             analyze.codeCommands[command.ordinal()]++
         }
 
+        for (int i = 0; i < analyze.times.length; i++) {
+            if (analyze.times[i] <= 0) {
+                BrainFCommand command = brain.code.getCommandAt(i)
+                println "Dead code at $i: $command"
+            }
+        }
+
         analyze
     }
 
