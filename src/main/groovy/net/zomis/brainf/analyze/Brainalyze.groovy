@@ -73,8 +73,8 @@ class Brainalyze implements BrainfuckListener {
             String hexAddress = String.format("%04X", i)
             String decAddress = String.format("%06d", i)
 
-            boolean space = value == 13 || value == 10 || value == 9 // if tab or new line
-            char chrValue = space ? 32 : tapeValues[i];
+            boolean specialChar = value >= 0 && value <= 13
+            char chrValue = specialChar ? 32 : tapeValues[i];
             String decValue = String.format("%6d", value);
 
             String reads = String.format("%6d", memoryRead[i]);
