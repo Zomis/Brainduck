@@ -43,6 +43,7 @@ public class BrainTest {
         BrainfuckRunner brain = BrainF.createWithDefaultSize();
         brain.getCode().addCommands("++[ > +++++[>+>+++<<-]>[>+<-]<[+-+-]> +++ << -]");
         Brainalyze analyze = Brainalyze.analyze(brain);
+        analyze.print()
         Map<Integer, List<Integer>> counts = analyze.getWhileLoopCounts();
         assert counts.size() == 4
         assert counts[2] == [2]
