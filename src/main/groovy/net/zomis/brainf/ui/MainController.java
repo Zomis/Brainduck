@@ -13,6 +13,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import net.zomis.brainf.BrainF;
 import net.zomis.brainf.BrainFCommand;
 import net.zomis.brainf.analyze.Brainalyze;
@@ -36,8 +37,9 @@ public class MainController implements Initializable {
 	private TextArea memory;
 	
 	private final BrainfuckRunner brain = BrainF.createUsingSystemInputWithMemorySize(0x1000);
-	
-	public MainController() {
+    private Stage stage;
+
+    public MainController() {
 	}
 	
 	private ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
@@ -112,6 +114,9 @@ public class MainController implements Initializable {
         this.codeArea = new CodeArea();
         codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
         codeArea.replaceText(0, 0, GroovyRead.read("fizzbuzz.bf"));
+        codeArea.setOnKeyReleased(e -> {
+            stage.setTitle(String.format("BrainDuck pos %d col %d", codeArea.getCaretPosition(), codeArea.getCaretColumn()));
+        });
         codeArea.setPrefWidth(600);
         codeArea.setPrefHeight(600);
         AnchorPane.setTopAnchor(codeArea, 0d);
@@ -120,5 +125,9 @@ public class MainController implements Initializable {
         AnchorPane.setBottomAnchor(codeArea, 0d);
         codePane.getChildren().add(codeArea);
 	}
-	
+
+    public void initStage(Stage stage) {
+        this.stage = stage;
+    }
+
 }

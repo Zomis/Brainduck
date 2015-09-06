@@ -12,7 +12,10 @@ public class BrainFDebug extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		
         primaryStage.setTitle("BrainDuck");
-        Parent root = FXMLLoader.load(MainController.class.getResource("brainf.fxml"));
+        FXMLLoader loader = new FXMLLoader(MainController.class.getResource("brainf.fxml"));
+        Parent root = loader.load();
+        MainController controller = loader.getController();
+        controller.initStage(primaryStage);
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.centerOnScreen();
