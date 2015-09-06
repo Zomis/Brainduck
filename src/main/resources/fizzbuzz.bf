@@ -60,7 +60,7 @@ END OF SETUP
 ALGORITHM START
 
 +[-<+]-         Go backwards to the 255 mark
-<
+<<
 
 [
  +[->+]-        Go forward to the start position 255 marker
