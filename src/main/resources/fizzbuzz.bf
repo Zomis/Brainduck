@@ -120,7 +120,7 @@ Use the boolean to check whether or not to print the number
 <]>.[-]]<<++++++[-<++++++++>]<.[-]<<[-<+>]
          End of StackOverflow code
          
-         +[-<+]->>    Locate the 255 marker and goto the boolean
+         cursor is now located on the the boolean
   ]+
   
   Boolean is always one here so print new line
