@@ -11,12 +11,16 @@ class Brainalyze implements BrainfuckListener {
     private final int[] times
     private final int[] actionsPerCommand
     private final int[] codeCommands
+    private final long[] memoryRead
+    private final long[] memoryWrite
     private final Map<Integer, List<Integer>> whileLoopCounts = new HashMap<>()
 
     Brainalyze(BrainfuckRunner runner) {
         this.times = new int[runner.code.commandCount];
         this.actionsPerCommand = new int[BrainFCommand.values().length];
         this.codeCommands = new int[BrainFCommand.values().length];
+        this.memoryRead = new long[runner.memory.memorySize]
+        this.memoryWrite = new long[runner.memory.memorySize]
     }
 
     static Brainalyze analyze(BrainfuckRunner brain) {
@@ -58,6 +62,12 @@ class Brainalyze implements BrainfuckListener {
             printCompactList(entry.value)
             println()
         })
+        println()
+        println 'Memory reads'
+        println memoryRead
+        println()
+        println 'Memory writes'
+        println memoryWrite
         println()
     }
 
@@ -112,6 +122,19 @@ class Brainalyze implements BrainfuckListener {
     void beforePerform(BrainfuckRunner runner, BrainFCommand command) {
         this.times[runner.code.commandIndex]++
         actionsPerCommand[command.ordinal()]++
+
+        switch (command) {
+            case BrainFCommand.ADD:
+            case BrainFCommand.SUBTRACT:
+            case BrainFCommand.READ:
+                memoryWrite[runner.memory.memoryIndex]++
+                break
+            case BrainFCommand.WHILE:
+            case BrainFCommand.END_WHILE:
+            case BrainFCommand.WRITE:
+                memoryRead[runner.memory.memoryIndex]++
+                break
+        }
 
         if (command == BrainFCommand.WHILE) {
             whileLoopCounts.putIfAbsent(runner.code.commandIndex, new ArrayList<Integer>())
