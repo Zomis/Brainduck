@@ -36,7 +36,7 @@ class BrainfuckMemory {
         }
     }
 
-    public byte[] getMemoryArray(int fromIndex, int length) {
+    public int[] getMemoryArray(int fromIndex, int length) {
         return Arrays.copyOfRange(memory, fromIndex, fromIndex + length);
     }
 

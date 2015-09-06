@@ -13,6 +13,7 @@ class Brainalyze implements BrainfuckListener {
     private final int[] codeCommands
     private final long[] memoryRead
     private final long[] memoryWrite
+    private int[] tapeValues
     private final Map<Integer, List<Integer>> whileLoopCounts = new HashMap<>()
 
     Brainalyze(BrainfuckRunner runner) {
@@ -21,12 +22,15 @@ class Brainalyze implements BrainfuckListener {
         this.codeCommands = new int[BrainFCommand.values().length];
         this.memoryRead = new long[runner.memory.memorySize]
         this.memoryWrite = new long[runner.memory.memorySize]
+        this.tapeValues = new long[runner.memory.memorySize]
     }
 
     static Brainalyze analyze(BrainfuckRunner brain) {
         Brainalyze analyze = new Brainalyze(brain)
         brain.setListener(analyze)
         brain.run()
+
+        analyze.tapeValues = brain.memory.getMemoryArray(0, brain.memory.memorySize)
 
         int commandCount = brain.code.commandCount
         for (int i = 0; i < commandCount; i++) {
@@ -63,6 +67,20 @@ class Brainalyze implements BrainfuckListener {
             println()
         })
         println()
+        println 'Tape summary'
+        for (int i = 0; i < tapeValues.length; i++) {
+            int value = tapeValues[i]
+            String hexAddress = String.format("%04X", i)
+            String decAddress = String.format("%06d", i)
+
+            boolean space = value == 13 || value == 10 || value == 9 // if tab or new line
+            char chrValue = space ? 32 : tapeValues[i];
+            String decValue = String.format("%6d", value);
+
+            String reads = String.format("%6d", memoryRead[i]);
+            String writes = String.format("%6d", memoryWrite[i]);
+            println "Hex $hexAddress\tDec $decAddress\tValue $decValue '$chrValue' \tReads: $reads\tWrites: $writes"
+        }
         println 'Memory reads'
         println memoryRead
         println()

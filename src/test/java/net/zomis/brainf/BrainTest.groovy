@@ -64,6 +64,14 @@ public class BrainTest {
     }
 
     @Test
+    public void allCharacters() {
+        BrainfuckRunner brain = BrainF.createWithDefaultSize()
+        brain.code.addCommands(">>>>+++++++++++++++[<+++++++++++++++++>-]<[->[+>>]+[<<]>]")
+        Brainalyze analyze = Brainalyze.analyze(brain)
+        analyze.print()
+    }
+
+    @Test
     public void input() {
         BrainfuckRunner brain = BrainF.createFromCodeAndInput(BrainfuckMemory.DEFAULT_MEMORY_SIZE, "+++,.", "a");
         brain.run();
