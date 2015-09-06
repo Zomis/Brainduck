@@ -14,6 +14,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import net.zomis.brainf.BrainF;
 import net.zomis.brainf.BrainFCommand;
+import net.zomis.brainf.analyze.Brainalyze;
 import net.zomis.brainf.model.BrainfuckRunner;
 
 public class MainController implements Initializable {
@@ -60,8 +61,14 @@ public class MainController implements Initializable {
 		}
 		update();
 	}
-	
-	@FXML
+
+    @FXML
+    private void analyze(ActionEvent event) {
+        Brainalyze analyze = Brainalyze.analyze(brain);
+        analyze.print();
+    }
+
+    @FXML
 	private void step(ActionEvent event) {
 		BrainFCommand comm;
 		do {

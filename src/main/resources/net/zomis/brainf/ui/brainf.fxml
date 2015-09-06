@@ -15,6 +15,7 @@
                   <Button mnemonicParsing="false" onAction="#step" text="Run Step" />
                   <Button mnemonicParsing="false" onAction="#repeat" text="Repeat" />
                   <Button mnemonicParsing="false" onAction="#runToCursor" text="Run to cursor" />
+                  <Button mnemonicParsing="false" onAction="#analyze" text="Analyze" />
                </children>
             </HBox>
             <SplitPane dividerPositions="0.27625" prefHeight="200.0" prefWidth="200.0">

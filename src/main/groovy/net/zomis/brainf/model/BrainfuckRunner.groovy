@@ -8,6 +8,13 @@ class BrainfuckRunner {
     BrainfuckCode code = new BrainfuckCode()
     private final InputStream input;
     private final StringBuilder output = new StringBuilder();
+    private BrainfuckListener listener = new BrainfuckListener() {
+        @Override
+        void beforePerform(BrainfuckRunner runner, BrainFCommand command) {}
+
+        @Override
+        void afterPerform(BrainfuckRunner runner, BrainFCommand command) {}
+    }
 
     BrainfuckRunner(int memorySize, String code, InputStream input) {
         this(memorySize, input);
@@ -46,6 +53,7 @@ class BrainfuckRunner {
     }
 
     void perform(BrainFCommand command) {
+        listener.beforePerform(this, command)
         switch (command) {
             case BrainFCommand.ADD:
                 memory.changeMemory(1);
@@ -83,6 +91,11 @@ class BrainfuckRunner {
             default:
                 break;
         }
+        listener.afterPerform(this, command)
+    }
+
+    void setListener(BrainfuckListener listener) {
+        this.listener = listener
     }
 
 }

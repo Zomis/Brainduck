@@ -51,4 +51,13 @@ class BrainfuckCode {
     BrainFCommand getNextCommand() {
         commands.get(commandIndex)
     }
+
+    int getCommandCount() {
+        commands.size()
+    }
+
+    BrainFCommand getCommandAt(int index) {
+        commands.get(index)
+    }
+
 }
