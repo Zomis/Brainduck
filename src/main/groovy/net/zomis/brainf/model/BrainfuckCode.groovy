@@ -8,10 +8,15 @@ class BrainfuckCode {
     int commandIndex
 
     @PackageScope void gotoMatching(BrainFCommand decrease, BrainFCommand increase, int direction) {
+        commandIndex = findMatching(decrease, increase, direction);
+    }
+
+    int findMatching(BrainFCommand decrease, BrainFCommand increase, int direction) {
+        int index = commandIndex
         int matching = 1;
         while (true) {
-            commandIndex += direction;
-            BrainFCommand current = commands.get(commandIndex);
+            index += direction;
+            BrainFCommand current = commands.get(index);
 
             if (current == decrease) {
                 matching--;
@@ -23,6 +28,7 @@ class BrainfuckCode {
                 matching++;
             }
         }
+        index
     }
 
     void addCommands(String string) {
