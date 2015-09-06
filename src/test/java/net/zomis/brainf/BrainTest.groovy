@@ -5,10 +5,6 @@ import net.zomis.brainf.model.BrainfuckMemory
 import net.zomis.brainf.model.BrainfuckRunner
 import org.junit.Test
 
-import static org.junit.Assert.assertArrayEquals
-import static org.junit.Assert.assertEquals
-import static org.junit.Assert.fail
-
 public class BrainTest {
 
     @Test
@@ -20,13 +16,13 @@ public class BrainTest {
         brain.getCode().addCommands("+++[---         Make sure that we are not at 253 (end)");
         brain.getCode().addCommands("++[--<++]--	");
 
-        assertEquals(BrainFCommand.NEXT, brain.step());
-        assertEquals(BrainFCommand.ADD, brain.step());
-        assertEquals(BrainFCommand.NEXT, brain.step());
-        assertEquals(BrainFCommand.WHILE, brain.step());
+        assert brain.step() == BrainFCommand.NEXT
+        assert brain.step() == BrainFCommand.ADD
+        assert brain.step() == BrainFCommand.NEXT
+        assert brain.step() == BrainFCommand.WHILE
 
-        assertEquals(6, brain.getCode().getCommandIndex());
-        assertEquals(BrainFCommand.ADD, brain.step());
+        assert brain.code.commandIndex == 6
+        assert brain.step() == BrainFCommand.ADD
     }
 
     @Test
@@ -34,8 +30,7 @@ public class BrainTest {
         BrainfuckRunner brain = BrainF.createWithDefaultSize();
         brain.getCode().addCommands("++[>+++<-]>>>");
         brain.run();
-        assertArrayEquals([ 0, 6, 0, 0, 0, 0, 0, 0, 0, 0 ] as byte[],
-                brain.getMemory().getMemoryArray(0, 10));
+        assert [ 0, 6, 0, 0, 0, 0, 0, 0, 0, 0 ] == brain.getMemory().getMemoryArray(0, 10)
     }
 
     @Test
@@ -57,7 +52,7 @@ public class BrainTest {
         BrainfuckRunner brain = BrainF.createWithDefaultSize();
         brain.getCode().addCommands("++++++[>++++++++++>++++<<-]>+++++>++[-<.+>]");
         brain.run();
-        assertEquals("ABCDEFGHIJKLMNOPQRSTUVWXYZ", brain.getOutput());
+        assert brain.getOutput() == "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     }
 
     @Test
@@ -72,7 +67,7 @@ public class BrainTest {
     public void input() {
         BrainfuckRunner brain = BrainF.createFromCodeAndInput(BrainfuckMemory.DEFAULT_MEMORY_SIZE, "+++,.", "a");
         brain.run();
-        assertEquals("a", brain.getOutput());
+        assert "a" == brain.getOutput()
     }
 
     @Test
@@ -80,15 +75,14 @@ public class BrainTest {
         BrainfuckRunner abc = BrainF.createWithDefaultSize();
         abc.getCode().addCommands("+>++>+++<");
         abc.run();
-        assertEquals(9, abc.getCode().getCommandIndex());
-        assertEquals(1, abc.getMemory().getMemoryIndex());
-        assertEquals(2, abc.getMemory().getMemory());
+        assert 9 == abc.getCode().getCommandIndex()
+        assert 1 == abc.getMemory().getMemoryIndex()
+        assert 2 == abc.getMemory().getMemory()
         abc.perform(BrainFCommand.PREVIOUS);
-        assertEquals(1, abc.getMemory().getMemory());
+        assert 1 == abc.getMemory().getMemory()
         abc.perform(BrainFCommand.NEXT);
         abc.perform(BrainFCommand.NEXT);
-        assertEquals(3, abc.getMemory().getMemory());
-
+        assert 3 == abc.getMemory().getMemory()
     }
 
 }
