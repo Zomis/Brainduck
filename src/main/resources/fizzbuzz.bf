@@ -1,5 +1,3 @@
-++++++++++[>++++++++++<-]> Initialize 100 (number of times to perform FizzBuzz)
-
 TAPE MEANINGS
 255 Start
 254 A Fizz or Buzz text to print
@@ -22,6 +20,8 @@ Some empty space for converting counter to string
     Zero
 254 and 253 marker to indicate the end of sequences
 
+++++++++++[>++++++++++<-]> Initialize 100 (number of times to perform FizzBuzz)
+
 
 >++++++++++                   Line break
 >-                            Start marker
@@ -29,6 +29,7 @@ Some empty space for converting counter to string
 
 
 SETUP Create the Fizz and Buzz sequences on the tape
+  without having to write plus more than 65 times for every character
 
 FIZZ
 -->                               Create indicator
@@ -99,7 +100,7 @@ ALGORITHM START
 		 ]
 	 -->
 	 
-	 +++ # Detect if we are at the 253 end
+	 +++ Detect if we are at the 253 end
 	 ]
   ---
 
