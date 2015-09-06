@@ -81,7 +81,7 @@ ALGORITHM START
 	 If current marker is NOT zero
 	 	 [
 		     <<++                Go left to value 252 and change to 254
-             [>]                 Position to a place that is zero to avoid repeat
+             [>]                 Go to a zero to avoid repeat in case there is a 254 value in the string
              ++[-->++]-- <       Find NEXT 254 marker and stop right before it
      	 ]
 	 
