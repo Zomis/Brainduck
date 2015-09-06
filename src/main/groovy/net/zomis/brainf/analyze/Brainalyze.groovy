@@ -68,6 +68,7 @@ class Brainalyze implements BrainfuckListener {
         })
         println()
         println 'Tape summary'
+        int totalUsed = 0
         for (int i = 0; i < tapeValues.length; i++) {
             int value = tapeValues[i]
             String hexAddress = String.format("%04X", i)
@@ -80,7 +81,12 @@ class Brainalyze implements BrainfuckListener {
             String reads = String.format("%6d", memoryRead[i]);
             String writes = String.format("%6d", memoryWrite[i]);
             println "Hex $hexAddress\tDec $decAddress\tValue $decValue '$chrValue' \tReads: $reads\tWrites: $writes"
+            if (memoryRead[i] > 0 || memoryWrite[i] > 0) {
+                totalUsed++
+            }
         }
+        println "Total memory used = $totalUsed"
+        println()
         println 'Memory reads'
         println memoryRead
         println()
