@@ -60,7 +60,26 @@ public class BrainTest {
         BrainfuckRunner brain = BrainF.createWithDefaultSize();
         brain.getCode().addCommands(BrainfuckRunner.classLoader.getResource('fizzbuzz.bf').text);
         Brainalyze analyze = Brainalyze.analyze(brain)
+        assert analyze.getActionsForCommand(BrainFCommand.WRITE) == 413
+        assert analyze.getActionsForCommand(BrainFCommand.WRITE) == brain.output.length()
+        assert brain.output == fizzBuzzString(100)
         analyze.print()
+    }
+
+    static String fizzBuzzString(int max) {
+        StringBuilder str = new StringBuilder()
+        for (int i = 1; i <= max; i++) {
+            if (i % 15 == 0) {
+                str.append('FizzBuzz\n')
+            } else if (i % 5 == 0) {
+                str.append('Buzz\n')
+            } else if (i % 3 == 0) {
+                str.append('Fizz\n')
+            } else {
+                str.append("$i\n")
+            }
+        }
+        str.toString()
     }
 
     @Test

@@ -197,4 +197,8 @@ class Brainalyze implements BrainfuckListener {
         return this.whileLoopCounts
     }
 
+    int getActionsForCommand(BrainFCommand command) {
+        this.actionsPerCommand[command.ordinal()]
+    }
+
 }
