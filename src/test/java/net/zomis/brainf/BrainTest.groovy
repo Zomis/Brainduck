@@ -60,7 +60,16 @@ public class BrainTest {
         BrainfuckRunner brain = BrainF.createWithDefaultSize();
         brain.getCode().addCommands(BrainfuckRunner.classLoader.getResource('fizzbuzz.bf').text);
         Brainalyze analyze = Brainalyze.analyze(brain)
-        assert analyze.getActionsForCommand(BrainFCommand.WRITE) == 413
+        assert analyze.getActionsForCommand(BrainFCommand.WRITE) == brain.output.length()
+        assert brain.output == fizzBuzzString(100)
+        analyze.print()
+    }
+
+    @Test
+    public void fizzBuzzMin() {
+        BrainfuckRunner brain = BrainF.createWithDefaultSize();
+        brain.getCode().addCommands(BrainfuckRunner.classLoader.getResource('fizzbuzz-min.bf').text);
+        Brainalyze analyze = Brainalyze.analyze(brain)
         assert analyze.getActionsForCommand(BrainFCommand.WRITE) == brain.output.length()
         assert brain.output == fizzBuzzString(100)
         analyze.print()
