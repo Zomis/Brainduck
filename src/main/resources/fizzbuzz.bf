@@ -31,27 +31,38 @@ Some empty space for converting counter to string
 SETUP Create the Fizz and Buzz sequences on the tape
   without having to write plus more than 65 times for every character
 
-FIZZ
+Fizz
 -->                               Create indicator
-+++++++[->++++++++++<]>           Create F
-[->+>+>+>+<<<<]                   Copy 4x F
-+++                               Set modulo operator to 3
->>+++>>>                          Adjust second letter to I
-++++++++[-<++++<++++<++++>>>]     Make the last three lowercase to Fiff
-+++++[-<++++<++++>>]              Modify the last two F to Z by adding 20
->>                                Leave two zeros at the end
-
-BUZZ
--->                               Create indicator
-++++++[->+++++++++++<]>           Create B
-[->+>+>+>+<<<<]                   Copy 4x B
-+++++                             Set modulo operator to 5
->>+>++++++>++++++>                Adjust BBBB to BCHH
-++++++++[-<++++<++++<++++>>>]     Make lower case
-++++++[-<+++<+++<+++>>>]          Adjust Bchh to Buzz
->>                                Leave two zeros at the end
+>+++++ +++++ [-
+>+++++ ++
+>+++++ +++++
+>+++++ +++++ ++
+>+++++ +++++ ++
+<<<<]
+>
+>+++++
+>++
+>++
+[<]+++                             Set modulo value to 3
+[>]>
 
 
+Buzz = 66 117 122 122
+-->>                               Create indicator
++++++ +++++ [-
+> +++++ ++                         10 * 7 = 70
+> +++++ +++++ ++                   10 * 12 = 120
+> +++++ +++++ ++
+> +++++ +++++ ++
+<<<<]
+>----                              70 minus 4 = 66
+>---                               120 minus 3 = 117
+>++                                120 plus 2 = 122
+>++
+[<]+++++                           Set modulo value to 3
+[>]
+
+>
 
 -->---          Mark the ending with 254 and 253
 
