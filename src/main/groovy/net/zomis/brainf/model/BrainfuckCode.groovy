@@ -55,6 +55,9 @@ class BrainfuckCode {
     }
 
     BrainFCommand getNextCommand() {
+        if (!hasMoreCommands()) {
+            return null;
+        }
         commands.get(commandIndex)
     }
 

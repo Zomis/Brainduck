@@ -37,10 +37,10 @@ class BrainfuckRunner {
     }
 
     BrainFCommand step() {
-        if (!code.hasMoreCommands()) {
-            return null;
-        }
         BrainFCommand command = code.getNextCommand();
+        if (command == null) {
+            return null
+        }
         perform(command);
         code.commandIndex++;
         return command;
