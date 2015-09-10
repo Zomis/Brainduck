@@ -21,7 +21,7 @@ description = "Brainfuck Java interpreter and utility"
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-mainClassName = 'net.zomis.brainf.ui.BrainFDebug'
+mainClassName = 'net.zomis.brainf.ui.Brainduck'
 
 
 
