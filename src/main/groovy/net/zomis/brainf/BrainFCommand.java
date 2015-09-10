@@ -27,8 +27,12 @@ public enum BrainFCommand {
 	private BrainFCommand(char ch) {
 		this.ch = ch;
 	}
-	
-	public static BrainFCommand getCommand(char ch) {
+
+    public boolean isLoop() {
+        return this == WHILE || this == END_WHILE;
+    }
+
+    public static BrainFCommand getCommand(char ch) {
 		return commands.getOrDefault(ch, NONE);
 	}
 	
