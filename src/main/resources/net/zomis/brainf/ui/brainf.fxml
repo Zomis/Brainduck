@@ -9,14 +9,21 @@
    <children>
       <MenuBar>
         <menus>
-          <Menu mnemonicParsing="false" text="File">
+          <Menu text="_File">
             <items>
               <MenuItem mnemonicParsing="false" text="Close" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
+          <Menu text="_Edit">
             <items>
               <MenuItem mnemonicParsing="false" text="Delete" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="true" text="_Run/Debug">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Step" onAction="#step">
+                 <accelerator><KeyCodeCombination alt="UP" code="F7" control="UP" meta="UP" shift="UP" shortcut="UP" /></accelerator>
+              </MenuItem>
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
