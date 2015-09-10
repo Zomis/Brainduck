@@ -31,9 +31,10 @@ public class MainController implements Initializable {
     @FXML private TabPane tabs;
 
     private TabController currentTab;
-    private Stage stage;
+    private final Stage stage;
 
-    public MainController() {
+    public MainController(Stage stage) {
+        this.stage = stage;
 	}
 	
 	private ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
@@ -107,10 +108,11 @@ public class MainController implements Initializable {
         FXMLLoader loader = new FXMLLoader(TabController.class.getResource("tabcontent.fxml"));
         try {
             Parent root = loader.load();
-            TabController controller = loader.getController();
-//            controller.initStage(primaryStage);
             Tab tab = new Tab("untitled1");
             tab.setContent(root);
+            TabController controller = loader.getController();
+            System.out.println(stage);
+            controller.setStage(stage);
             currentTab = controller;
             tabs.getTabs().add(tab);
         } catch (IOException e) {
@@ -118,9 +120,5 @@ public class MainController implements Initializable {
             tabs.getTabs().add(new Tab(e.getMessage()));
         }
 	}
-
-    public void initStage(Stage stage) {
-        this.stage = stage;
-    }
 
 }
