@@ -17,6 +17,7 @@ public class Brainduck extends Application {
         loader.setController(controller);
         Parent root = loader.load();
         Scene scene = new Scene(root);
+        scene.getStylesheets().add(MainController.class.getResource("styles.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.centerOnScreen();
         primaryStage.show();
