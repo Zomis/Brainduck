@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<SplitPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+   dividerPositions="0.85" orientation="VERTICAL" prefHeight="600.0" prefWidth="800.0" fx:controller="net.zomis.brainf.ui.TabController">
+    <items>
+        <SplitPane dividerPositions="0.27625" prefHeight="200.0" prefWidth="200.0">
+            <items>
+                <ListView fx:id="memoryList" prefHeight="200.0" prefWidth="200.0" />
+                <AnchorPane fx:id="codePane" prefHeight="Infinity" prefWidth="Infinity" />
+            </items>
+        </SplitPane>
+        <TextArea fx:id="output" text="Output" />
+    </items>
+</SplitPane>

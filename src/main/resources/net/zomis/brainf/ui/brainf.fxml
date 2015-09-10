@@ -3,27 +3,40 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<SplitPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.zomis.brainf.ui.MainController">
-   <items>
-      <SplitPane dividerPositions="0.04666666666666667, 0.85" orientation="VERTICAL" prefHeight="600.0" prefWidth="800.0">
-         <items>
-            <HBox prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Button mnemonicParsing="false" onAction="#saveCode" text="Save code" />
-                  <Button mnemonicParsing="false" onAction="#step" text="Run Step" />
-                  <Button mnemonicParsing="false" onAction="#repeat" text="Repeat" />
-                  <Button mnemonicParsing="false" onAction="#runToCursor" text="Run to cursor" />
-                  <Button mnemonicParsing="false" onAction="#analyze" text="Analyze" />
-               </children>
-            </HBox>
-            <SplitPane dividerPositions="0.27625" prefHeight="200.0" prefWidth="200.0">
-               <items>
-                  <ListView fx:id="memoryList" prefHeight="200.0" prefWidth="200.0" />
-                  <AnchorPane fx:id="codePane" prefHeight="Infinity" prefWidth="Infinity" />
-               </items>
-            </SplitPane>
-            <TextArea fx:id="output" text="Output" />
-         </items>
-      </SplitPane>
-   </items>
-</SplitPane>
+
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.zomis.brainf.ui.MainController">
+   <children>
+      <MenuBar>
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Close" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edit">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Delete" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <HBox prefHeight="20.0" prefWidth="200.0">
+           <children>
+               <Button mnemonicParsing="false" onAction="#saveCode" text="Save code" />
+               <Button mnemonicParsing="false" onAction="#step" text="Run Step" />
+               <Button mnemonicParsing="false" onAction="#repeat" text="Repeat" />
+               <Button mnemonicParsing="false" onAction="#runToCursor" text="Run to cursor" />
+               <Button mnemonicParsing="false" onAction="#analyze" text="Analyze" />
+           </children>
+      </HBox>
+      <TabPane fx:id="tabs" prefHeight="768.0" prefWidth="1024.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+        </tabs>
+      </TabPane>
+   </children>
+</VBox>
