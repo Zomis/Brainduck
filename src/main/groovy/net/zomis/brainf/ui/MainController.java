@@ -13,22 +13,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.TextArea;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import net.zomis.brainf.BrainF;
-import net.zomis.brainf.BrainFCommand;
 import net.zomis.brainf.analyze.Brainalyze;
 import net.zomis.brainf.model.BrainfuckRunner;
-import net.zomis.brainf.ui.run.RunStrategy;
-import net.zomis.brainf.ui.run.SingleStepStrategy;
-import net.zomis.brainf.ui.run.StepContinueStrategy;
-import net.zomis.brainf.ui.run.StepOutStrategy;
-import org.fxmisc.richtext.CodeArea;
-import org.fxmisc.richtext.LineNumberFactory;
+import net.zomis.brainf.model.run.RunStrategy;
+import net.zomis.brainf.model.run.SingleStepStrategy;
+import net.zomis.brainf.model.run.StepContinueStrategy;
+import net.zomis.brainf.model.run.StepOutStrategy;
 
 public class MainController implements Initializable {
 
@@ -67,11 +60,10 @@ public class MainController implements Initializable {
 	}
 
     private void runWith(RunStrategy strategy) {
-        boolean repeat = true;
-        while (repeat) {
-            repeat = strategy.next(brain());
+        int count = brain().run(strategy);
+        if (count == 0) {
+            System.out.println(strategy + " not started");
         }
-
         if (Platform.isFxApplicationThread()) {
             update();
         } else {

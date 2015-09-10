@@ -3,6 +3,8 @@ package net.zomis.brainf
 import net.zomis.brainf.analyze.Brainalyze
 import net.zomis.brainf.model.BrainfuckMemory
 import net.zomis.brainf.model.BrainfuckRunner
+import net.zomis.brainf.model.run.StepContinueStrategy
+import net.zomis.brainf.model.run.StepOutStrategy
 import org.junit.Test
 
 public class BrainTest {
@@ -73,6 +75,35 @@ public class BrainTest {
         assert analyze.getActionsForCommand(BrainFCommand.WRITE) == brain.output.length()
         assert brain.output == fizzBuzzString(100)
         analyze.print()
+    }
+
+    @Test
+    public void stepContinueStrategy() {
+        BrainfuckRunner brain = BrainF.createWithDefaultSize();
+        brain.getCode().addCommands("+++[>+<-]-");
+        assert brain.step() == BrainFCommand.ADD
+        assert brain.step() == BrainFCommand.ADD
+        assert brain.step() == BrainFCommand.ADD
+        assert brain.run(new StepContinueStrategy()) == 0
+        assert brain.step() == BrainFCommand.WHILE
+        int count = brain.run(new StepContinueStrategy())
+        assert count == 5
+        assert brain.memory.getMemory(1) == 1
+        assert brain.code.nextCommand == BrainFCommand.NEXT
+    }
+
+    @Test
+    public void stepOutStrategy() {
+        BrainfuckRunner brain = BrainF.createWithDefaultSize();
+        brain.getCode().addCommands("+++[>+<-]-");
+        assert brain.step() == BrainFCommand.ADD
+        assert brain.step() == BrainFCommand.ADD
+        assert brain.step() == BrainFCommand.ADD
+        assert brain.run(new StepOutStrategy()) == 0
+        assert brain.step() == BrainFCommand.WHILE
+        assert brain.run(new StepOutStrategy()) == 15
+        assert brain.memory.getMemory(1) == 3
+        assert brain.code.nextCommand == BrainFCommand.SUBTRACT
     }
 
     static String fizzBuzzString(int max) {

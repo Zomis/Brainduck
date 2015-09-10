@@ -1,9 +1,14 @@
-package net.zomis.brainf.ui.run
+package net.zomis.brainf.model.run
 
 import net.zomis.brainf.BrainFCommand
 import net.zomis.brainf.model.BrainfuckRunner
 
 class SingleStepStrategy implements RunStrategy {
+
+    @Override
+    boolean start(BrainfuckRunner runner) {
+        return true
+    }
 
     @Override
     boolean next(BrainfuckRunner runner) {

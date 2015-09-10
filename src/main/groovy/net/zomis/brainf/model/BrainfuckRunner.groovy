@@ -1,6 +1,7 @@
 package net.zomis.brainf.model
 
 import net.zomis.brainf.BrainFCommand
+import net.zomis.brainf.model.run.RunStrategy
 
 class BrainfuckRunner {
 
@@ -98,4 +99,13 @@ class BrainfuckRunner {
         this.listener = listener
     }
 
+    int run(RunStrategy strategy) {
+        int count = 0;
+        boolean repeat = strategy.start(this);
+        while (repeat) {
+            count++
+            repeat = strategy.next(this)
+        }
+        count
+    }
 }

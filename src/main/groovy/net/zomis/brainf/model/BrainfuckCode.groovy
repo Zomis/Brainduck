@@ -16,8 +16,10 @@ class BrainfuckCode {
         int matching = 1;
         while (true) {
             index += direction;
-            BrainFCommand current = commands.get(index);
-
+            BrainFCommand current = getCommandAt(index);
+            if (current == null) {
+                return -1
+            }
             if (current == decrease) {
                 matching--;
                 if (matching == 0) {
@@ -66,6 +68,9 @@ class BrainfuckCode {
     }
 
     BrainFCommand getCommandAt(int index) {
+        if (index < 0 || index >= commands.size()) {
+            return null
+        }
         commands.get(index)
     }
 
