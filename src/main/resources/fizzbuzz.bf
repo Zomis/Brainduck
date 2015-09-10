@@ -39,12 +39,12 @@ Fizz
 >+++++ +++++ ++
 >+++++ +++++ ++
 <<<<]
++++                                Set modulo value to 3
 >
 >+++++
 >++
 >++
-[<]+++                             Set modulo value to 3
-[>]>
+>>
 
 
 Buzz = 66 117 122 122
@@ -55,14 +55,12 @@ Buzz = 66 117 122 122
 > +++++ +++++ ++
 > +++++ +++++ ++
 <<<<]
++++++                              Set modulo value to 5
 >----                              70 minus 4 = 66
 >---                               120 minus 3 = 117
 >++                                120 plus 2 = 122
 >++
-[<]+++++                           Set modulo value to 3
-[>]
-
->
+>>
 
 -->---          Mark the ending with 254 and 253
 
