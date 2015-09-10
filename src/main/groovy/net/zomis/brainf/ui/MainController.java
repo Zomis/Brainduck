@@ -23,6 +23,10 @@ import net.zomis.brainf.BrainF;
 import net.zomis.brainf.BrainFCommand;
 import net.zomis.brainf.analyze.Brainalyze;
 import net.zomis.brainf.model.BrainfuckRunner;
+import net.zomis.brainf.ui.run.RunStrategy;
+import net.zomis.brainf.ui.run.SingleStepStrategy;
+import net.zomis.brainf.ui.run.StepContinueStrategy;
+import net.zomis.brainf.ui.run.StepOutStrategy;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 
@@ -47,6 +51,7 @@ public class MainController implements Initializable {
 //		}
 		exec.scheduleWithFixedDelay(() -> this.step(null), 100, 100, TimeUnit.MILLISECONDS);
 	}
+
 	@FXML
 	private void runToCursor(ActionEvent event) {
 		int index = currentTab.getCodeArea().getCaretPosition();
@@ -58,21 +63,29 @@ public class MainController implements Initializable {
 
     @FXML
 	private void step(ActionEvent event) {
-        BrainFCommand comm;
+        runWith(new SingleStepStrategy());
+	}
+
+    private void runWith(RunStrategy strategy) {
         boolean repeat = true;
         while (repeat) {
-            comm = brain().step();
-            if (comm != BrainFCommand.NONE) {
-                System.out.println("Step: " + comm);
-            }
-            repeat = comm == BrainFCommand.NONE;
+            repeat = strategy.next(brain());
         }
 
         if (Platform.isFxApplicationThread()) {
             update();
+        } else {
+            Platform.runLater(() -> update());
         }
-        else Platform.runLater(() -> update());
-	}
+    }
+
+    @FXML private void stepOut(ActionEvent event) {
+        runWith(new StepOutStrategy());
+    }
+
+    @FXML private void stepContinue(ActionEvent event) {
+        runWith(new StepContinueStrategy());
+    }
 
     @FXML private void analyze(ActionEvent event) {
         Brainalyze analyze = Brainalyze.analyze(brain());

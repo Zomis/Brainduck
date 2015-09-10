@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.input.*?>
-<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" >
    <children>
       <MenuBar>
         <menus>
@@ -21,9 +20,15 @@
           </Menu>
           <Menu mnemonicParsing="true" text="_Run/Debug">
             <items>
-              <MenuItem mnemonicParsing="false" text="Step" onAction="#step">
-                 <accelerator><KeyCodeCombination alt="UP" code="F7" control="UP" meta="UP" shift="UP" shortcut="UP" /></accelerator>
-              </MenuItem>
+                <MenuItem text="_Step" onAction="#step">
+                    <accelerator><KeyCodeCombination alt="UP" code="F7" control="UP" meta="UP" shift="UP" shortcut="UP" /></accelerator>
+                </MenuItem>
+                <MenuItem text="Step _Out" onAction="#stepOut">
+                    <accelerator><KeyCodeCombination alt="UP" code="F8" control="UP" meta="UP" shift="DOWN" shortcut="UP" /></accelerator>
+                </MenuItem>
+                <MenuItem text="Step _Continue" onAction="#stepContinue">
+                    <accelerator><KeyCodeCombination alt="UP" code="F8" control="UP" meta="UP" shift="UP" shortcut="UP" /></accelerator>
+                </MenuItem>
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
