@@ -31,7 +31,7 @@ repositories {
 }
 dependencies {
     compile group: 'org.fxmisc.richtext', name: 'richtextfx', version: '0.6.8'
-    compile group: 'org.codehaus.groovy', name: 'groovy-all', version:'2.4.3'
+    compile group: 'org.codehaus.groovy', name: 'groovy-all', version:'2.4.4'
     testCompile group: 'junit', name: 'junit', version:'4.11'
     testCompile group: 'org.loadui', name: 'testFx', version:'3.1.2'
 }
