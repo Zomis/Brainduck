@@ -1,9 +1,9 @@
-package net.zomis.brainf;
+package net.zomis.brainf.model;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public enum BrainFCommand {
+public enum BrainFCommand implements BrainfuckCommand {
 
 	NONE((char) 0),
     NEXT('>'),

@@ -1,8 +1,10 @@
 package net.zomis.brainf.analyze
 
-import net.zomis.brainf.BrainFCommand
+import net.zomis.brainf.model.BrainFCommand
+import net.zomis.brainf.model.BrainfuckCommand
 import net.zomis.brainf.model.BrainfuckListener
 import net.zomis.brainf.model.BrainfuckRunner
+import net.zomis.brainf.model.SpecialCommand
 
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -34,13 +36,13 @@ class Brainalyze implements BrainfuckListener {
 
         int commandCount = brain.code.commandCount
         for (int i = 0; i < commandCount; i++) {
-            BrainFCommand command = brain.code.getCommandAt(i)
+            BrainfuckCommand command = brain.code.getCommandAt(i)
             analyze.codeCommands[command.ordinal()]++
         }
 
         for (int i = 0; i < analyze.times.length; i++) {
             if (analyze.times[i] <= 0) {
-                BrainFCommand command = brain.code.getCommandAt(i)
+                BrainfuckCommand command = brain.code.getCommandAt(i)
                 println "Dead code at $i: $command"
             }
         }
@@ -150,7 +152,11 @@ class Brainalyze implements BrainfuckListener {
     private final Stack<AtomicInteger> enteredLoops = new Stack<>()
 
     @Override
-    void beforePerform(BrainfuckRunner runner, BrainFCommand command) {
+    void beforePerform(BrainfuckRunner runner, BrainfuckCommand cmd) {
+        if (!(cmd instanceof BrainFCommand)) {
+            return
+        }
+        BrainFCommand command = (BrainFCommand) cmd
         this.times[runner.code.commandIndex]++
         actionsPerCommand[command.ordinal()]++
 
@@ -189,7 +195,7 @@ class Brainalyze implements BrainfuckListener {
     }
 
     @Override
-    void afterPerform(BrainfuckRunner runner, BrainFCommand command) {
+    void afterPerform(BrainfuckRunner runner, BrainfuckCommand command) {
 
     }
 

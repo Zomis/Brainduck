@@ -1,6 +1,8 @@
 package net.zomis.brainf
 
 import net.zomis.brainf.analyze.Brainalyze
+import net.zomis.brainf.model.BrainF
+import net.zomis.brainf.model.BrainFCommand
 import net.zomis.brainf.model.BrainfuckMemory
 import net.zomis.brainf.model.BrainfuckRunner
 import net.zomis.brainf.model.run.StepContinueStrategy

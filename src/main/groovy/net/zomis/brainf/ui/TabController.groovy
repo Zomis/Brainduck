@@ -6,8 +6,8 @@ import javafx.scene.control.ListView
 import javafx.scene.control.TextArea
 import javafx.scene.layout.AnchorPane
 import javafx.stage.Stage
-import net.zomis.brainf.BrainF
-import net.zomis.brainf.BrainFCommand
+import net.zomis.brainf.model.BrainF
+import net.zomis.brainf.model.BrainFCommand
 import net.zomis.brainf.model.BrainfuckRunner
 import org.fxmisc.richtext.CodeArea
 import org.fxmisc.richtext.LineNumberFactory

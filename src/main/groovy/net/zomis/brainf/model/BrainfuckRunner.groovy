@@ -1,6 +1,5 @@
 package net.zomis.brainf.model
 
-import net.zomis.brainf.BrainFCommand
 import net.zomis.brainf.model.run.RunStrategy
 
 class BrainfuckRunner {
@@ -11,10 +10,10 @@ class BrainfuckRunner {
     private final StringBuilder output = new StringBuilder();
     private BrainfuckListener listener = new BrainfuckListener() {
         @Override
-        void beforePerform(BrainfuckRunner runner, BrainFCommand command) {}
+        void beforePerform(BrainfuckRunner runner, BrainfuckCommand command) {}
 
         @Override
-        void afterPerform(BrainfuckRunner runner, BrainFCommand command) {}
+        void afterPerform(BrainfuckRunner runner, BrainfuckCommand command) {}
     }
 
     BrainfuckRunner(int memorySize, String code, InputStream input) {
@@ -37,8 +36,8 @@ class BrainfuckRunner {
         }
     }
 
-    BrainFCommand step() {
-        BrainFCommand command = code.getNextCommand();
+    BrainfuckCommand step() {
+        BrainfuckCommand command = code.getNextCommand();
         if (command == null) {
             return null
         }
@@ -53,7 +52,7 @@ class BrainfuckRunner {
         output.setLength(0);
     }
 
-    void perform(BrainFCommand command) {
+    void perform(BrainfuckCommand command) {
         listener.beforePerform(this, command)
         switch (command) {
             case BrainFCommand.ADD:

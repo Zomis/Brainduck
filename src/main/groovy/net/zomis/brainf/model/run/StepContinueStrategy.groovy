@@ -1,6 +1,6 @@
 package net.zomis.brainf.model.run
 
-import net.zomis.brainf.BrainFCommand
+import net.zomis.brainf.model.BrainFCommand
 import net.zomis.brainf.model.BrainfuckRunner
 
 class StepContinueStrategy implements RunStrategy {

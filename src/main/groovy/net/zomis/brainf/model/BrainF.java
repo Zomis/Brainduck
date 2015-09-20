@@ -1,4 +1,4 @@
-package net.zomis.brainf;
+package net.zomis.brainf.model;
 
 import net.zomis.brainf.model.BrainfuckMemory;
 import net.zomis.brainf.model.BrainfuckRunner;

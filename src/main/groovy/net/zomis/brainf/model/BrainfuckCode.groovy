@@ -1,22 +1,27 @@
 package net.zomis.brainf.model
 
 import groovy.transform.PackageScope
-import net.zomis.brainf.BrainFCommand
+
+import java.util.function.Predicate
 
 class BrainfuckCode {
-    private final List<BrainFCommand> commands = new ArrayList<>();
+    private final List<BrainfuckCommand> commands = new ArrayList<>();
     int commandIndex
 
-    @PackageScope void gotoMatching(BrainFCommand decrease, BrainFCommand increase, int direction) {
+    BrainfuckCode() {
+
+    }
+
+    @PackageScope void gotoMatching(BrainfuckCommand decrease, BrainfuckCommand increase, int direction) {
         commandIndex = findMatching(decrease, increase, direction);
     }
 
-    int findMatching(BrainFCommand decrease, BrainFCommand increase, int direction) {
+    int findMatching(BrainfuckCommand decrease, BrainfuckCommand increase, int direction) {
         int index = commandIndex
         int matching = 1;
         while (true) {
             index += direction;
-            BrainFCommand current = getCommandAt(index);
+            BrainfuckCommand current = getCommandAt(index);
             if (current == null) {
                 return -1
             }
@@ -39,7 +44,7 @@ class BrainfuckCode {
                 .forEachOrdered({ addCommand(it) });
     }
 
-    void addCommand(BrainFCommand command) {
+    void addCommand(BrainfuckCommand command) {
         this.commands.add(command)
     }
 
@@ -56,7 +61,7 @@ class BrainfuckCode {
         commandIndex < commands.size()
     }
 
-    BrainFCommand getNextCommand() {
+    BrainfuckCommand getNextCommand() {
         if (!hasMoreCommands()) {
             return null;
         }
@@ -67,7 +72,7 @@ class BrainfuckCode {
         commands.size()
     }
 
-    BrainFCommand getCommandAt(int index) {
+    BrainfuckCommand getCommandAt(int index) {
         if (index < 0 || index >= commands.size()) {
             return null
         }
