@@ -87,6 +87,10 @@ class BrainfuckRunner {
                 char write = (char) memory.getMemory();
                 output.append(write);
                 break;
+            case SpecialCommand.class:
+                SpecialCommand specialCommand = (SpecialCommand) command
+                specialCommand.call(this)
+                break
             case BrainFCommand.NONE:
             default:
                 break;

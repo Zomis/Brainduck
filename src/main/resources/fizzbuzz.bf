@@ -21,7 +21,7 @@ Some empty space for converting counter to string
 254 and 253 marker to indicate the end of sequences
 
 ++++++++++[>++++++++++<-]> Initialize 100 (number of times to perform FizzBuzz)
-
+$ assert value == 100
 
 >++++++++++                   Line break
 >-                            Start marker

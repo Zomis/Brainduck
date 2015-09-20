@@ -37,7 +37,10 @@ class Brainalyze implements BrainfuckListener {
         int commandCount = brain.code.commandCount
         for (int i = 0; i < commandCount; i++) {
             BrainfuckCommand command = brain.code.getCommandAt(i)
-            analyze.codeCommands[command.ordinal()]++
+            if (command instanceof BrainFCommand) {
+                BrainFCommand cmd = command as BrainFCommand
+                analyze.codeCommands[cmd.ordinal()]++
+            }
         }
 
         for (int i = 0; i < analyze.times.length; i++) {

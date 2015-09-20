@@ -12,4 +12,8 @@ class SpecialDelegate {
         runner.memory.getMemory(runner.memory.memoryIndex - count)
     }
 
+    int getValue() {
+        runner.memory.getMemory()
+    }
+
 }
