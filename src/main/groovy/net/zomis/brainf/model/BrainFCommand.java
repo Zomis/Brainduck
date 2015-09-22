@@ -30,16 +30,8 @@ public enum BrainFCommand implements BrainfuckCommand {
     }),
     ADD('+', r -> r.getMemory().changeMemory(1)),
     SUBTRACT('-', r -> r.getMemory().changeMemory(-1)),
-    WHILE('[', r -> {
-        if (r.getMemory().getMemory() == 0) {
-            r.getCode().gotoMatching(BrainFCommand.END_WHILE, BrainFCommand.WHILE, 1);
-        }
-    }),
-    END_WHILE(']', r -> {
-        if (r.getMemory().getMemory() != 0) {
-            r.getCode().gotoMatching(BrainFCommand.WHILE, BrainFCommand.END_WHILE, -1);
-        }
-    });
+    WHILE('[', new BFLoop(1)),
+    END_WHILE(']', new BFLoop(-1));
 
     private final char ch;
     private final BrainfuckCommand perform;
