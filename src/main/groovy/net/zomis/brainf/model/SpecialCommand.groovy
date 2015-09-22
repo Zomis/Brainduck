@@ -10,7 +10,8 @@ class SpecialCommand implements BrainfuckCommand {
         this.code = code
     }
 
-    void call(BrainfuckRunner runner) {
+    @Override
+    void perform(BrainfuckRunner runner) {
         CompilerConfiguration cc = new CompilerConfiguration()
         cc.setScriptBaseClass(DelegatingScript.class.getName())
         GroovyShell sh = new GroovyShell(cc)
