@@ -16,4 +16,8 @@ class SpecialDelegate {
         runner.memory.getMemory()
     }
 
+    int getPosition() {
+        runner.memory.memoryIndex
+    }
+
 }

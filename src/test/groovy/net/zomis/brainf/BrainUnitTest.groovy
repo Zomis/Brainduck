@@ -15,13 +15,23 @@ class BrainUnitTest {
     }
 
     @Test
-    void assertFail() {
+    void assertingValue() {
         addCommands('''
             ++++
             $ assert value == 4
             $ assert value == 5
         ''')
         expectFailure('value == 5')
+    }
+
+    @Test
+    void assertingPosition() {
+        addCommands('''
+            >>
+            $ assert position == 2
+            $ assert position == 1
+        ''')
+        expectFailure('position == 1')
     }
 
     void addCommands(String code) {
