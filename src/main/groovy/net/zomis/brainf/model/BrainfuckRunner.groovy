@@ -4,16 +4,23 @@ import net.zomis.brainf.model.run.RunStrategy
 
 class BrainfuckRunner {
 
-    BrainfuckMemory memory
-    BrainfuckCode code = new BrainfuckCode()
+    final BrainfuckMemory memory
+    final BrainfuckCode code
     final InputStream input;
-    private final StringBuilder output = new StringBuilder();
+    private final StringBuilder output
     private BrainfuckListener listener = new BrainfuckListener() {
         @Override
         void beforePerform(BrainfuckRunner runner, BrainfuckCommand command) {}
 
         @Override
         void afterPerform(BrainfuckRunner runner, BrainfuckCommand command) {}
+    }
+
+    BrainfuckRunner(BrainfuckMemory memory, BrainfuckCode code, InputStream input, StringBuilder output) {
+        this.memory = memory
+        this.code = code
+        this.input = input
+        this.output = output
     }
 
     BrainfuckRunner(int memorySize, String code, InputStream input) {
@@ -24,10 +31,16 @@ class BrainfuckRunner {
     BrainfuckRunner(int memorySize, InputStream input) {
         memory = new BrainfuckMemory(memorySize);
         this.input = input;
+        this.output = new StringBuilder()
+        this.code = new BrainfuckCode()
     }
 
     String getOutput() {
         return output.toString();
+    }
+
+    StringBuilder getOutputBuilder() {
+        return output
     }
 
     void run() {

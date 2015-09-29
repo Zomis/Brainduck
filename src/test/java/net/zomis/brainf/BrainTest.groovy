@@ -80,6 +80,14 @@ public class BrainTest {
     }
 
     @Test
+    public void includeTest() {
+        BrainfuckRunner brain = BrainF.createWithDefaultSize();
+        brain.getCode().addCommands(BrainfuckRunner.classLoader.getResource('include-base.bf').text);
+        brain.run()
+        assert brain.memory.getMemoryArray(0, 5) == [0, 0, 12, 0, 0] as int[]
+    }
+
+    @Test
     public void stepContinueStrategy() {
         BrainfuckRunner brain = BrainF.createWithDefaultSize();
         brain.getCode().addCommands("+++[>+<-]-");

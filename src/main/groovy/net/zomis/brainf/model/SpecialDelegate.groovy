@@ -1,5 +1,12 @@
 package net.zomis.brainf.model
 
+import net.zomis.brainf.model.codeconv.BrainfuckConverter
+import net.zomis.brainf.model.codeconv.GroovySupportConverter
+
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.Paths
+
 class SpecialDelegate {
 
     private BrainfuckRunner runner
@@ -29,6 +36,33 @@ class SpecialDelegate {
 
     ArrayBuilder values(int firstValue) {
         return new ArrayBuilder(firstValue)
+    }
+
+    void include(String name) {
+        List<URL> urls = []
+        if (!name.endsWith('.bf')) {
+            name = name + '.bf'
+        }
+        Path relative = Paths.get(name)
+        if (Files.exists(relative)) {
+            urls << relative.toUri().toURL()
+        }
+        urls << getClass().getResource(name)
+        urls << getClass().classLoader.getResource(name)
+
+        URL url = urls.stream()
+            .peek({url -> println "Checking for $name at $url"})
+            .filter({url -> url != null})
+            .findFirst()
+            .orElseThrow({new RuntimeException("Unable to find file $name")})
+
+        List<BrainfuckCommand> commands = []
+        BrainfuckCodeConverter converter = new GroovySupportConverter(new BrainfuckConverter())
+        converter.convert(url.text, { commands.add it })
+        println 'Subcommand: ' + commands
+
+        def command = new SubCommand(commands)
+        command.perform(runner)
     }
 
 }
