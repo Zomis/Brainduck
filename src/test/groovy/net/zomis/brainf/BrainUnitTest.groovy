@@ -34,6 +34,25 @@ class BrainUnitTest {
         expectFailure('position == 1')
     }
 
+    @Test
+    void assertingMemoryArray() {
+        addCommands('''
+             +
+            >++
+            >+++
+            >++++
+            >+++++
+            >+++++ +
+            $ {
+                def arr = memory 6 offsetBackward 5
+                def exp = values 1 2 3 4 5 6
+                assert arr == exp
+                assert false
+            }
+        ''')
+        expectFailure('assert false')
+    }
+
     void addCommands(String code) {
         runner.code.addCommands(code)
     }

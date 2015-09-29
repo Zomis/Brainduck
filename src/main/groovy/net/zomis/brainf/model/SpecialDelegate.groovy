@@ -20,4 +20,19 @@ class SpecialDelegate {
         runner.memory.memoryIndex
     }
 
+    def memory(int count) {
+        int index = runner.memory.memoryIndex
+        [offset: {int forward ->
+            int[] values = runner.memory.getMemoryArray(index + forward, count)
+            new ArrayBuilder(values)
+        }, offsetBackward: {int backward ->
+            int[] values = runner.memory.getMemoryArray(index - backward, count)
+            new ArrayBuilder(values)
+        }]
+    }
+
+    ArrayBuilder values(int firstValue) {
+        return new ArrayBuilder(firstValue)
+    }
+
 }
