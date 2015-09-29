@@ -8,10 +8,6 @@ class SpecialDelegate {
         this.runner = runner
     }
 
-    int memBack(int count) {
-        runner.memory.getMemory(runner.memory.memoryIndex - count)
-    }
-
     int getValue() {
         runner.memory.getMemory()
     }
