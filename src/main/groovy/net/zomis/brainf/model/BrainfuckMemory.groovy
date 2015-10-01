@@ -6,19 +6,15 @@ class BrainfuckMemory {
 
     public static final int DEFAULT_MEMORY_SIZE = 0x1000;
 
-    int memoryIndex
+    private int memoryIndex
     private int[] memory
     int size = DEFAULT_MEMORY_SIZE
     int minValue = 0
     int maxValue = 255
 
     BrainfuckMemory(int size) {
-        this(size: size)
-    }
-
-    BrainfuckMemory(Map map) {
-        map?.each { k, v -> this[k] = v }
-        this.memory = new int[this.size]
+        this.size = size
+        this.memory = new int[size]
     }
 
     void changeMemory(int i) {
@@ -34,6 +30,11 @@ class BrainfuckMemory {
         if (memoryIndex >= memory.length) {
             memoryIndex -= memory.length;
         }
+    }
+
+    public void setMemoryIndex(int newIndex) {
+        this.memoryIndex = newIndex
+        memoryIndexWraparound()
     }
 
     public int[] getMemoryArray(int fromIndex, int length) {

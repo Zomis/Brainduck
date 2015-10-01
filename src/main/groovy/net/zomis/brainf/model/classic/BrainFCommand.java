@@ -12,11 +12,9 @@ public enum BrainFCommand implements BrainfuckCommand {
 	NONE((char) 0, r -> {}),
     NEXT('>', r -> {
         r.getMemory().setMemoryIndex(r.getMemory().getMemoryIndex() + 1);
-        r.getMemory().memoryIndexWraparound();
     }),
     PREVIOUS('<', r -> {
         r.getMemory().setMemoryIndex(r.getMemory().getMemoryIndex() - 1);
-        r.getMemory().memoryIndexWraparound();
     }),
     WRITE('.', r -> {
         char write = (char) r.getMemory().getMemory();
