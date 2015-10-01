@@ -2,6 +2,7 @@ package net.zomis.brainf
 
 import net.zomis.brainf.analyze.Brainalyze
 import net.zomis.brainf.model.BrainF
+import net.zomis.brainf.model.ListCode
 import net.zomis.brainf.model.classic.BrainFCommand
 import net.zomis.brainf.model.BrainfuckMemory
 import net.zomis.brainf.model.BrainfuckRunner
@@ -14,11 +15,11 @@ public class BrainTest {
     @Test
     public void gotoCorrectEndWhile() {
         BrainfuckRunner brain = BrainF.createWithDefaultSize();
-        brain.getCode().addCommands(">+>[-]+   ");
-        brain.getCode().addCommands("++[-->++]-->   Find next 254 and go one step beyond it");
-        brain.getCode().addCommands("            Loop through all 254s");
-        brain.getCode().addCommands("+++[---         Make sure that we are not at 253 (end)");
-        brain.getCode().addCommands("++[--<++]--	");
+        brain.code.source = ListCode.create(">+>[-]+   ")
+            .addCommands("++[-->++]-->   Find next 254 and go one step beyond it")
+            .addCommands("            Loop through all 254s")
+            .addCommands("+++[---         Make sure that we are not at 253 (end)")
+            .addCommands("++[--<++]--	");
 
         assert brain.step() == BrainFCommand.NEXT
         assert brain.step() == BrainFCommand.ADD
@@ -32,7 +33,7 @@ public class BrainTest {
     @Test
     public void simpleLoopMultiplication() {
         BrainfuckRunner brain = BrainF.createWithDefaultSize();
-        brain.getCode().addCommands("++[>+++<-]>>>");
+        brain.code.source = ListCode.create("++[>+++<-]>>>");
         brain.run();
         assert [ 0, 6, 0, 0, 0, 0, 0, 0, 0, 0 ] == brain.getMemory().getMemoryArray(0, 10)
     }
@@ -40,7 +41,7 @@ public class BrainTest {
     @Test
     public void analyzeLoops() {
         BrainfuckRunner brain = BrainF.createWithDefaultSize();
-        brain.getCode().addCommands("++[ > +++++[>+>+++<<-]>[>+<-]<[+-+-]> +++ << -]");
+        brain.code.source = ListCode.create("++[ > +++++[>+>+++<<-]>[>+<-]<[+-+-]> +++ << -]");
         Brainalyze analyze = Brainalyze.analyze(brain);
         analyze.print()
         Map<Integer, List<Integer>> counts = analyze.getWhileLoopCounts();
@@ -54,7 +55,7 @@ public class BrainTest {
     @Test
     public void printAlphabet() {
         BrainfuckRunner brain = BrainF.createWithDefaultSize();
-        brain.getCode().addCommands("++++++[>++++++++++>++++<<-]>+++++>++[-<.+>]");
+        brain.code.source = ListCode.create("++++++[>++++++++++>++++<<-]>+++++>++[-<.+>]");
         brain.run();
         assert brain.getOutput() == "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     }
@@ -62,7 +63,7 @@ public class BrainTest {
     @Test
     public void fizzBuzz() {
         BrainfuckRunner brain = BrainF.createWithDefaultSize();
-        brain.getCode().addCommands(BrainfuckRunner.classLoader.getResource('fizzbuzz.bf').text);
+        brain.code.source = ListCode.create(BrainfuckRunner.classLoader.getResource('fizzbuzz.bf').text);
         Brainalyze analyze = Brainalyze.analyze(brain)
         assert analyze.getActionsForCommand(BrainFCommand.WRITE) == brain.output.length()
         assert brain.output == fizzBuzzString(100)
@@ -72,7 +73,7 @@ public class BrainTest {
     @Test
     public void fizzBuzzMin() {
         BrainfuckRunner brain = BrainF.createWithDefaultSize();
-        brain.getCode().addCommands(BrainfuckRunner.classLoader.getResource('fizzbuzz-min.bf').text);
+        brain.code.source = ListCode.create(BrainfuckRunner.classLoader.getResource('fizzbuzz-min.bf').text);
         Brainalyze analyze = Brainalyze.analyze(brain)
         assert analyze.getActionsForCommand(BrainFCommand.WRITE) == brain.output.length()
         assert brain.output == fizzBuzzString(100)
@@ -82,7 +83,7 @@ public class BrainTest {
     @Test
     public void includeTest() {
         BrainfuckRunner brain = BrainF.createWithDefaultSize();
-        brain.getCode().addCommands(BrainfuckRunner.classLoader.getResource('include-base.bf').text);
+        brain.code.source = ListCode.create(BrainfuckRunner.classLoader.getResource('include-base.bf').text);
         brain.run()
         assert brain.memory.getMemoryArray(0, 5) == [0, 0, 12, 0, 0] as int[]
     }
@@ -90,7 +91,7 @@ public class BrainTest {
     @Test
     public void stepContinueStrategy() {
         BrainfuckRunner brain = BrainF.createWithDefaultSize();
-        brain.getCode().addCommands("+++[>+<-]-");
+        brain.code.source = ListCode.create("+++[>+<-]-");
         assert brain.step() == BrainFCommand.ADD
         assert brain.step() == BrainFCommand.ADD
         assert brain.step() == BrainFCommand.ADD
@@ -105,7 +106,7 @@ public class BrainTest {
     @Test
     public void stepOutStrategy() {
         BrainfuckRunner brain = BrainF.createWithDefaultSize();
-        brain.getCode().addCommands("+++[>+<-]-");
+        brain.code.source = ListCode.create("+++[>+<-]-");
         assert brain.step() == BrainFCommand.ADD
         assert brain.step() == BrainFCommand.ADD
         assert brain.step() == BrainFCommand.ADD
@@ -135,7 +136,7 @@ public class BrainTest {
     @Test
     public void allCharacters() {
         BrainfuckRunner brain = BrainF.createWithDefaultSize()
-        brain.code.addCommands(">>>>+++++++++++++++[<+++++++++++++++++>-]<[->[+>>]+[<<]>]")
+        brain.code.source = ListCode.create(">>>>+++++++++++++++[<+++++++++++++++++>-]<[->[+>>]+[<<]>]")
         Brainalyze analyze = Brainalyze.analyze(brain)
         analyze.print()
     }
@@ -150,7 +151,7 @@ public class BrainTest {
     @Test
     public void simpleCommands() {
         BrainfuckRunner abc = BrainF.createWithDefaultSize();
-        abc.getCode().addCommands("+>++>+++<");
+        abc.code.source = ListCode.create("+>++>+++<");
         abc.run();
         assert 9 == abc.getCode().getCommandIndex()
         assert 1 == abc.getMemory().getMemoryIndex()

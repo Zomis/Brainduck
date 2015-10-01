@@ -2,6 +2,7 @@ package net.zomis.brainf
 
 import net.zomis.brainf.model.BrainF
 import net.zomis.brainf.model.BrainfuckRunner
+import net.zomis.brainf.model.ListCode
 import org.junit.Before
 import org.junit.Test
 
@@ -54,7 +55,7 @@ class BrainUnitTest {
     }
 
     void addCommands(String code) {
-        runner.code.addCommands(code)
+        runner.code.source = ListCode.create(code)
     }
 
     void expectFailure(String expectedContains) {

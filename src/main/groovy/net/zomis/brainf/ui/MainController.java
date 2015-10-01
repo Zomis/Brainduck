@@ -18,6 +18,7 @@ import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
 import net.zomis.brainf.analyze.Brainalyze;
 import net.zomis.brainf.model.BrainfuckRunner;
+import net.zomis.brainf.model.ListCode;
 import net.zomis.brainf.model.run.RunStrategy;
 import net.zomis.brainf.model.run.SingleStepStrategy;
 import net.zomis.brainf.model.run.StepContinueStrategy;
@@ -100,7 +101,7 @@ public class MainController implements Initializable {
 	}
 
     @FXML private void saveCode(ActionEvent event) {
-        brain().getCode().setCommands(currentTab.getCodeArea().getText());
+        brain().getCode().setSource(ListCode.create(currentTab.getCodeArea().getText()));
         brain().reset();
     }
 

@@ -7,11 +7,11 @@ import net.zomis.brainf.model.classic.BrainfuckConverter
 import net.zomis.brainf.model.groovy.GroovySupportConverter
 
 class BrainfuckCode {
-    private final List<BrainfuckCommand> commands = new ArrayList<>();
+
+    CodeRetriever source
     int commandIndex
 
     BrainfuckCode() {
-
     }
 
     @PackageScope void gotoMatching(BrainfuckCommand decrease, BrainfuckCommand increase, int direction) {
@@ -40,44 +40,27 @@ class BrainfuckCode {
         index
     }
 
-    void addCommands(String string) {
-        BrainfuckCodeConverter converter = new GroovySupportConverter(new BrainfuckConverter())
-        converter.convert(string, { addCommand it })
-    }
-
-    void addCommand(BrainfuckCommand command) {
-        this.commands.add(command)
-    }
-
-    void setCommands(String text) {
-        commands.clear();
-        addCommands(text);
-    }
-
     void resetIndex() {
         commandIndex = 0
     }
 
     boolean hasMoreCommands() {
-        commandIndex < commands.size()
+        getCommandAt(commandIndex) != null
     }
 
     BrainfuckCommand getNextCommand() {
         if (!hasMoreCommands()) {
             return null;
         }
-        commands.get(commandIndex)
+        source.getCommand(commandIndex)
     }
 
     int getCommandCount() {
-        commands.size()
+        source.capacity()
     }
 
     BrainfuckCommand getCommandAt(int index) {
-        if (index < 0 || index >= commands.size()) {
-            return null
-        }
-        commands.get(index)
+        source.getCommand(index)
     }
 
 }
