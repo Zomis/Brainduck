@@ -1,6 +1,7 @@
 package net.zomis.brainf.model.run
 
 import net.zomis.brainf.model.BrainFCommand
+import net.zomis.brainf.model.BrainfuckCommand
 import net.zomis.brainf.model.BrainfuckRunner
 
 class StepContinueStrategy implements RunStrategy {
@@ -19,7 +20,7 @@ class StepContinueStrategy implements RunStrategy {
 
     @Override
     boolean next(BrainfuckRunner runner) {
-        BrainFCommand comm = runner.getCode().getNextCommand()
+        BrainfuckCommand comm = runner.getCode().getNextCommand()
         if (comm == BrainFCommand.WHILE) {
             loops++
         }

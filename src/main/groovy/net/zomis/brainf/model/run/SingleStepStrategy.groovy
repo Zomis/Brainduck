@@ -1,6 +1,7 @@
 package net.zomis.brainf.model.run
 
 import net.zomis.brainf.model.BrainFCommand
+import net.zomis.brainf.model.BrainfuckCommand
 import net.zomis.brainf.model.BrainfuckRunner
 
 class SingleStepStrategy implements RunStrategy {
@@ -12,7 +13,7 @@ class SingleStepStrategy implements RunStrategy {
 
     @Override
     boolean next(BrainfuckRunner runner) {
-        BrainFCommand comm = runner.step();
+        BrainfuckCommand comm = runner.step();
         if (comm != BrainFCommand.NONE) {
             System.out.println("Step: " + comm);
         }
