@@ -70,16 +70,6 @@ public class BrainTest {
     }
 
     @Test
-    public void sudoku() {
-        BrainfuckRunner brain = BrainF.createWithDefaultSize();
-        brain.getCode().addCommands(BrainfuckRunner.classLoader.getResource('sudoku.bf').text);
-        Brainalyze analyze = Brainalyze.analyze(brain)
-        assert analyze.getActionsForCommand(BrainFCommand.WRITE) == brain.output.length()
-        assert brain.output == fizzBuzzString(100)
-        analyze.print()
-    }
-
-    @Test
     public void fizzBuzzMin() {
         BrainfuckRunner brain = BrainF.createWithDefaultSize();
         brain.getCode().addCommands(BrainfuckRunner.classLoader.getResource('fizzbuzz-min.bf').text);
