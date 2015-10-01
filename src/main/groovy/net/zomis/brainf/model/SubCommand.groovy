@@ -1,7 +1,5 @@
 package net.zomis.brainf.model
 
-import net.zomis.brainf.model.classic.BrainfuckCode
-
 class SubCommand implements BrainfuckCommand {
 
     private final List<BrainfuckCommand> commands

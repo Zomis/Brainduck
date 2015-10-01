@@ -1,8 +1,9 @@
-package net.zomis.brainf.model.classic
+package net.zomis.brainf.model
 
 import groovy.transform.PackageScope
 import net.zomis.brainf.model.BrainfuckCodeConverter
 import net.zomis.brainf.model.BrainfuckCommand
+import net.zomis.brainf.model.classic.BrainfuckConverter
 import net.zomis.brainf.model.groovy.GroovySupportConverter
 
 class BrainfuckCode {
