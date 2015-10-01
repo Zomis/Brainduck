@@ -1,5 +1,7 @@
-package net.zomis.brainf.model
+package net.zomis.brainf.model.groovy
 
+import net.zomis.brainf.model.BrainfuckCommand
+import net.zomis.brainf.model.BrainfuckRunner
 import org.codehaus.groovy.control.CompilerConfiguration
 
 class SpecialCommand implements BrainfuckCommand {

@@ -1,5 +1,6 @@
 package net.zomis.brainf.model
 
+import net.zomis.brainf.model.classic.BrainfuckCode
 import net.zomis.brainf.model.run.RunStrategy
 
 class BrainfuckRunner {

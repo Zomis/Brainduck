@@ -1,4 +1,7 @@
-package net.zomis.brainf.model;
+package net.zomis.brainf.model.classic;
+
+import net.zomis.brainf.model.BrainfuckCommand;
+import net.zomis.brainf.model.BrainfuckRunner;
 
 import java.io.IOException;
 import java.util.HashMap;

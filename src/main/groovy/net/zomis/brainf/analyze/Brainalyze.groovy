@@ -1,10 +1,9 @@
 package net.zomis.brainf.analyze
 
-import net.zomis.brainf.model.BrainFCommand
+import net.zomis.brainf.model.classic.BrainFCommand
 import net.zomis.brainf.model.BrainfuckCommand
 import net.zomis.brainf.model.BrainfuckListener
 import net.zomis.brainf.model.BrainfuckRunner
-import net.zomis.brainf.model.SpecialCommand
 
 import java.util.concurrent.atomic.AtomicInteger
 

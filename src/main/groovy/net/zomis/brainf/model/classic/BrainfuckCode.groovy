@@ -1,11 +1,9 @@
-package net.zomis.brainf.model
+package net.zomis.brainf.model.classic
 
 import groovy.transform.PackageScope
-import net.zomis.brainf.model.codeconv.BrainfuckConverter
-import net.zomis.brainf.model.codeconv.GroovySupportConverter
-
-import java.util.function.Predicate
-import java.util.regex.Pattern
+import net.zomis.brainf.model.BrainfuckCodeConverter
+import net.zomis.brainf.model.BrainfuckCommand
+import net.zomis.brainf.model.groovy.GroovySupportConverter
 
 class BrainfuckCode {
     private final List<BrainfuckCommand> commands = new ArrayList<>();

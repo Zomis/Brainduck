@@ -1,9 +1,8 @@
-package net.zomis.brainf.model.codeconv
+package net.zomis.brainf.model.groovy
 
-import net.zomis.brainf.model.BrainFCommand
 import net.zomis.brainf.model.BrainfuckCodeConverter
 import net.zomis.brainf.model.BrainfuckCommand
-import net.zomis.brainf.model.SpecialCommand
+import net.zomis.brainf.model.groovy.SpecialCommand
 
 import java.util.function.Consumer
 import java.util.function.Predicate

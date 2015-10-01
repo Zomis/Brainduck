@@ -1,4 +1,4 @@
-package net.zomis.brainf.model
+package net.zomis.brainf.model.groovy
 
 class ArrayBuilder {
 

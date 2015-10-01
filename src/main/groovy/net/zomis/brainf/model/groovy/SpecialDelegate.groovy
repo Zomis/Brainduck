@@ -1,7 +1,10 @@
-package net.zomis.brainf.model
+package net.zomis.brainf.model.groovy
 
-import net.zomis.brainf.model.codeconv.BrainfuckConverter
-import net.zomis.brainf.model.codeconv.GroovySupportConverter
+import net.zomis.brainf.model.BrainfuckCodeConverter
+import net.zomis.brainf.model.BrainfuckCommand
+import net.zomis.brainf.model.BrainfuckRunner
+import net.zomis.brainf.model.SubCommand
+import net.zomis.brainf.model.classic.BrainfuckConverter
 
 import java.nio.file.Files
 import java.nio.file.Path

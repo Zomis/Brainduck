@@ -1,6 +1,6 @@
 package net.zomis.brainf.dsl
 
-import net.zomis.brainf.model.BrainFCommand
+import net.zomis.brainf.model.classic.BrainFCommand
 
 class ExternalAlgorithm {
     private Set<String> varNames = new HashSet<>()
