@@ -2,6 +2,7 @@ package net.zomis.brainf.model.groovy
 
 import net.zomis.brainf.model.BrainfuckCodeConverter
 import net.zomis.brainf.model.BrainfuckCommand
+import net.zomis.brainf.model.classic.BrainFCommand
 import net.zomis.brainf.model.groovy.SpecialCommand
 
 import java.util.function.Consumer
@@ -30,18 +31,23 @@ class GroovySupportConverter implements BrainfuckCodeConverter {
         for (String str : lines) {
             if (!codeEnabled && PATTERN_CODEBLOCK.test(str)) {
                 codeEnabled = true
+                addEmpty(add, str.length() - 1) // adding one Special command, the rest is pure text
             } else if (codeEnabled && PATTERN_CODEBLOCK_END.test(str)) {
                 codeEnabled = false
                 add.accept(new SpecialCommand(code.toString()))
                 code.setLength(0)
+                addEmpty(add, str.length())
             } else if (!codeEnabled && PATTERN_CODELINE.test(str)) {
                 add.accept(new SpecialCommand(str.substring(str.indexOf('$') + 1)))
+                addEmpty(add, str.length() - 1) // adding one Special command, the rest is pure text
             } else if (codeEnabled) {
                 code.append(str)
                 code.append('\n')
+                addEmpty(add, str.length())
             } else {
                 next.convert(str, add)
             }
+            add.accept(BrainFCommand.NONE) // line breaks
             // out-of-sync for text vs. code index can be fixed by adding multiple NONE fields, or by changing approach
         }
         if (codeEnabled) {
@@ -49,4 +55,11 @@ class GroovySupportConverter implements BrainfuckCodeConverter {
         }
 
     }
+
+    private void addEmpty(Consumer<BrainfuckCommand> add, int count) {
+        for (int i = 0; i < count; i++) {
+            add.accept(BrainFCommand.NONE)
+        }
+    }
+
 }
