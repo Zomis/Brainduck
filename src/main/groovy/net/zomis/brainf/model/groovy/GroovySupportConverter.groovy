@@ -28,7 +28,8 @@ class GroovySupportConverter implements BrainfuckCodeConverter {
         String[] lines = string.split('\n')
         boolean codeEnabled = false
         StringBuilder code = new StringBuilder()
-        for (String str : lines) {
+        for (int i = 0; i < lines.length; i++) {
+            String str = lines[i]
             if (!codeEnabled && PATTERN_CODEBLOCK.test(str)) {
                 codeEnabled = true
                 addEmpty(add, str.length() - 1) // adding one Special command, the rest is pure text
@@ -47,8 +48,10 @@ class GroovySupportConverter implements BrainfuckCodeConverter {
             } else {
                 next.convert(str, add)
             }
-            add.accept(BrainFCommand.NONE) // line breaks
-            // out-of-sync for text vs. code index can be fixed by adding multiple NONE fields, or by changing approach
+            if (i != lines.length -1) {
+                add.accept(BrainFCommand.NONE) // line breaks
+            }
+            // out-of-sync for text vs. code index is fixed by adding multiple NONE fields
         }
         if (codeEnabled) {
             throw new IllegalArgumentException('Code block was not terminated.')
