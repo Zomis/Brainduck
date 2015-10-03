@@ -5,7 +5,7 @@ public interface CodeRetriever {
     BrainfuckCommand getCommand(int commandIndex);
 
     default int getCommandLength(int commandIndex) {
-        return commandIndex + 1;
+        return 1;
     }
 
     int capacity();
