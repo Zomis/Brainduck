@@ -56,7 +56,8 @@ class BrainfuckRunner {
         }
         int index = code.commandIndex
         perform(command);
-        code.commandIndex += code.source.getCommandLength(index);
+        int commandLength = code.source.getCommandLength(index)
+        code.commandIndex += commandLength
         return command;
     }
 
