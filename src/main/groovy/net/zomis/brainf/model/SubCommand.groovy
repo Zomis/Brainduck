@@ -12,10 +12,7 @@ class SubCommand implements BrainfuckCommand {
     void perform(BrainfuckRunner runner) {
         BrainfuckRunner subRunner = new BrainfuckRunner(runner.memory, new BrainfuckCode(),
             runner.input, runner.outputBuilder)
-
-        for (BrainfuckCommand command : commands) {
-            subRunner.code.addCommand(command)
-        }
+        subRunner.code.source = new ListCode(commands)
         subRunner.run()
     }
 

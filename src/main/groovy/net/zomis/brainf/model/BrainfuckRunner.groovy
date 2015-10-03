@@ -25,7 +25,7 @@ class BrainfuckRunner {
 
     BrainfuckRunner(int memorySize, String code, InputStream input) {
         this(memorySize, input);
-        this.code.addCommands(code);
+        this.code.source = ListCode.create(code)
     }
 
     BrainfuckRunner(int memorySize, InputStream input) {
