@@ -14,7 +14,7 @@ class BrainfuckCode {
     BrainfuckCode() {
     }
 
-    @PackageScope void gotoMatching(BrainfuckCommand decrease, BrainfuckCommand increase, int direction) {
+    void gotoMatching(BrainfuckCommand decrease, BrainfuckCommand increase, int direction) {
         commandIndex = findMatching(decrease, increase, direction);
     }
 
