@@ -88,17 +88,7 @@ class Brainalyze implements BrainfuckListener {
         }
         for (int i = 0; i <= maxMemory; i++) {
             MemoryCell cell = cells[i]
-            int value = cell.value
-            String hexAddress = String.format("%04X", i)
-            String decAddress = String.format("%06d", i)
-
-            boolean specialChar = value >= 0 && value <= 13
-            char chrValue = specialChar ? 32 : value;
-            String decValue = String.format("%6d", value);
-
-            String reads = String.format("%6d", cell.readCount);
-            String writes = String.format("%6d", cell.writeCount);
-            println "Hex $hexAddress\tDec $decAddress\tValue $decValue '$chrValue' \tReads: $reads\tWrites: $writes"
+            println cell.toString()
             if (cell.readCount > 0 || cell.writeCount > 0) {
                 totalUsed++
             }

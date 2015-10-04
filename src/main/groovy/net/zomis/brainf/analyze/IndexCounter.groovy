@@ -1,7 +1,6 @@
 package net.zomis.brainf.analyze
 
 import java.util.concurrent.atomic.AtomicInteger
-import java.util.stream.Stream
 
 /**
  * For counting the number of times something occurs at a specific index.
