@@ -144,8 +144,8 @@ public class BrainTest {
         brain.code.source = ListCode.create(">> +++++ [->[+>>]+[<<]>]")
         // distribute values from 5 downto 1 across the tape
         Brainalyze analyze = Brainalyze.analyze(brain)
-        assert Arrays.copyOf(analyze.getMemoryRead(), 12)  == [0, 5, 6, 10, 0, 8, 0, 6, 0, 4, 0, 2] as int[]
-        assert Arrays.copyOf(analyze.getMemoryWrite(), 12) == [0, 0, 10, 5, 0, 4, 0, 3, 0, 2, 0, 1] as int[]
+        assert analyze.arrayLong({it.readCount}, 0, 12)  == [0, 5, 6, 10, 0, 8, 0, 6, 0, 4, 0, 2] as int[]
+        assert analyze.arrayLong({it.writeCount}, 0, 12) == [0, 0, 10, 5, 0, 4, 0, 3, 0, 2, 0, 1] as int[]
     }
 
     @Test

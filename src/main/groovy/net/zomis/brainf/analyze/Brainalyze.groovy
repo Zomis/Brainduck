@@ -6,24 +6,26 @@ import net.zomis.brainf.model.BrainfuckListener
 import net.zomis.brainf.model.BrainfuckRunner
 
 import java.util.concurrent.atomic.AtomicInteger
+import java.util.function.ToIntFunction
+import java.util.function.ToLongFunction
 
 class Brainalyze implements BrainfuckListener {
 
     private final int[] times
     private final int[] actionsPerCommand
     private final int[] codeCommands
-    private final long[] memoryRead
-    private final long[] memoryWrite
-    private int[] tapeValues
+    private final MemoryCell[] cells
     private final Map<Integer, List<Integer>> whileLoopCounts = new HashMap<>()
 
     private Brainalyze(BrainfuckRunner runner) {
         this.times = new int[runner.code.commandCount];
         this.actionsPerCommand = new int[BrainFCommand.values().length];
         this.codeCommands = new int[BrainFCommand.values().length];
-        this.memoryRead = new long[runner.memory.memorySize]
-        this.memoryWrite = new long[runner.memory.memorySize]
-        this.tapeValues = new long[runner.memory.memorySize]
+        int size = runner.memory.memorySize
+        this.cells = new MemoryCell[size]
+        for (int i = 0; i < size; i++) {
+            this.cells[i] = new MemoryCell(i)
+        }
     }
 
     int[] getTimes() {
@@ -38,20 +40,14 @@ class Brainalyze implements BrainfuckListener {
         return Arrays.copyOf(codeCommands, codeCommands.length)
     }
 
-    int[] getMemoryRead() {
-        return Arrays.copyOf(memoryRead, memoryRead.length)
-    }
-
-    int[] getMemoryWrite() {
-        return Arrays.copyOf(memoryWrite, memoryWrite.length)
-    }
-
     static Brainalyze analyze(BrainfuckRunner brain) {
         Brainalyze analyze = new Brainalyze(brain)
         brain.setListener(analyze)
         brain.run()
 
-        analyze.tapeValues = brain.memory.getMemoryArray(0, brain.memory.memorySize)
+        for (int i = 0; i < brain.memory.memorySize; i++) {
+            analyze.cells[i].value = brain.memory.getMemory(i)
+        }
 
         int commandCount = brain.code.commandCount
         for (int i = 0; i < commandCount; i++) {
@@ -86,25 +82,26 @@ class Brainalyze implements BrainfuckListener {
         println 'Tape summary'
         int totalUsed = 0
         int maxMemory = 0
-        for (int i = tapeValues.length - 1; i >= 0; i--) {
-            if (memoryRead[i] > 0 || memoryWrite[i] > 0) {
+        for (int i = cells.length - 1; i >= 0; i--) {
+            if (cells[i].readCount > 0 || cells[i].writeCount > 0) {
                 maxMemory = i
                 break
             }
         }
         for (int i = 0; i <= maxMemory; i++) {
-            int value = tapeValues[i]
+            MemoryCell cell = cells[i]
+            int value = cell.value
             String hexAddress = String.format("%04X", i)
             String decAddress = String.format("%06d", i)
 
             boolean specialChar = value >= 0 && value <= 13
-            char chrValue = specialChar ? 32 : tapeValues[i];
+            char chrValue = specialChar ? 32 : value;
             String decValue = String.format("%6d", value);
 
-            String reads = String.format("%6d", memoryRead[i]);
-            String writes = String.format("%6d", memoryWrite[i]);
+            String reads = String.format("%6d", cell.readCount);
+            String writes = String.format("%6d", cell.writeCount);
             println "Hex $hexAddress\tDec $decAddress\tValue $decValue '$chrValue' \tReads: $reads\tWrites: $writes"
-            if (memoryRead[i] > 0 || memoryWrite[i] > 0) {
+            if (cell.readCount > 0 || cell.writeCount > 0) {
                 totalUsed++
             }
         }
@@ -167,17 +164,18 @@ class Brainalyze implements BrainfuckListener {
         BrainFCommand command = (BrainFCommand) cmd
         this.times[runner.code.commandIndex]++
         actionsPerCommand[command.ordinal()]++
+        MemoryCell cell = cells[runner.memory.memoryIndex]
 
         switch (command) {
             case BrainFCommand.ADD:
             case BrainFCommand.SUBTRACT:
             case BrainFCommand.READ:
-                memoryWrite[runner.memory.memoryIndex]++
+                cell.writeCount++
                 break
             case BrainFCommand.WHILE:
             case BrainFCommand.END_WHILE:
             case BrainFCommand.WRITE:
-                memoryRead[runner.memory.memoryIndex]++
+                cell.readCount++
                 break
         }
 
@@ -213,6 +211,24 @@ class Brainalyze implements BrainfuckListener {
 
     int getActionsForCommand(BrainFCommand command) {
         this.actionsPerCommand[command.ordinal()]
+    }
+
+    int[] array(ToIntFunction<MemoryCell> function, int fromIndex, int toIndex) {
+        int[] result = new int[toIndex - fromIndex]
+        for (int i = 0; i < result.length; i++) {
+            MemoryCell cell = cells[fromIndex + i]
+            result[i] = function.applyAsInt(cell)
+        }
+        result
+    }
+
+    long[] arrayLong(ToLongFunction<MemoryCell> function, int fromIndex, int toIndex) {
+        long[] result = new long[toIndex - fromIndex]
+        for (int i = 0; i < result.length; i++) {
+            MemoryCell cell = cells[fromIndex + i]
+            result[i] = function.applyAsLong(cell)
+        }
+        result
     }
 
 }
