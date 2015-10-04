@@ -52,6 +52,16 @@ public class BrainTest {
     }
 
     @Test
+    public void loopOnce() {
+        BrainfuckRunner brain = BrainF.createWithDefaultSize();
+        brain.code.source = ListCode.create("+[-]");
+        Brainalyze analyze = Brainalyze.analyze(brain);
+        Map<Integer, List<Integer>> counts = analyze.getWhileLoopCounts();
+        assert counts.size() == 1
+        assert counts[1] == [1]
+    }
+
+    @Test
     public void printAlphabet() {
         BrainfuckRunner brain = BrainF.createWithDefaultSize();
         brain.code.source = ListCode.create("++++++[>++++++++++>++++<<-]>+++++>++[-<.+>]");
