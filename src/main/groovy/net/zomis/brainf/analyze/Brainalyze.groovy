@@ -17,13 +17,33 @@ class Brainalyze implements BrainfuckListener {
     private int[] tapeValues
     private final Map<Integer, List<Integer>> whileLoopCounts = new HashMap<>()
 
-    Brainalyze(BrainfuckRunner runner) {
+    private Brainalyze(BrainfuckRunner runner) {
         this.times = new int[runner.code.commandCount];
         this.actionsPerCommand = new int[BrainFCommand.values().length];
         this.codeCommands = new int[BrainFCommand.values().length];
         this.memoryRead = new long[runner.memory.memorySize]
         this.memoryWrite = new long[runner.memory.memorySize]
         this.tapeValues = new long[runner.memory.memorySize]
+    }
+
+    int[] getTimes() {
+        return Arrays.copyOf(times, times.length)
+    }
+
+    int[] getActionsPerCommand() {
+        return Arrays.copyOf(actionsPerCommand, actionsPerCommand.length)
+    }
+
+    int[] getCodeCommands() {
+        return Arrays.copyOf(codeCommands, codeCommands.length)
+    }
+
+    int[] getMemoryRead() {
+        return Arrays.copyOf(memoryRead, memoryRead.length)
+    }
+
+    int[] getMemoryWrite() {
+        return Arrays.copyOf(memoryWrite, memoryWrite.length)
     }
 
     static Brainalyze analyze(BrainfuckRunner brain) {

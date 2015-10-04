@@ -139,6 +139,16 @@ public class BrainTest {
     }
 
     @Test
+    public void readsAndWrites() {
+        BrainfuckRunner brain = BrainF.createWithDefaultSize()
+        brain.code.source = ListCode.create(">> +++++ [->[+>>]+[<<]>]")
+        // distribute values from 5 downto 1 across the tape
+        Brainalyze analyze = Brainalyze.analyze(brain)
+        assert analyze.getMemoryRead()  == [0, 5, 6, 10, 0, 8, 0, 6, 0, 4, 0, 2] as int[]
+        assert analyze.getMemoryWrite() == [0, 0, 10, 5, 0, 4, 0, 3, 0, 2, 0, 1] as int[]
+    }
+
+    @Test
     public void input() {
         BrainfuckRunner brain = BrainF.createFromCodeAndInput(BrainfuckMemory.DEFAULT_MEMORY_SIZE, "+++,.", "a");
         brain.run();
