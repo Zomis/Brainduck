@@ -185,7 +185,7 @@ class Brainalyze implements BrainfuckListener {
             if (current == 0) {
                 whileLoopCounts.get(runner.code.commandIndex).add(0)
             } else {
-                enteredLoops.add(new AtomicInteger())
+                enteredLoops.push(new AtomicInteger(0))
             }
         }
 
