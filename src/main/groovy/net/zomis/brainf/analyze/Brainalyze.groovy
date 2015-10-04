@@ -118,12 +118,6 @@ class Brainalyze implements BrainfuckListener {
         }
         println "Total memory used = $totalUsed"
         println()
-        println 'Memory reads'
-        println memoryRead
-        println()
-        println 'Memory writes'
-        println memoryWrite
-        println()
     }
 
     static void printCompactList(List<?> values) {
