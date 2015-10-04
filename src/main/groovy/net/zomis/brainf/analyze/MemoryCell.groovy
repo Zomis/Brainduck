@@ -6,6 +6,7 @@ class MemoryCell {
     int value
     long readCount
     long writeCount
+    IndexCounter prints = new IndexCounter()
 
     MemoryCell(int index) {
         this.index = index

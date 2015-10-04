@@ -89,6 +89,15 @@ public class BrainTest {
     }
 
     @Test
+    public void printedMemory() {
+        BrainfuckRunner brain = BrainF.createWithDefaultSize()
+        brain.code.source = ListCode.create('>.<+++.[-.]')
+        Brainalyze analyze = Brainalyze.analyze(brain)
+        assert analyze.cell(0).prints.toString() == '[6, 9 * 3]' // printed by code index 6 once, code index 9 thrice
+        assert analyze.cell(1).prints.toString() == '[1]'
+    }
+
+    @Test
     public void includeTest() {
         BrainfuckRunner brain = BrainF.createWithDefaultSize();
         brain.code.source = ListCode.create(BrainfuckRunner.classLoader.getResource('include-base.bf').text);

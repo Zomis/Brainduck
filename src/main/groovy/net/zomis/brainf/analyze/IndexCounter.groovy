@@ -25,6 +25,9 @@ class IndexCounter {
     }
 
     private static String printCompactList(List<?> values) {
+        if (values.isEmpty()) {
+            return '[]'
+        }
         StringBuilder str = new StringBuilder()
         int count = 0
         Object value = null

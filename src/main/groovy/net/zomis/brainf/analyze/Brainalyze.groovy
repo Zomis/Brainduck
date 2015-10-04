@@ -28,6 +28,10 @@ class Brainalyze implements BrainfuckListener {
         }
     }
 
+    MemoryCell cell(int index) {
+        cells[index]
+    }
+
     int[] getTimes() {
         return Arrays.copyOf(times, times.length)
     }
@@ -117,7 +121,8 @@ class Brainalyze implements BrainfuckListener {
             return
         }
         BrainFCommand command = (BrainFCommand) cmd
-        this.times[runner.code.commandIndex]++
+        int codeIndex = runner.code.commandIndex
+        this.times[codeIndex]++
         actionsPerCommand[command.ordinal()]++
         MemoryCell cell = cells[runner.memory.memoryIndex]
 
@@ -132,6 +137,10 @@ class Brainalyze implements BrainfuckListener {
             case BrainFCommand.WRITE:
                 cell.readCount++
                 break
+        }
+
+        if (command == BrainFCommand.WRITE) {
+            cell.prints.add(codeIndex)
         }
 
         if (command == BrainFCommand.WHILE) {
