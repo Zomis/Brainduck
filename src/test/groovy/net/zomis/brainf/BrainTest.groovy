@@ -1,6 +1,7 @@
 package net.zomis.brainf
 
 import net.zomis.brainf.analyze.Brainalyze
+import net.zomis.brainf.analyze.IndexCounters
 import net.zomis.brainf.model.BrainF
 import net.zomis.brainf.model.ListCode
 import net.zomis.brainf.model.classic.BrainFCommand
@@ -43,7 +44,7 @@ public class BrainTest {
         BrainfuckRunner brain = BrainF.createWithDefaultSize();
         brain.code.source = ListCode.create("++[ > +++++[>+>+++<<-]>[>+<-]<[+-+-]> +++ << -]");
         Brainalyze analyze = Brainalyze.analyze(brain);
-        Map<Integer, List<Integer>> counts = analyze.getWhileLoopCounts();
+        IndexCounters counts = analyze.getWhileLoopCounts();
         assert counts.size() == 4
         assert counts[2] == [2]
         assert counts[11] == [5, 5]
@@ -56,7 +57,7 @@ public class BrainTest {
         BrainfuckRunner brain = BrainF.createWithDefaultSize();
         brain.code.source = ListCode.create("+[-]");
         Brainalyze analyze = Brainalyze.analyze(brain);
-        Map<Integer, List<Integer>> counts = analyze.getWhileLoopCounts();
+        IndexCounters counts = analyze.getWhileLoopCounts();
         assert counts.size() == 1
         assert counts[1] == [1]
     }
