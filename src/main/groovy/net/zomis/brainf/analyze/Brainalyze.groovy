@@ -150,6 +150,7 @@ class Brainalyze implements BrainfuckListener {
                 counter.add(0)
             } else {
                 whileLoopCounts.begin(counter)
+                cell.whileLoopStart.add(codeIndex)
             }
         }
 
@@ -157,8 +158,10 @@ class Brainalyze implements BrainfuckListener {
             whileLoopCounts.recent().increase()
             int current = runner.memory.getMemory()
             if (current == 0) {
-                int startPos = runner.code.findMatching(BrainFCommand.WHILE, BrainFCommand.END_WHILE, -1)
                 whileLoopCounts.finishLast()
+                cell.whileLoopEnd.add(codeIndex)
+            } else {
+                cell.whileLoopContinue.add(codeIndex)
             }
         }
     }

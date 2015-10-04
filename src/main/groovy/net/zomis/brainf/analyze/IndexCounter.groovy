@@ -1,6 +1,7 @@
 package net.zomis.brainf.analyze
 
 import java.util.concurrent.atomic.AtomicInteger
+import java.util.stream.Stream
 
 /**
  * For counting the number of times something occurs at a specific index.
@@ -56,6 +57,28 @@ class IndexCounter {
         str.toString()
     }
 
+    private List<String> tagNames() {
+        if (results.isEmpty()) {
+            return []
+        }
+        List<String> result = []
+        int count = 0
+        Object value = null
+        for (Object i : results) {
+            if (Objects.equals(i, value)) {
+                count++
+            } else {
+                if (count > 0) {
+                    result << countString(count, value)
+                }
+                count = 1
+                value = i
+            }
+        }
+        result << countString(count, value)
+        result
+    }
+
     void increase() {
         this.started.peek().incrementAndGet()
     }
@@ -66,6 +89,10 @@ class IndexCounter {
 
     void finishLast() {
         add(this.started.pop().get())
+    }
+
+    Stream<String> tags(String prefix) {
+        tagNames().stream().map({prefix + ' ' + it})
     }
 
 }
