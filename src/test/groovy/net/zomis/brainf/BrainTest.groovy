@@ -43,7 +43,6 @@ public class BrainTest {
         BrainfuckRunner brain = BrainF.createWithDefaultSize();
         brain.code.source = ListCode.create("++[ > +++++[>+>+++<<-]>[>+<-]<[+-+-]> +++ << -]");
         Brainalyze analyze = Brainalyze.analyze(brain);
-        analyze.print()
         Map<Integer, List<Integer>> counts = analyze.getWhileLoopCounts();
         assert counts.size() == 4
         assert counts[2] == [2]
@@ -67,7 +66,6 @@ public class BrainTest {
         Brainalyze analyze = Brainalyze.analyze(brain)
         assert analyze.getActionsForCommand(BrainFCommand.WRITE) == brain.output.length()
         assert brain.output == fizzBuzzString(100)
-        analyze.print()
     }
 
     @Test
@@ -77,7 +75,6 @@ public class BrainTest {
         Brainalyze analyze = Brainalyze.analyze(brain)
         assert analyze.getActionsForCommand(BrainFCommand.WRITE) == brain.output.length()
         assert brain.output == fizzBuzzString(100)
-        analyze.print()
     }
 
     @Test

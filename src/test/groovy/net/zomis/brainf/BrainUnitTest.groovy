@@ -63,7 +63,6 @@ class BrainUnitTest {
             runner.run()
             assert false : 'No assertion error was thrown'
         } catch (AssertionError error) {
-            println error
             assert error.getMessage().contains(expectedContains)
         }
     }
