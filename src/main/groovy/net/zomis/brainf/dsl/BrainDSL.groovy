@@ -74,7 +74,6 @@ class BrainDSL {
             if (i > 0) {
                 addCode('>')
             }
-            println 'set ' + args[i]
             set(args[i])
         }
         this
@@ -84,7 +83,6 @@ class BrainDSL {
         if (text == null) {
             throw new IllegalArgumentException('text cannot be null')
         }
-        println 'set ' + text + ' of type ' + text.class
         if (text instanceof Integer) {
             set(text as int)
         } else if (text instanceof String) {
@@ -98,7 +96,6 @@ class BrainDSL {
     }
 
     BrainDSL set(String text) {
-        println 'set text ' + text + ' length ' + text.length()
         for (int i = 0; i < text.length(); i++) {
             if (i > 0) {
                 addCode('>')
@@ -110,7 +107,6 @@ class BrainDSL {
     }
 
     BrainDSL set(int value) {
-        println 'set int ' + value
         addCode('[-]')
         if (value > 0) {
             addCode('+' * value)
