@@ -26,6 +26,22 @@ class SpecialDelegate {
         runner.memory.memoryIndex
     }
 
+    void nextLoop(String tagName) {
+
+    }
+
+    void nextLoops(String tagName) {
+
+    }
+
+    void loop(String tagName) {
+
+    }
+
+    void lastLoop(String tagName) {
+
+    }
+
     def memory(int count) {
         int index = runner.memory.memoryIndex
         [offset: {int forward ->
