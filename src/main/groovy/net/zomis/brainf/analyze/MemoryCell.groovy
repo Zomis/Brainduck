@@ -34,13 +34,15 @@ class MemoryCell {
 
         String reads = String.format("%6d", this.readCount);
         String writes = String.format("%6d", this.writeCount);
-        Map<String, Integer> tagList = resolveTags()
-        String tags = tagList.isEmpty() ? '' : tagList.toString()
-        "Hex $hexAddress\tDec $decAddress\tValue $decValue '$chrValue' \tReads: $reads\tWrites: $writes $tags".toString()
+        Map<String, Integer> tagsCount = resolveTags()
+        String tags = tagsCount.isEmpty() ? '' : tagsCount.toString()
+        "Hex $hexAddress\tDec $decAddress\tValue $decValue '$chrValue' \t" +
+            "Reads: $reads\tWrites: $writes $tags".toString()
     }
 
     Map<String, Integer> resolveTags() {
-        Stream.of(prints.tags('print'), whileLoopStart.tags('loop-start'), whileLoopContinue.tags('loop-continue'), whileLoopEnd.tags('loop-end'))
+        Stream.of(prints.tags('print'), whileLoopStart.tags('loop-start'),
+                whileLoopContinue.tags('loop-continue'), whileLoopEnd.tags('loop-end'))
             .flatMap({it})
             .collect(countingCollector())
     }
@@ -54,7 +56,8 @@ class MemoryCell {
                 mapB.merge(ee.key, ee.value, plus)
             })
         }
-        Collector.Characteristics[] characteristics = [Collector.Characteristics.CONCURRENT, Collector.Characteristics.UNORDERED] as Collector.Characteristics[]
+        Collector.Characteristics[] characteristics = [Collector.Characteristics.CONCURRENT,
+               Collector.Characteristics.UNORDERED] as Collector.Characteristics[]
         Collector.of(supplier, accumulator, combiner, characteristics)
     }
 
