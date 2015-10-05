@@ -56,7 +56,7 @@ class MemoryCell {
     }
 
     public static <T> Collector<T, ?, Map<T, Integer>> countingCollector() {
-        Supplier<Map<T, Integer>> supplier = {new HashMap<>()}
+        Supplier<Map<T, Integer>> supplier = {new TreeMap<>()}
         BiFunction<Integer, Integer, Integer> plus = {a, b -> a + b}
         BiConsumer<Map<T, Integer>, T> accumulator = {map, obj -> map.merge(obj, 1, plus)}
         BinaryOperator<Map<T, Integer>> combiner = {Map<T, Integer> mapA, Map<T, Integer> mapB ->
