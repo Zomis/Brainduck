@@ -66,6 +66,9 @@ public class BrainTest {
         >+[++[-]+-]
         >+[-]
         $ lastLoop 'after'
+        >++++[-
+            $ loop 'duplicate'
+        ]
         '''
         source.addCommands(commands)
         analyze()
@@ -76,9 +79,11 @@ public class BrainTest {
         assert analyze.cell(2).resolveTags(context).entrySet().stream().filter({
             it.key.contains('nested') && it.key.contains('loop-begin')
         }).count() == 2 // expect two kinds of 'loop-begin nested' tags
-        cellTagsContains(analyze.cell(2), 'nested #134')
-        cellTagsContains(analyze.cell(2), 'nested #137')
         cellTagsContains(analyze.cell(3), 'after')
+        cellTagsContains(analyze.cell(4), 'duplicate')
+        assert analyze.cell(4).resolveTags(context).entrySet().stream().filter({
+            it.key.contains('duplicate')
+        }).mapToInt({it.key.count('duplicate')}).max().orElse(0) == 1 // do not expect any duplicate tag names
     }
 
     private void cellTagsContains(MemoryCell cell, String text) {
