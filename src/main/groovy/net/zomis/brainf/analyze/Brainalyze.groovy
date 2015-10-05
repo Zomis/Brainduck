@@ -6,7 +6,6 @@ import net.zomis.brainf.model.BrainfuckListener
 import net.zomis.brainf.model.BrainfuckRunner
 import net.zomis.brainf.model.groovy.GroovyBFContext
 
-import java.util.concurrent.atomic.AtomicInteger
 import java.util.function.ToIntFunction
 import java.util.function.ToLongFunction
 

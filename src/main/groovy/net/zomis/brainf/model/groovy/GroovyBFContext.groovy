@@ -7,7 +7,7 @@ import org.codehaus.groovy.control.CompilerConfiguration
 class GroovyBFContext {
 
     GroovyShell shell
-    private Map<Integer, String> loopNames = new HashMap<>()
+    private Map<Integer, Set<String>> loopNames = new HashMap<>()
 
     GroovyBFContext() {
         CompilerConfiguration cc = new CompilerConfiguration()
@@ -20,11 +20,13 @@ class GroovyBFContext {
     }
 
     void addLoopName(int index, String name) {
-        this.loopNames.merge(index, name, {a, b -> a + ' ' + b})
+        this.loopNames.putIfAbsent(index, new HashSet<String>())
+        this.loopNames.get(index).add(name)
     }
 
     String getLoopName(int index) {
-        this.loopNames.get(index) + " #$index"
+        String names = String.valueOf(this.loopNames.get(index))
+        "#$index $names"
     }
 
     Map<Integer, String> getLoopNames() {
