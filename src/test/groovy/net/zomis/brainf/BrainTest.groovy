@@ -2,11 +2,15 @@ package net.zomis.brainf
 
 import net.zomis.brainf.analyze.Brainalyze
 import net.zomis.brainf.analyze.IndexCounters
+import net.zomis.brainf.analyze.MemoryCell
 import net.zomis.brainf.model.BrainF
 import net.zomis.brainf.model.ListCode
 import net.zomis.brainf.model.classic.BrainFCommand
 import net.zomis.brainf.model.BrainfuckMemory
 import net.zomis.brainf.model.BrainfuckRunner
+import net.zomis.brainf.model.classic.BrainfuckConverter
+import net.zomis.brainf.model.groovy.GroovyBFContext
+import net.zomis.brainf.model.groovy.GroovySupportConverter
 import net.zomis.brainf.model.run.StepContinueStrategy
 import net.zomis.brainf.model.run.StepOutStrategy
 import org.junit.Before
@@ -17,15 +21,19 @@ public class BrainTest {
     BrainfuckRunner brain
     ListCode source
     Brainalyze analyze
+    GroovyBFContext context
 
     void analyze() {
-        analyze = Brainalyze.analyze(brain)
+        analyze = Brainalyze.analyze(brain, context)
     }
 
     @Before
     public void setup() {
+        context = new GroovyBFContext()
         brain = BrainF.createWithDefaultSize()
-        source = ListCode.create("")
+        def converter = new GroovySupportConverter(context,
+            new BrainfuckConverter())
+        source = ListCode.create(converter, "")
         brain.code.source = source
     }
 
@@ -44,6 +52,39 @@ public class BrainTest {
 
         assert brain.code.commandIndex == 6
         assert brain.step() == BrainFCommand.ADD
+    }
+
+    @Test(timeout = 10000L)
+    public void namedLoops() {
+        String commands = '''
+        $ nextLoop 'before'
+        +++[-]
+        >+[-
+            $ loop 'inside'
+        ]
+        $ nextLoops 'nested'
+        >+[++[-]+-]
+        >+[-]
+        $ lastLoop 'after'
+        '''
+        source.addCommands(commands)
+        analyze()
+        analyze.print()
+        println context.getLoopNames()
+        cellTagsContains(analyze.cell(0), 'before')
+        cellTagsContains(analyze.cell(1), 'inside')
+        assert analyze.cell(2).resolveTags(context).entrySet().stream().filter({
+            it.key.contains('nested') && it.key.contains('loop-begin')
+        }).count() == 2 // expect two kinds of 'loop-begin nested' tags
+        cellTagsContains(analyze.cell(2), 'nested #134')
+        cellTagsContains(analyze.cell(2), 'nested #137')
+        cellTagsContains(analyze.cell(3), 'after')
+    }
+
+    private void cellTagsContains(MemoryCell cell, String text) {
+        assert cell.toString(context).contains(text)
+/*        assert cell.resolveTags(context).entrySet().stream().filter({
+        }).findAny().isPresent()*/
     }
 
     @Test

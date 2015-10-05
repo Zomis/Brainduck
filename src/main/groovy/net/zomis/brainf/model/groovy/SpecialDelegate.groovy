@@ -1,22 +1,24 @@
 package net.zomis.brainf.model.groovy
 
-import net.zomis.brainf.model.BrainfuckCodeConverter
 import net.zomis.brainf.model.BrainfuckCommand
 import net.zomis.brainf.model.BrainfuckRunner
 import net.zomis.brainf.model.CodeRetriever
 import net.zomis.brainf.model.ListCode
 import net.zomis.brainf.model.SubCommand
-import net.zomis.brainf.model.classic.BrainfuckConverter
+import net.zomis.brainf.model.classic.BrainFCommand
 
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.util.function.Predicate
 
 class SpecialDelegate {
 
-    private BrainfuckRunner runner
+    private final BrainfuckRunner runner
+    private final GroovyBFContext groovyContext
 
-    SpecialDelegate(BrainfuckRunner runner) {
+    SpecialDelegate(GroovyBFContext groovyContext, BrainfuckRunner runner) {
+        this.groovyContext = groovyContext
         this.runner = runner
     }
 
@@ -28,20 +30,57 @@ class SpecialDelegate {
         runner.memory.memoryIndex
     }
 
-    void nextLoop(String tagName) {
+    static final Predicate<BrainfuckCommand> IS_WHILE_START = { it == BrainFCommand.WHILE }
+    static final Predicate<BrainfuckCommand> IS_WHILE_END = {it == BrainFCommand.END_WHILE}
 
+    void nextLoop(String tagName) {
+        int index = findCode(IS_WHILE_START, 1)
+        groovyContext.addLoopName(index, tagName)
     }
 
     void nextLoops(String tagName) {
+        int firstIndex = findCode(IS_WHILE_START, 1)
+        int previousIndex = runner.code.commandIndex
+        runner.code.commandIndex = firstIndex
+        int lastIndex = runner.code.findMatching(BrainFCommand.END_WHILE, BrainFCommand.WHILE, 1)
+        runner.code.commandIndex = previousIndex
+
+        while (firstIndex < lastIndex) {
+            if (IS_WHILE_START.test(runner.code.getCommandAt(firstIndex))) {
+                groovyContext.addLoopName(firstIndex, tagName)
+            }
+            firstIndex++
+        }
 
     }
 
     void loop(String tagName) {
-
+        int index = findCode(IS_WHILE_START, -1)
+        groovyContext.addLoopName(index, tagName)
     }
 
     void lastLoop(String tagName) {
+        int endIndex = findCode(IS_WHILE_END, -1)
+        int previousIndex = runner.code.commandIndex
+        runner.code.commandIndex = endIndex
+        int startIndex = runner.code.findMatching(BrainFCommand.WHILE, BrainFCommand.END_WHILE, -1)
+        runner.code.commandIndex = previousIndex
+        groovyContext.addLoopName(startIndex, tagName)
+    }
 
+    int findCode(Predicate<BrainfuckCommand> predicate, int delta) {
+        int index = runner.code.commandIndex
+        while (true) {
+            BrainfuckCommand command = runner.code.getCommandAt(index)
+            if (command == null) {
+                throw new IllegalStateException('command out of range: ' + index)
+            }
+            if (predicate.test(command)) {
+                break
+            }
+            index += delta
+        }
+        index
     }
 
     def memory(int count) {

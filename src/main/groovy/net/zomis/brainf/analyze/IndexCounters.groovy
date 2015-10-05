@@ -33,7 +33,7 @@ class IndexCounters {
     }
 
     IndexCounter getOrCreate(int i) {
-        counters.putIfAbsent(i, new IndexCounter())
+        counters.putIfAbsent(i, new IndexCounter(forIndex: i))
         counters.get(i)
     }
 

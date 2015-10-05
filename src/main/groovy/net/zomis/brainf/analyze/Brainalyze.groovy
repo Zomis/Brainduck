@@ -4,6 +4,7 @@ import net.zomis.brainf.model.classic.BrainFCommand
 import net.zomis.brainf.model.BrainfuckCommand
 import net.zomis.brainf.model.BrainfuckListener
 import net.zomis.brainf.model.BrainfuckRunner
+import net.zomis.brainf.model.groovy.GroovyBFContext
 
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.function.ToIntFunction
@@ -16,8 +17,9 @@ class Brainalyze implements BrainfuckListener {
     private final int[] codeCommands
     private final MemoryCell[] cells
     private final IndexCounters whileLoopCounts = new IndexCounters()
+    private final GroovyBFContext groovy
 
-    private Brainalyze(BrainfuckRunner runner) {
+    private Brainalyze(BrainfuckRunner runner, GroovyBFContext groovy) {
         this.times = new int[runner.code.commandCount];
         this.actionsPerCommand = new int[BrainFCommand.values().length];
         this.codeCommands = new int[BrainFCommand.values().length];
@@ -26,6 +28,7 @@ class Brainalyze implements BrainfuckListener {
         for (int i = 0; i < size; i++) {
             this.cells[i] = new MemoryCell(i)
         }
+        this.groovy = groovy
     }
 
     MemoryCell cell(int index) {
@@ -44,8 +47,8 @@ class Brainalyze implements BrainfuckListener {
         return Arrays.copyOf(codeCommands, codeCommands.length)
     }
 
-    static Brainalyze analyze(BrainfuckRunner brain) {
-        Brainalyze analyze = new Brainalyze(brain)
+    static Brainalyze analyze(BrainfuckRunner brain, GroovyBFContext groovyContext) {
+        Brainalyze analyze = new Brainalyze(brain, groovyContext)
         brain.setListener(analyze)
         brain.run()
 
@@ -92,7 +95,7 @@ class Brainalyze implements BrainfuckListener {
         }
         for (int i = 0; i <= maxMemory; i++) {
             MemoryCell cell = cells[i]
-            println cell.toString()
+            println cell.toString(groovy)
             if (cell.readCount > 0 || cell.writeCount > 0) {
                 totalUsed++
             }
@@ -156,12 +159,13 @@ class Brainalyze implements BrainfuckListener {
 
         if (command == BrainFCommand.END_WHILE) {
             whileLoopCounts.recent().increase()
+            int startIndex = whileLoopCounts.recent().forIndex
             int current = runner.memory.getMemory()
             if (current == 0) {
                 whileLoopCounts.finishLast()
-                cell.whileLoopEnd.add(codeIndex)
+                cell.whileLoopEnd.add(startIndex)
             } else {
-                cell.whileLoopContinue.add(codeIndex)
+                cell.whileLoopContinue.add(startIndex)
             }
         }
     }

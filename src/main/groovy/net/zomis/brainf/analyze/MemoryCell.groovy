@@ -1,8 +1,11 @@
 package net.zomis.brainf.analyze
 
+import net.zomis.brainf.model.groovy.GroovyBFContext
+
 import java.util.function.BiConsumer
 import java.util.function.BiFunction
 import java.util.function.BinaryOperator
+import java.util.function.Function
 import java.util.function.Supplier
 import java.util.stream.Collector
 import java.util.stream.Stream
@@ -22,8 +25,7 @@ class MemoryCell {
         this.index = index
     }
 
-    @Override
-    String toString() {
+    String toString(GroovyBFContext groovy) {
         int value = this.value
         String hexAddress = String.format("%04X", index)
         String decAddress = String.format("%06d", index)
@@ -34,15 +36,20 @@ class MemoryCell {
 
         String reads = String.format("%6d", this.readCount);
         String writes = String.format("%6d", this.writeCount);
-        Map<String, Integer> tagsCount = resolveTags()
+        Map<String, Integer> tagsCount = resolveTags(groovy)
         String tags = tagsCount.isEmpty() ? '' : tagsCount.toString()
         "Hex $hexAddress\tDec $decAddress\tValue $decValue '$chrValue' \t" +
             "Reads: $reads\tWrites: $writes $tags".toString()
     }
 
-    Map<String, Integer> resolveTags() {
-        Stream.of(prints.tags('print'), whileLoopStart.tags('loop-start'),
-                whileLoopContinue.tags('loop-continue'), whileLoopEnd.tags('loop-end'))
+    Map<String, Integer> resolveTags(GroovyBFContext groovy) {
+        Function<Integer, String> loopNames = {i ->
+            groovy.getLoopName(i)
+        }
+        Stream.of(prints.tags('print', loopNames),
+                whileLoopStart.tags('loop-begin', loopNames),
+                whileLoopContinue.tags('loop-continue', loopNames),
+                whileLoopEnd.tags('loop-end', loopNames))
             .flatMap({it})
             .collect(countingCollector())
     }

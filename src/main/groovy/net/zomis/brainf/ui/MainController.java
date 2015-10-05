@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 import net.zomis.brainf.analyze.Brainalyze;
 import net.zomis.brainf.model.BrainfuckRunner;
 import net.zomis.brainf.model.ListCode;
+import net.zomis.brainf.model.groovy.GroovyBFContext;
 import net.zomis.brainf.model.run.RunStrategy;
 import net.zomis.brainf.model.run.SingleStepStrategy;
 import net.zomis.brainf.model.run.StepContinueStrategy;
@@ -81,7 +82,7 @@ public class MainController implements Initializable {
     }
 
     @FXML private void analyze(ActionEvent event) {
-        Brainalyze analyze = Brainalyze.analyze(brain());
+        Brainalyze analyze = Brainalyze.analyze(brain(), new GroovyBFContext());
         analyze.print();
     }
 

@@ -1,6 +1,7 @@
 package net.zomis.brainf.analyze
 
 import java.util.concurrent.atomic.AtomicInteger
+import java.util.function.Function
 import java.util.stream.Stream
 
 /**
@@ -10,6 +11,7 @@ import java.util.stream.Stream
  */
 class IndexCounter {
 
+    int forIndex
     List<Integer> results = []
     Stack<AtomicInteger> started = new Stack<>()
 
@@ -18,23 +20,24 @@ class IndexCounter {
     }
 
     String toString() {
-        printCompactList(results)
+        printCompactList(results, {String.valueOf(it)})
     }
 
-    private static String countString(int count, Object value) {
-        count >= 2 ? "$value * $count" : "$value"
+    private static <T> String countString(int count, T value, Function<T, String> toStringFunction) {
+        String val = toStringFunction.apply(value)
+        count >= 2 ? "$val * $count" : "$val"
     }
 
-    private static String printCompactList(List<?> values) {
+    private static <T> String printCompactList(List<T> values, Function<T, String> toStringFunction) {
         if (values.isEmpty()) {
             return '[]'
         }
         StringBuilder str = new StringBuilder()
         int count = 0
-        Object value = null
+        T value = null
         str.append '['
         boolean shouldPrintComma = false
-        for (Object i : values) {
+        for (T i : values) {
             if (Objects.equals(i, value)) {
                 count++
             } else {
@@ -43,7 +46,7 @@ class IndexCounter {
                 }
                 if (count > 0) {
                     shouldPrintComma = true
-                    str.append countString(count, value)
+                    str.append countString(count, value, toStringFunction)
                 }
                 count = 1
                 value = i
@@ -52,30 +55,30 @@ class IndexCounter {
         if (shouldPrintComma) {
             str.append ', '
         }
-        str.append countString(count, value)
+        str.append countString(count, value, toStringFunction)
         str.append ']'
         str.toString()
     }
 
-    private List<String> tagNames() {
+    private List<String> tagNames(Function<Integer, String> toStringFunction) {
         if (results.isEmpty()) {
             return []
         }
         List<String> result = []
         int count = 0
-        Object value = null
-        for (Object i : results) {
+        Integer value = null
+        for (Integer i : results) {
             if (Objects.equals(i, value)) {
                 count++
             } else {
                 if (count > 0) {
-                    result << countString(count, value)
+                    result << countString(count, value, toStringFunction)
                 }
                 count = 1
                 value = i
             }
         }
-        result << countString(count, value)
+        result << countString(count, value, toStringFunction)
         result
     }
 
@@ -91,8 +94,8 @@ class IndexCounter {
         add(this.started.pop().get())
     }
 
-    Stream<String> tags(String prefix) {
-        tagNames().stream().map({prefix + ' ' + it})
+    Stream<String> tags(String prefix, Function<Integer, String> indexToStringFunction) {
+        tagNames(indexToStringFunction).stream().map({prefix + ' ' + it})
     }
 
 }
