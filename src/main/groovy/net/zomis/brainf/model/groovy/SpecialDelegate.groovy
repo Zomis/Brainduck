@@ -3,6 +3,8 @@ package net.zomis.brainf.model.groovy
 import net.zomis.brainf.model.BrainfuckCodeConverter
 import net.zomis.brainf.model.BrainfuckCommand
 import net.zomis.brainf.model.BrainfuckRunner
+import net.zomis.brainf.model.CodeRetriever
+import net.zomis.brainf.model.ListCode
 import net.zomis.brainf.model.SubCommand
 import net.zomis.brainf.model.classic.BrainfuckConverter
 
@@ -75,9 +77,7 @@ class SpecialDelegate {
             .findFirst()
             .orElseThrow({new RuntimeException("Unable to find file $name")})
 
-        List<BrainfuckCommand> commands = []
-        BrainfuckCodeConverter converter = new GroovySupportConverter(new BrainfuckConverter())
-        converter.convert(url.text, { commands.add it })
+        CodeRetriever commands = ListCode.create(url.text)
         println 'Subcommand: ' + commands
 
         def command = new SubCommand(commands)
