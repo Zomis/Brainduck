@@ -51,6 +51,7 @@ class MemoryCell {
                 whileLoopContinue.tags('loop-continue', loopNames),
                 whileLoopEnd.tags('loop-end', loopNames))
             .flatMap({it})
+            .sorted()
             .collect(countingCollector())
     }
 
