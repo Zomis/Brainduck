@@ -17,6 +17,7 @@ class Brainalyze implements BrainfuckListener {
     private final MemoryCell[] cells
     private final IndexCounters whileLoopCounts = new IndexCounters()
     private final GroovyBFContext groovy
+    private boolean memoryIndexBelowZero
 
     private Brainalyze(BrainfuckRunner runner, GroovyBFContext groovy) {
         this.times = new int[runner.code.commandCount];
@@ -83,6 +84,10 @@ class Brainalyze implements BrainfuckListener {
             println "$entry.key $entry.value"
         })
         println()
+        if (this.memoryIndexBelowZero) {
+            println 'WARNING: Memory index goes below zero'
+        }
+        println()
         println 'Tape summary'
         int totalUsed = 0
         int maxMemory = 0
@@ -127,6 +132,10 @@ class Brainalyze implements BrainfuckListener {
         this.times[codeIndex]++
         actionsPerCommand[command.ordinal()]++
         MemoryCell cell = cells[runner.memory.memoryIndex]
+
+        if (command == BrainFCommand.PREVIOUS && runner.memory.memoryIndex == 0) {
+            this.memoryIndexBelowZero = true
+        }
 
         switch (command) {
             case BrainFCommand.ADD:
@@ -198,6 +207,10 @@ class Brainalyze implements BrainfuckListener {
             result[i] = function.applyAsLong(cell)
         }
         result
+    }
+
+    boolean isMemoryIndexBelowZero() {
+        this.memoryIndexBelowZero
     }
 
 }
