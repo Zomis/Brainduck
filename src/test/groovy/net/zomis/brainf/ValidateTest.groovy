@@ -18,4 +18,12 @@ class ValidateTest extends BrainfuckTest {
         assert !analyze.isMemoryIndexBelowZero()
     }
 
+    @Test
+    void valueRange() {
+        source.addCommands('-[+]++')
+        analyze()
+        assert analyze.minValue == -1
+        assert analyze.maxValue == 2
+    }
+
 }

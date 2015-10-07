@@ -18,6 +18,8 @@ class Brainalyze implements BrainfuckListener {
     private final IndexCounters whileLoopCounts = new IndexCounters()
     private final GroovyBFContext groovy
     private boolean memoryIndexBelowZero
+    private int minValue
+    private int maxValue
 
     private Brainalyze(BrainfuckRunner runner, GroovyBFContext groovy) {
         this.times = new int[runner.code.commandCount];
@@ -180,7 +182,12 @@ class Brainalyze implements BrainfuckListener {
 
     @Override
     void afterPerform(BrainfuckRunner runner, BrainfuckCommand command) {
-
+        if (runner.memory.value > this.maxValue) {
+            this.maxValue = runner.memory.value
+        }
+        if (runner.memory.value < this.minValue) {
+            this.minValue = runner.memory.value
+        }
     }
 
     IndexCounters getWhileLoopCounts() {
@@ -211,6 +218,14 @@ class Brainalyze implements BrainfuckListener {
 
     boolean isMemoryIndexBelowZero() {
         this.memoryIndexBelowZero
+    }
+
+    int getMinValue() {
+        this.minValue
+    }
+
+    int getMaxValue() {
+        this.maxValue
     }
 
 }
