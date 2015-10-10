@@ -20,6 +20,8 @@ class Brainalyze implements BrainfuckListener {
     private boolean memoryIndexBelowZero
     private int minValue
     private int maxValue
+    private int maxMemory
+    private int cellsUsed
 
     private Brainalyze(BrainfuckRunner runner, GroovyBFContext groovy) {
         this.times = new int[runner.code.commandCount];
@@ -66,6 +68,20 @@ class Brainalyze implements BrainfuckListener {
                 analyze.codeCommands[cmd.ordinal()]++
             }
         }
+
+        for (int i = analyze.cells.length - 1; i >= 0; i--) {
+            if (analyze.cells[i].readCount > 0 || analyze.cells[i].writeCount > 0) {
+                analyze.maxMemory = i
+                break
+            }
+        }
+        for (int i = 0; i <= analyze.maxMemory; i++) {
+            MemoryCell cell = analyze.cells[i]
+            if (cell.readCount > 0 || cell.writeCount > 0) {
+                analyze.cellsUsed++
+            }
+        }
+
         analyze
     }
 
@@ -91,22 +107,11 @@ class Brainalyze implements BrainfuckListener {
         }
         println()
         println 'Tape summary'
-        int totalUsed = 0
-        int maxMemory = 0
-        for (int i = cells.length - 1; i >= 0; i--) {
-            if (cells[i].readCount > 0 || cells[i].writeCount > 0) {
-                maxMemory = i
-                break
-            }
-        }
         for (int i = 0; i <= maxMemory; i++) {
             MemoryCell cell = cells[i]
             println cell.toString(groovy)
-            if (cell.readCount > 0 || cell.writeCount > 0) {
-                totalUsed++
-            }
         }
-        println "Total memory used = $totalUsed"
+        println "Total memory used = $cellsUsed"
         println()
     }
 
@@ -230,6 +235,14 @@ class Brainalyze implements BrainfuckListener {
 
     int getMaxValue() {
         this.maxValue
+    }
+
+    int getMaxMemory() {
+        this.maxMemory
+    }
+
+    int getCellsUsed() {
+        this.cellsUsed
     }
 
 }
