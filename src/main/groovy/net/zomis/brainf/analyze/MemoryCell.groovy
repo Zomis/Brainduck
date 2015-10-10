@@ -17,6 +17,7 @@ class MemoryCell {
     long readCount
     long writeCount
     IndexCounter prints = new IndexCounter()
+    IndexCounter userInputs = new IndexCounter()
     IndexCounter whileLoopStart = new IndexCounter()
     IndexCounter whileLoopContinue = new IndexCounter()
     IndexCounter whileLoopEnd = new IndexCounter()
@@ -47,6 +48,7 @@ class MemoryCell {
             groovy.getLoopName(i)
         }
         Stream.of(prints.tags('print', loopNames),
+                userInputs.tags('userInput', loopNames),
                 whileLoopStart.tags('loop-begin', loopNames),
                 whileLoopContinue.tags('loop-continue', loopNames),
                 whileLoopEnd.tags('loop-end', loopNames))

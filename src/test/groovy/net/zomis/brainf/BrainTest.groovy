@@ -61,6 +61,14 @@ public class BrainTest extends BrainfuckTest {
         }).mapToInt({it.key.count('duplicate')}).max().orElse(0) == 1 // do not expect any duplicate tag names
     }
 
+    @Test(timeout = 1000L)
+    public void userInputTag() {
+        String commands = '++++[->,<]'
+        brain = BrainF.createFromCodeAndInput(30, commands, 'INPUT')
+        analyze()
+        cellTagsContains(analyze.cell(1), 'userInput')
+    }
+
     private void cellTagsContains(MemoryCell cell, String text) {
         assert cell.toString(context).contains(text)
 /*        assert cell.resolveTags(context).entrySet().stream().filter({

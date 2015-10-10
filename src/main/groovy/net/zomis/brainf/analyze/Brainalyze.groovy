@@ -139,6 +139,10 @@ class Brainalyze implements BrainfuckListener {
             this.memoryIndexBelowZero = true
         }
 
+        if (command == BrainFCommand.READ) {
+            cell.userInputs.add(codeIndex)
+        }
+
         switch (command) {
             case BrainFCommand.ADD:
             case BrainFCommand.SUBTRACT:
