@@ -25,8 +25,9 @@ class GroovyBFContext {
     }
 
     String getLoopName(int index) {
-        String names = String.valueOf(this.loopNames.get(index))
-        "#$index $names"
+        def loopNameSet = this.loopNames.get(index)
+        String prefix = "#$index"
+        return loopNameSet ? "$prefix $loopNameSet" : prefix
     }
 
     Map<Integer, String> getLoopNames() {

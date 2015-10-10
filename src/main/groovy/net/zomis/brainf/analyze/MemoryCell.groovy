@@ -45,8 +45,7 @@ class MemoryCell {
 
     Map<String, Integer> resolveTags(GroovyBFContext groovy) {
         Function<Integer, String> loopNames = {i ->
-            String name = groovy.getLoopName(i)
-            return name ? name : ''
+            groovy.getLoopName(i)
         }
         Stream.of(prints.tags('print', loopNames),
                 userInputs.tags('userInput', loopNames),
