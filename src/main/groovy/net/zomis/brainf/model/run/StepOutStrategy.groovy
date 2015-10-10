@@ -21,7 +21,7 @@ class StepOutStrategy implements RunStrategy {
     @Override
     boolean next(BrainfuckRunner runner) {
         BrainfuckCommand comm = runner.getCode().getNextCommand()
-        int value = runner.getMemory().getMemory()
+        int value = runner.memory.value
         if (comm == BrainFCommand.WHILE) {
             loops++
         }

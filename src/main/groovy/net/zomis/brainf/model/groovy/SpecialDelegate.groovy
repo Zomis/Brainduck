@@ -23,7 +23,7 @@ class SpecialDelegate {
     }
 
     int getValue() {
-        runner.memory.getMemory()
+        runner.memory.value
     }
 
     int getPosition() {

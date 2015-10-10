@@ -219,12 +219,12 @@ public class BrainTest extends BrainfuckTest {
         brain.run();
         assert 9 == brain.code.commandIndex
         assert 1 == brain.memory.memoryIndex
-        assert 2 == brain.memory.memory
+        assert 2 == brain.memory.value
         brain.perform(BrainFCommand.PREVIOUS)
-        assert 1 == brain.memory.memory
+        assert 1 == brain.memory.value
         brain.perform(BrainFCommand.NEXT)
         brain.perform(BrainFCommand.NEXT)
-        assert 3 == brain.memory.memory
+        assert 3 == brain.memory.value
     }
 
 }

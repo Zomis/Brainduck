@@ -24,7 +24,7 @@ class StepContinueStrategy implements RunStrategy {
         if (comm == BrainFCommand.WHILE) {
             loops++
         }
-        if (comm == BrainFCommand.END_WHILE && runner.getMemory().getMemory() == 0) {
+        if (comm == BrainFCommand.END_WHILE && runner.getMemory().getValue() == 0) {
             loops--
         }
         if (comm == BrainFCommand.END_WHILE && loops <= 0) {

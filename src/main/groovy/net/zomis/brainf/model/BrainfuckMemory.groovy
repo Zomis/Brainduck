@@ -49,11 +49,6 @@ class BrainfuckMemory {
         return memory[index];
     }
 
-    @Deprecated
-    public int getMemory() {
-        return getValue();
-    }
-
     public int getValue() {
         return memory[memoryIndex];
     }

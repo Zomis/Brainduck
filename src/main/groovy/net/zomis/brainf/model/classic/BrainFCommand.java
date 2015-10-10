@@ -17,7 +17,7 @@ public enum BrainFCommand implements BrainfuckCommand {
         r.getMemory().setMemoryIndex(r.getMemory().getMemoryIndex() - 1);
     }),
     WRITE('.', r -> {
-        char write = (char) r.getMemory().getMemory();
+        char write = (char) r.getMemory().getValue();
         r.appendOutput(write);
     }),
     READ(',', r -> {
