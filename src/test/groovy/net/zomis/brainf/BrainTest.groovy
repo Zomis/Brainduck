@@ -10,6 +10,8 @@ import net.zomis.brainf.model.run.StepContinueStrategy
 import net.zomis.brainf.model.run.StepOutStrategy
 import org.junit.Test
 
+import java.util.concurrent.TimeUnit
+
 public class BrainTest extends BrainfuckTest {
 
     @Test
@@ -113,7 +115,11 @@ public class BrainTest extends BrainfuckTest {
     @Test
     public void fizzBuzz() {
         source.addCommands(BrainfuckRunner.classLoader.getResource('fizzbuzz.bf').text);
+        long start = System.nanoTime()
         analyze()
+        long stop = System.nanoTime()
+        long ms = TimeUnit.MILLISECONDS.convert(stop - start, TimeUnit.NANOSECONDS)
+        println "FizzBuzz analyze took $ms ms"
         assert analyze.getActionsForCommand(BrainFCommand.WRITE) == brain.output.length()
         assert brain.output == fizzBuzzString(100)
     }

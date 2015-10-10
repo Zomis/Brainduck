@@ -34,15 +34,14 @@ class GroovyBFContext {
     }
 
     private class SpecialCommand implements BrainfuckCommand {
-        final String code
+        private final DelegatingScript script
 
         SpecialCommand(String code) {
-            this.code = code
+            script = (DelegatingScript) shell.parse(code)
         }
 
         @Override
         void perform(BrainfuckRunner runner) {
-            DelegatingScript script = (DelegatingScript) shell.parse(code)
             script.setDelegate(new SpecialDelegate(GroovyBFContext.this, runner))
             script.run()
         }
