@@ -16,6 +16,7 @@ class Brainalyze implements BrainfuckListener {
     private final int[] codeCommands
     private final MemoryCell[] cells
     private final IndexCounters whileLoopCounts = new IndexCounters()
+    private final List<Map> problematicCommands = []
     private final GroovyBFContext groovy
     private boolean memoryIndexBelowZero
     private int minValue
@@ -67,6 +68,18 @@ class Brainalyze implements BrainfuckListener {
                 BrainFCommand cmd = command as BrainFCommand
                 analyze.codeCommands[cmd.ordinal()]++
             }
+            if (command instanceof GroovyBFContext.SpecialCommand) {
+                GroovyBFContext.SpecialCommand cmd = command as GroovyBFContext.SpecialCommand
+                for (int codeIndex = 0; codeIndex < cmd.code.length(); codeIndex++) {
+                    char ch = cmd.code.charAt(codeIndex)
+                    BrainFCommand bfCommand = BrainFCommand.getCommand(ch)
+                    if (bfCommand != BrainFCommand.NONE) {
+                        Map<String, Object> map = [index: i, codeIndex: codeIndex, command: bfCommand]
+                        analyze.problematicCommands << map
+                        break;
+                    }
+                }
+            }
         }
 
         for (int i = analyze.cells.length - 1; i >= 0; i--) {
@@ -113,6 +126,9 @@ class Brainalyze implements BrainfuckListener {
         }
         println "Total memory used = $cellsUsed"
         println()
+        for (Map problem : problematicCommands) {
+            println "Problematic command: $problem"
+        }
     }
 
     static void printCommands(int[] ints) {

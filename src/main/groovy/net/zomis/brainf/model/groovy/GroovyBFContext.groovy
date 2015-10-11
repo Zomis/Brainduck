@@ -34,10 +34,12 @@ class GroovyBFContext {
         new HashMap<Integer, String>(this.loopNames)
     }
 
-    private class SpecialCommand implements BrainfuckCommand {
+    public class SpecialCommand implements BrainfuckCommand {
         private final DelegatingScript script
+        private final String code
 
         SpecialCommand(String code) {
+            this.code = code
             script = (DelegatingScript) shell.parse(code)
         }
 
@@ -46,6 +48,17 @@ class GroovyBFContext {
             script.setDelegate(new SpecialDelegate(GroovyBFContext.this, runner))
             script.run()
         }
+
+        String getCode() {
+            this.code
+        }
+
+        @Override
+        String toString() {
+            String myCode = this.code
+            "SpecialCommand: $myCode"
+        }
+
     }
 
 }
