@@ -35,7 +35,7 @@ SETUP Create the Fizz and Buzz sequences on the tape
 Fizz
 -->                               Create indicator
 >+++++ +++++ [-
-$ loop 'setup-Fizz'
+$ loop 'setupFizz'
 >+++++ ++
 >+++++ +++++
 >+++++ +++++ ++
@@ -52,7 +52,7 @@ $ loop 'setup-Fizz'
 Buzz = 66 117 122 122
 -->>                               Create indicator
 +++++ +++++ [-
-$ loop 'setup-Buzz'
+$ loop 'setupBuzz'
 > +++++ ++                         10 * 7 = 70
 > +++++ +++++ ++                   10 * 12 = 120
 > +++++ +++++ ++
@@ -130,12 +130,12 @@ ALL FIZZBUZZES PROCESSED
 Use the boolean to check whether or not to print the number
 
   
-  $ nextLoop 'search255-afterFizzBuzzes'
+  $ nextLoop 'search255_afterFizzBuzzes'
   +[-<+]-     Go back to the 255 marker
   >>          Go to boolean
   -[+         If boolean is zero then print the number
 
-         $ nextLoops 'print-number'
+         $ nextLoops 'printNumber'
          Code taken from StackOverflow below for printing a number
 >++++++++++<<[->+>-[>+>>]>[+[-<+>]>+>>]<<<<<<]>>[-]>>>++++++++++<[->-[>+>>]>[+[-
 <+>]>+>>]<<<<<]>[-]>>[>++++++[-<++++++++>]<.<<+>+>[-]]<[<[->-<]++++++[->++++++++
