@@ -207,6 +207,18 @@ public class BrainTest extends BrainfuckTest {
     }
 
     @Test
+    public void bfGroovy() {
+        source.addCommands('''+++>
+$ bf '+' * 3
+<---
+''')
+        brain.run()
+        assert brain.memory.getMemory(0) == 0
+        assert brain.memory.getMemory(1) == 3
+        assert brain.memory.getMemory(2) == 0
+    }
+
+    @Test
     public void input() {
         BrainfuckRunner brain = BrainF.createFromCodeAndInput(BrainfuckMemory.DEFAULT_MEMORY_SIZE, "+++,.", "a");
         brain.run();

@@ -6,6 +6,7 @@ import net.zomis.brainf.model.CodeRetriever
 import net.zomis.brainf.model.ListCode
 import net.zomis.brainf.model.SubCommand
 import net.zomis.brainf.model.classic.BrainFCommand
+import net.zomis.brainf.model.classic.BrainfuckConverter
 
 import java.nio.file.Files
 import java.nio.file.Path
@@ -36,6 +37,12 @@ class SpecialDelegate {
     void nextLoop(String tagName) {
         int index = findCode(IS_WHILE_START, 1)
         groovyContext.addLoopName(index, tagName)
+    }
+
+    void bf(String code) {
+        def commands = ListCode.create(new BrainfuckConverter(), code)
+        def subCommand = new SubCommand(commands)
+        runner.perform(subCommand)
     }
 
     void nextLoops(String tagName) {
