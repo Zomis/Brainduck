@@ -32,6 +32,9 @@
                 <MenuItem text="_Run" onAction="#runCode">
                     <accelerator><KeyCodeCombination alt="UP" code="F9" control="UP" meta="UP" shift="UP" shortcut="UP" /></accelerator>
                 </MenuItem>
+                <MenuItem text="S_top" onAction="#stopRunning">
+                    <accelerator><KeyCodeCombination alt="UP" code="F2" control="DOWN" meta="UP" shift="UP" shortcut="UP" /></accelerator>
+                </MenuItem>
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">

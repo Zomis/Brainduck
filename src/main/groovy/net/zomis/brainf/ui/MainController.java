@@ -6,6 +6,8 @@ import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -28,6 +30,8 @@ public class MainController implements Initializable {
 
     private TabController currentTab;
     private final Stage stage;
+    private final AtomicBoolean runSwitch = new AtomicBoolean();
+    private final AtomicBoolean codeRunning = new AtomicBoolean();
 
     public MainController(Stage stage) {
         this.stage = stage;
@@ -58,16 +62,55 @@ public class MainController implements Initializable {
         runWith(new SingleStepStrategy());
 	}
 
+    @FXML
+    private void stopRunning(ActionEvent event) {
+        runSwitch.set(false);
+    }
+
     private void runWith(RunStrategy strategy) {
-        int count = brain().run(strategy);
-        if (count == 0) {
-            System.out.println(strategy + " not started");
+        if (codeRunning.get()) {
+            System.out.println("--- Code already running, cannot start " + strategy);
+            // do not allow multiple runs at the same time
+            return;
         }
-        if (Platform.isFxApplicationThread()) {
-            update();
-        } else {
-            Platform.runLater(() -> update());
-        }
+        this.exec.execute(() -> {
+            this.codeRunning.set(true);
+            this.runSwitch.set(true);
+            final AtomicInteger runTimes = new AtomicInteger();
+            int count = brain().run(new RunStrategy() {
+                @Override
+                public boolean start(BrainfuckRunner runner) {
+                    return strategy.start(runner);
+                }
+
+                @Override
+                public boolean next(BrainfuckRunner runner) {
+                    if (Thread.interrupted()) {
+                        stopCode();
+                        return false;
+                    }
+                    if (!runSwitch.get()) {
+                        stopCode();
+                        return false;
+                    }
+                    return strategy.next(runner);
+                }
+
+                private void stopCode() {
+                    runSwitch.set(true);
+                    codeRunning.set(false);
+                }
+            });
+            if (count == 0) {
+                System.out.println(strategy + " not started");
+            }
+            if (Platform.isFxApplicationThread()) {
+                update();
+            } else {
+                Platform.runLater(() -> update());
+            }
+            codeRunning.set(false);
+        });
     }
 
     @FXML private void stepOut(ActionEvent event) {
