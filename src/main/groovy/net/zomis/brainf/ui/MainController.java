@@ -20,10 +20,7 @@ import net.zomis.brainf.analyze.Brainalyze;
 import net.zomis.brainf.model.BrainfuckRunner;
 import net.zomis.brainf.model.ListCode;
 import net.zomis.brainf.model.groovy.GroovyBFContext;
-import net.zomis.brainf.model.run.RunStrategy;
-import net.zomis.brainf.model.run.SingleStepStrategy;
-import net.zomis.brainf.model.run.StepContinueStrategy;
-import net.zomis.brainf.model.run.StepOutStrategy;
+import net.zomis.brainf.model.run.*;
 
 public class MainController implements Initializable {
 
@@ -75,6 +72,10 @@ public class MainController implements Initializable {
 
     @FXML private void stepOut(ActionEvent event) {
         runWith(new StepOutStrategy());
+    }
+
+    @FXML private void runCode(ActionEvent event) {
+        runWith(new UntilEndStrategy());
     }
 
     @FXML private void stepContinue(ActionEvent event) {

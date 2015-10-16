@@ -29,6 +29,9 @@
                 <MenuItem text="Step _Continue" onAction="#stepContinue">
                     <accelerator><KeyCodeCombination alt="UP" code="F8" control="UP" meta="UP" shift="UP" shortcut="UP" /></accelerator>
                 </MenuItem>
+                <MenuItem text="_Run" onAction="#runCode">
+                    <accelerator><KeyCodeCombination alt="UP" code="F9" control="UP" meta="UP" shift="UP" shortcut="UP" /></accelerator>
+                </MenuItem>
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
