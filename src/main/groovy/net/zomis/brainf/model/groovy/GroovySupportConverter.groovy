@@ -2,6 +2,7 @@ package net.zomis.brainf.model.groovy
 
 import net.zomis.brainf.model.BrainfuckCodeConverter
 import net.zomis.brainf.model.BrainfuckCommand
+import net.zomis.brainf.model.BrainfuckRunner
 import net.zomis.brainf.model.classic.BrainFCommand
 
 import java.util.function.Consumer
@@ -57,7 +58,12 @@ class GroovySupportConverter implements BrainfuckCodeConverter {
         if (codeEnabled) {
             throw new IllegalArgumentException('Code block was not terminated.')
         }
-
+        add.accept(new BrainfuckCommand() {
+            @Override
+            void perform(BrainfuckRunner runner) {
+                groovyContext.postExecute();
+            }
+        })
     }
 
     private static void addEmpty(Consumer<BrainfuckCommand> add, int count) {

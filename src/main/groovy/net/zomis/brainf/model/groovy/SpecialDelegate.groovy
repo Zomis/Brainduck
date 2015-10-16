@@ -1,6 +1,9 @@
 package net.zomis.brainf.model.groovy
 
+import net.zomis.brainf.analyze.Brainalyze
+import net.zomis.brainf.model.BrainfuckCode
 import net.zomis.brainf.model.BrainfuckCommand
+import net.zomis.brainf.model.BrainfuckMemory
 import net.zomis.brainf.model.BrainfuckRunner
 import net.zomis.brainf.model.CodeRetriever
 import net.zomis.brainf.model.ListCode
@@ -105,7 +108,28 @@ class SpecialDelegate {
         return new ArrayBuilder(firstValue)
     }
 
-    void include(String name) {
+    void compareWith(String file) {
+        final Runnable before = groovyContext.afterRun
+        groovyContext.afterRun = {
+            before.run()
+            String myOutput = runner.output
+            BrainfuckRunner other = new BrainfuckRunner(new BrainfuckMemory(runner.memory.size), new BrainfuckCode(),
+                null, new StringBuilder())
+            URL url = findFile(file)
+            GroovyBFContext otherContext = new GroovyBFContext()
+            other.code.source = ListCode.create(new GroovySupportConverter(otherContext,
+                    new BrainfuckConverter()), url.text)
+            Brainalyze analyze = Brainalyze.analyze(other, otherContext)
+            println "Analyze for $file"
+            analyze.print()
+            println()
+            println()
+            String otherOutput = other.output
+            assert myOutput == otherOutput
+        }
+    }
+
+    URL findFile(String name) {
         List<URL> urls = []
         if (!name.endsWith('.bf')) {
             name = name + '.bf'
@@ -118,10 +142,15 @@ class SpecialDelegate {
         urls << getClass().classLoader.getResource(name)
 
         URL url = urls.stream()
-            .peek({url -> println "Checking for $name at $url"})
-            .filter({url -> url != null})
-            .findFirst()
-            .orElseThrow({new RuntimeException("Unable to find file $name")})
+                .peek({url -> println "Checking for $name at $url"})
+                .filter({url -> url != null})
+                .findFirst()
+                .orElseThrow({new RuntimeException("Unable to find file $name")})
+        return url
+    }
+
+    void include(String name) {
+        URL url = findFile(name)
 
         CodeRetriever commands = ListCode.create(url.text)
         println 'Subcommand: ' + commands

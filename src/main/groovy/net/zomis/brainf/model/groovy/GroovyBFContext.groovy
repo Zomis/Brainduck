@@ -1,5 +1,6 @@
 package net.zomis.brainf.model.groovy
 
+import groovy.transform.PackageScope
 import net.zomis.brainf.model.BrainfuckCommand
 import net.zomis.brainf.model.BrainfuckRunner
 import org.codehaus.groovy.control.CompilerConfiguration
@@ -8,6 +9,7 @@ class GroovyBFContext {
 
     GroovyShell shell
     private Map<Integer, Set<String>> loopNames = new HashMap<>()
+    @PackageScope Runnable afterRun = {}
 
     GroovyBFContext() {
         CompilerConfiguration cc = new CompilerConfiguration()
@@ -32,6 +34,10 @@ class GroovyBFContext {
 
     Map<Integer, String> getLoopNames() {
         new HashMap<Integer, String>(this.loopNames)
+    }
+
+    void postExecute() {
+        afterRun.run()
     }
 
     public class SpecialCommand implements BrainfuckCommand {
