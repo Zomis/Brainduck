@@ -229,7 +229,7 @@ $ bf '+' * 3
     public void simpleCommands() {
         source.addCommands("+>++>+++<")
         brain.run();
-        assert 9 == brain.code.commandIndex
+        assert brain.code.commandCount == brain.code.commandIndex
         assert 1 == brain.memory.memoryIndex
         assert 2 == brain.memory.value
         brain.perform(BrainFCommand.PREVIOUS)

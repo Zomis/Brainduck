@@ -58,12 +58,14 @@ class GroovySupportConverter implements BrainfuckCodeConverter {
         if (codeEnabled) {
             throw new IllegalArgumentException('Code block was not terminated.')
         }
-        add.accept(new BrainfuckCommand() {
-            @Override
-            void perform(BrainfuckRunner runner) {
-                groovyContext.postExecute();
-            }
-        })
+        if (!string.isEmpty()) {
+            add.accept(new BrainfuckCommand() {
+                @Override
+                void perform(BrainfuckRunner runner) {
+                    groovyContext.postExecute();
+                }
+            })
+        }
     }
 
     private static void addEmpty(Consumer<BrainfuckCommand> add, int count) {
