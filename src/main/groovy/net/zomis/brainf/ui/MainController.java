@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -18,6 +19,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import net.zomis.brainf.analyze.Brainalyze;
 import net.zomis.brainf.model.BrainfuckRunner;
 import net.zomis.brainf.model.ListCode;
@@ -170,6 +172,7 @@ public class MainController implements Initializable {
             e.printStackTrace();
             tabs.getTabs().add(new Tab(e.getMessage()));
         }
-	}
+        stage.setOnCloseRequest(e -> exec.shutdownNow());
+    }
 
 }
