@@ -22,6 +22,15 @@ class BrainfuckCode {
         return findMatching(commandIndex, decrease, increase, direction)
     }
 
+    /**
+     * Searches for a matching command, that is grouped with another command, in the specified direction
+     *
+     * @param startIndex Index to start search at (exclusive)
+     * @param decrease The desired search target
+     * @param increase The command that is the opposite of the desired search target, which increases the nesting
+     * @param direction How much to change the index each step
+     * @return The first found index of the `decrease` that has a nesting level of 0, or -1 if no such target is found
+     */
     int findMatching(int startIndex, BrainfuckCommand decrease, BrainfuckCommand increase, int direction) {
         int index = startIndex
         int matching = 1;
