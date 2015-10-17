@@ -48,10 +48,6 @@ class Brainalyze implements BrainfuckListener {
         return Arrays.copyOf(actionsPerCommand, actionsPerCommand.length)
     }
 
-    int[] getCodeCommands() {
-        return Arrays.copyOf(codeCommands, codeCommands.length)
-    }
-
     static Brainalyze analyze(BrainfuckRunner brain, GroovyBFContext groovyContext) {
         Brainalyze analyze = new Brainalyze(brain, groovyContext)
         brain.setListener(analyze)
