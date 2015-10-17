@@ -151,14 +151,23 @@ public class BrainTest extends BrainfuckTest {
     public void stepContinueStrategy() {
         source.addCommands("+++[>+<-]-");
         assert brain.step() == BrainFCommand.ADD
-        assert brain.step() == BrainFCommand.ADD
-        assert brain.step() == BrainFCommand.ADD
-        assert brain.run(new StepContinueStrategy()) == 0
-        assert brain.step() == BrainFCommand.WHILE
-        int count = brain.run(new StepContinueStrategy())
-        assert count == 5
-        assert brain.memory.getMemory(1) == 1
+        brain.run(new StepContinueStrategy())
+        assert brain.step() == BrainFCommand.NEXT
+        assert brain.memory.getMemory(0) == 3
+
+        brain.run(new StepContinueStrategy())
         assert brain.code.nextCommand == BrainFCommand.NEXT
+        assert brain.memory.getMemory(0) == 2
+        assert brain.memory.getMemory(1) == 1
+
+        brain.run(new StepContinueStrategy())
+        assert brain.memory.getMemory(0) == 1
+        assert brain.code.nextCommand == BrainFCommand.NEXT
+
+        brain.run(new StepContinueStrategy())
+        assert brain.memory.getMemory(0) == 0
+        assert brain.code.nextCommand == BrainFCommand.SUBTRACT
+
     }
 
     @Test
