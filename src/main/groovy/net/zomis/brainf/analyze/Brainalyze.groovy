@@ -103,9 +103,6 @@ class Brainalyze implements BrainfuckListener {
         println 'Code instructions per command'
         printCommands(codeCommands)
         println()
-        println 'Number of times each command has been performed'
-        println times
-        println()
         println 'While loops analysis'
         whileLoopCounts.sorted().forEach({entry ->
             println "$entry.key $entry.value"
