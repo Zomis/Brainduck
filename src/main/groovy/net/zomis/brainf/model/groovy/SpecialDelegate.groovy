@@ -50,10 +50,7 @@ class SpecialDelegate {
 
     void nextLoops(String tagName) {
         int firstIndex = findCode(IS_WHILE_START, 1)
-        int previousIndex = runner.code.commandIndex
-        runner.code.commandIndex = firstIndex
-        int lastIndex = runner.code.findMatching(BrainFCommand.END_WHILE, BrainFCommand.WHILE, 1)
-        runner.code.commandIndex = previousIndex
+        int lastIndex = runner.code.findMatching(firstIndex, BrainFCommand.END_WHILE, BrainFCommand.WHILE, 1)
 
         while (firstIndex < lastIndex) {
             if (IS_WHILE_START.test(runner.code.getCommandAt(firstIndex))) {
@@ -71,10 +68,7 @@ class SpecialDelegate {
 
     void lastLoop(String tagName) {
         int endIndex = findCode(IS_WHILE_END, -1)
-        int previousIndex = runner.code.commandIndex
-        runner.code.commandIndex = endIndex
-        int startIndex = runner.code.findMatching(BrainFCommand.WHILE, BrainFCommand.END_WHILE, -1)
-        runner.code.commandIndex = previousIndex
+        int startIndex = runner.code.findMatching(endIndex, BrainFCommand.WHILE, BrainFCommand.END_WHILE, -1)
         groovyContext.addLoopName(startIndex, tagName)
     }
 

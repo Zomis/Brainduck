@@ -19,7 +19,11 @@ class BrainfuckCode {
     }
 
     int findMatching(BrainfuckCommand decrease, BrainfuckCommand increase, int direction) {
-        int index = commandIndex
+        return findMatching(commandIndex, decrease, increase, direction)
+    }
+
+    int findMatching(int startIndex, BrainfuckCommand decrease, BrainfuckCommand increase, int direction) {
+        int index = startIndex
         int matching = 1;
         while (true) {
             index += direction;
