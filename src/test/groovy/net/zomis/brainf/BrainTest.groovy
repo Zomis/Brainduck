@@ -2,6 +2,7 @@ package net.zomis.brainf
 
 import net.zomis.brainf.analyze.IndexCounters
 import net.zomis.brainf.analyze.MemoryCell
+import net.zomis.brainf.analyze.analyzers.ReadWriteAnalysis
 import net.zomis.brainf.model.BrainF
 import net.zomis.brainf.model.classic.BrainFCommand
 import net.zomis.brainf.model.BrainfuckMemory
@@ -210,9 +211,16 @@ public class BrainTest extends BrainfuckTest {
     public void readsAndWrites() {
         source.addCommands(">> +++++ [->[+>>]+[<<]>]")
         // distribute values from 5 downto 1 across the tape
-        analyze()
-        assert analyze.arrayLong({it.readCount}, 0, 12)  == [0, 5, 6, 10, 0, 8, 0, 6, 0, 4, 0, 2] as int[]
-        assert analyze.arrayLong({it.writeCount}, 0, 12) == [0, 0, 10, 5, 0, 4, 0, 3, 0, 2, 0, 1] as int[]
+        analyze(new ReadWriteAnalysis())
+        analyze.print()
+        ReadWriteAnalysis readWrite = analyze.get(ReadWriteAnalysis)
+        assert readWrite.maxMemory == 0x0B
+        assert readWrite.cellsUsed == 7 // 5 cells gets values + 2 for loop check
+        assert readWrite.maxMemory + 1 - readWrite.cellsUsed == 5 // one at start + 4 between the values
+        assert analyze.arrayLong(ReadWriteAnalysis.ReadWriteData, {it.readCount}, 0, 12)  ==
+            [0, 5, 6, 10, 0, 8, 0, 6, 0, 4, 0, 2] as int[]
+        assert analyze.arrayLong(ReadWriteAnalysis.ReadWriteData, {it.writeCount}, 0, 12) ==
+            [0, 0, 10, 5, 0, 4, 0, 3, 0, 2, 0, 1] as int[]
     }
 
     @Test

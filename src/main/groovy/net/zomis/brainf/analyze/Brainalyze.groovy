@@ -1,5 +1,7 @@
 package net.zomis.brainf.analyze
 
+import groovy.transform.PackageScope
+import net.zomis.brainf.analyze.analyzers.ReadWriteAnalysis
 import net.zomis.brainf.model.classic.BrainFCommand
 import net.zomis.brainf.model.BrainfuckCommand
 import net.zomis.brainf.model.BrainfuckListener
@@ -18,13 +20,17 @@ class Brainalyze implements BrainfuckListener {
     private final IndexCounters whileLoopCounts = new IndexCounters()
     private final List<Map> problematicCommands = []
     private final GroovyBFContext groovy
+    @PackageScope final Map<Class<?>, Object> analysis = [:]
     private boolean memoryIndexBelowZero
     private int minValue
     private int maxValue
     private int maxMemory
-    private int cellsUsed
 
-    private Brainalyze(BrainfuckRunner runner, GroovyBFContext groovy) {
+    public <T extends BrainfuckAnalyzer> T get(Class<T> clazz) {
+        return (T) analysis.get(clazz)
+    }
+
+    @PackageScope Brainalyze(BrainfuckRunner runner, GroovyBFContext groovy) {
         this.times = new int[runner.code.commandCount];
         this.actionsPerCommand = new int[BrainFCommand.values().length];
         this.codeCommands = new int[BrainFCommand.values().length];
@@ -48,6 +54,7 @@ class Brainalyze implements BrainfuckListener {
         return Arrays.copyOf(actionsPerCommand, actionsPerCommand.length)
     }
 
+    @Deprecated
     static Brainalyze analyze(BrainfuckRunner brain, GroovyBFContext groovyContext) {
         Brainalyze analyze = new Brainalyze(brain, groovyContext)
         brain.setListener(analyze)
@@ -79,22 +86,19 @@ class Brainalyze implements BrainfuckListener {
         }
 
         for (int i = analyze.cells.length - 1; i >= 0; i--) {
-            if (analyze.cells[i].readCount > 0 || analyze.cells[i].writeCount > 0) {
+            if (analyze.cells[i].used) {
                 analyze.maxMemory = i
                 break
             }
         }
-        for (int i = 0; i <= analyze.maxMemory; i++) {
-            MemoryCell cell = analyze.cells[i]
-            if (cell.readCount > 0 || cell.writeCount > 0) {
-                analyze.cellsUsed++
-            }
-        }
-
         analyze
     }
 
     void print() {
+        if (get(ReadWriteAnalysis)) {
+            maxMemory = get(ReadWriteAnalysis).maxMemory
+        }
+
         println 'Brainfuck Analyze'
         println '-----------------'
         println 'Actions per command'
@@ -117,7 +121,8 @@ class Brainalyze implements BrainfuckListener {
             MemoryCell cell = cells[i]
             println cell.toString(groovy)
         }
-        println "Total memory used = $cellsUsed"
+        println()
+        this.analysis.values().forEach({it.print()})
         println()
         for (Map problem : problematicCommands) {
             println "Problematic command: $problem"
@@ -161,12 +166,10 @@ class Brainalyze implements BrainfuckListener {
             case BrainFCommand.ADD:
             case BrainFCommand.SUBTRACT:
             case BrainFCommand.READ:
-                cell.writeCount++
-                break
             case BrainFCommand.WHILE:
             case BrainFCommand.END_WHILE:
             case BrainFCommand.WRITE:
-                cell.readCount++
+                cell.used = true
                 break
         }
 
@@ -234,6 +237,16 @@ class Brainalyze implements BrainfuckListener {
         result
     }
 
+    public <T> long[] arrayLong(Class<T> clazz, ToLongFunction<T> function, int fromIndex, int toIndex) {
+        long[] result = new long[toIndex - fromIndex]
+        for (int i = 0; i < result.length; i++) {
+            MemoryCell cell = cells[fromIndex + i]
+            T obj = cell.data(clazz)
+            result[i] = obj ? function.applyAsLong(obj) : 0
+        }
+        result
+    }
+
     boolean isMemoryIndexBelowZero() {
         this.memoryIndexBelowZero
     }
@@ -244,14 +257,6 @@ class Brainalyze implements BrainfuckListener {
 
     int getMaxValue() {
         this.maxValue
-    }
-
-    int getMaxMemory() {
-        this.maxMemory
-    }
-
-    int getCellsUsed() {
-        this.cellsUsed
     }
 
 }

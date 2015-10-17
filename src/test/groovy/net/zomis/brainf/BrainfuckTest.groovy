@@ -1,6 +1,8 @@
 package net.zomis.brainf
 
+import net.zomis.brainf.analyze.AnalyzeFactory
 import net.zomis.brainf.analyze.Brainalyze
+import net.zomis.brainf.analyze.BrainfuckAnalyzer
 import net.zomis.brainf.model.BrainF
 import net.zomis.brainf.model.BrainfuckRunner
 import net.zomis.brainf.model.ListCode
@@ -18,6 +20,10 @@ class BrainfuckTest {
 
     void analyze() {
         analyze = Brainalyze.analyze(brain, context)
+    }
+
+    void analyze(BrainfuckAnalyzer... analyzers) {
+        analyze = new AnalyzeFactory().addAnalyzers(analyzers).analyze(brain, context)
     }
 
     @Before
