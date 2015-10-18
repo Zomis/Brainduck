@@ -7,17 +7,19 @@ import net.zomis.brainf.model.BrainfuckCommand
 import net.zomis.brainf.model.BrainfuckRunner
 import net.zomis.brainf.model.classic.BrainFCommand
 
+import java.util.function.BiFunction
+
 class CommandCountAnalysis implements BrainfuckAnalyzer {
 
     private int[] times
-    private int[] actionsPerCommand
-    private int[] codeCommands
+    private final Map<BrainfuckCommand, Integer> actionsPerCommand = [:]
+    private final Map<BrainfuckCommand, Integer> codeCommands = [:]
+
+    private static final BiFunction<Integer, Integer, Integer> MERGE_FUNCTION = {a, b -> a + b}
 
     @Override
     void beforeStart(BrainfuckRunner runner) {
         this.times = new int[runner.code.commandCount];
-        this.actionsPerCommand = new int[BrainFCommand.values().length];
-        this.codeCommands = new int[BrainFCommand.values().length];
     }
 
     @Override
@@ -31,14 +33,10 @@ class CommandCountAnalysis implements BrainfuckAnalyzer {
     }
 
     @Override
-    void beforePerform(MemoryCell cell, BrainfuckRunner runner, BrainfuckCommand cmd) {
+    void beforePerform(MemoryCell cell, BrainfuckRunner runner, BrainfuckCommand command) {
         int codeIndex = runner.code.commandIndex
         this.times[codeIndex]++
-        if (!(cmd instanceof BrainFCommand)) {
-            return
-        }
-        def command = cmd as BrainFCommand
-        actionsPerCommand[command.ordinal()]++
+        actionsPerCommand.merge(command, 1, MERGE_FUNCTION)
     }
 
     @Override
@@ -46,37 +44,39 @@ class CommandCountAnalysis implements BrainfuckAnalyzer {
         int commandCount = runner.code.commandCount
         for (int i = 0; i < commandCount; i++) {
             BrainfuckCommand command = runner.code.getCommandAt(i)
-            if (command instanceof BrainFCommand) {
-                BrainFCommand cmd = command as BrainFCommand
-                codeCommands[cmd.ordinal()]++
-            }
+            codeCommands.merge(command, 1, MERGE_FUNCTION)
         }
     }
 
-    static void printCommands(int[] ints) {
+    static void printCommands(Map<BrainfuckCommand, Integer> ints) {
         int sum = 0
-        BrainFCommand.values().each {
-            int count = ints[it.ordinal()]
+        ints.entrySet().stream().forEach({
+            BrainfuckCommand command = it.key
+            Integer count = it.value
             if (count > 0) {
-                println "$it: $count"
+                println "$command: $count"
             }
             if (it != BrainFCommand.NONE) {
                 sum += count
             }
-        }
+        })
         println "Total: $sum"
     }
 
     int getActionsForCommand(BrainFCommand command) {
-        this.@actionsPerCommand[command.ordinal()]
+        this.@actionsPerCommand[command]
     }
 
     int[] getTimes() {
         return Arrays.copyOf(this.@times, this.@times.length)
     }
 
-    int[] getActionsPerCommand() {
-        return Arrays.copyOf(this.@actionsPerCommand, this.@actionsPerCommand.length)
+    Map<BrainfuckCommand, Integer> getActionsPerCommand() {
+        return new HashMap<>(this.@actionsPerCommand)
+    }
+
+    Map<BrainfuckCommand, Integer> getCodeCommands() {
+        return new HashMap<>(this.@codeCommands)
     }
 
 }
