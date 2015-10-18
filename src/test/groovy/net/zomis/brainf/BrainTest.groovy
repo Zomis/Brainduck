@@ -2,6 +2,7 @@ package net.zomis.brainf
 
 import net.zomis.brainf.analyze.IndexCounters
 import net.zomis.brainf.analyze.MemoryCell
+import net.zomis.brainf.analyze.analyzers.CommandCountAnalysis
 import net.zomis.brainf.analyze.analyzers.IOAnalysis
 import net.zomis.brainf.analyze.analyzers.MemoryValues
 import net.zomis.brainf.analyze.analyzers.ReadWriteAnalysis
@@ -120,19 +121,19 @@ public class BrainTest extends BrainfuckTest {
     public void fizzBuzz() {
         source.addCommands(BrainfuckRunner.classLoader.getResource('fizzbuzz.bf').text);
         long start = System.nanoTime()
-        analyze()
+        analyzeAll()
         long stop = System.nanoTime()
         long ms = TimeUnit.MILLISECONDS.convert(stop - start, TimeUnit.NANOSECONDS)
         println "FizzBuzz analyze took $ms ms"
-        assert analyze.getActionsForCommand(BrainFCommand.WRITE) == brain.output.length()
+        assert analyze.get(CommandCountAnalysis).getActionsForCommand(BrainFCommand.WRITE) == brain.output.length()
         assert brain.output == fizzBuzzString(100)
     }
 
     @Test
     public void fizzBuzzMin() {
         source.addCommands(BrainfuckRunner.classLoader.getResource('fizzbuzz-min.bf').text);
-        analyze()
-        assert analyze.getActionsForCommand(BrainFCommand.WRITE) == brain.output.length()
+        analyzeAll()
+        assert analyze.get(CommandCountAnalysis).getActionsForCommand(BrainFCommand.WRITE) == brain.output.length()
         assert brain.output == fizzBuzzString(100)
     }
 

@@ -13,9 +13,6 @@ import java.util.function.ToLongFunction
 
 class Brainalyze implements BrainfuckListener {
 
-    private final int[] times
-    private final int[] actionsPerCommand
-    private final int[] codeCommands
     private final MemoryCell[] cells
     private final GroovyBFContext groovy
     @PackageScope final Map<Class<?>, Object> analysis = [:]
@@ -27,9 +24,6 @@ class Brainalyze implements BrainfuckListener {
     }
 
     @PackageScope Brainalyze(BrainfuckRunner runner, GroovyBFContext groovy) {
-        this.times = new int[runner.code.commandCount];
-        this.actionsPerCommand = new int[BrainFCommand.values().length];
-        this.codeCommands = new int[BrainFCommand.values().length];
         int size = runner.memory.memorySize
         this.cells = new MemoryCell[size]
         for (int i = 0; i < size; i++) {
@@ -42,28 +36,11 @@ class Brainalyze implements BrainfuckListener {
         cells[index]
     }
 
-    int[] getTimes() {
-        return Arrays.copyOf(times, times.length)
-    }
-
-    int[] getActionsPerCommand() {
-        return Arrays.copyOf(actionsPerCommand, actionsPerCommand.length)
-    }
-
     @Deprecated
     static Brainalyze analyze(BrainfuckRunner brain, GroovyBFContext groovyContext) {
         Brainalyze analyze = new Brainalyze(brain, groovyContext)
         brain.setListener(analyze)
         brain.run()
-
-        int commandCount = brain.code.commandCount
-        for (int i = 0; i < commandCount; i++) {
-            BrainfuckCommand command = brain.code.getCommandAt(i)
-            if (command instanceof BrainFCommand) {
-                BrainFCommand cmd = command as BrainFCommand
-                analyze.codeCommands[cmd.ordinal()]++
-            }
-        }
 
         for (int i = analyze.cells.length - 1; i >= 0; i--) {
             if (analyze.cells[i].used) {
@@ -81,12 +58,6 @@ class Brainalyze implements BrainfuckListener {
 
         println 'Brainfuck Analyze'
         println '-----------------'
-        println 'Actions per command'
-        printCommands(actionsPerCommand)
-        println()
-        println 'Code instructions per command'
-        printCommands(codeCommands)
-        println()
         if (this.memoryIndexBelowZero) {
             println 'WARNING: Memory index goes below zero'
         }
@@ -101,29 +72,12 @@ class Brainalyze implements BrainfuckListener {
         println()
     }
 
-    static void printCommands(int[] ints) {
-        int sum = 0
-        BrainFCommand.values().each {
-            int count = ints[it.ordinal()]
-            if (count > 0) {
-                println "$it: $count"
-            }
-            if (it != BrainFCommand.NONE) {
-                sum += count
-            }
-        }
-        println "Total: $sum"
-    }
-
     @Override
     void beforePerform(BrainfuckRunner runner, BrainfuckCommand cmd) {
         if (!(cmd instanceof BrainFCommand)) {
             return
         }
         BrainFCommand command = (BrainFCommand) cmd
-        int codeIndex = runner.code.commandIndex
-        this.times[codeIndex]++
-        actionsPerCommand[command.ordinal()]++
         MemoryCell cell = cells[runner.memory.memoryIndex]
 
         if (command == BrainFCommand.PREVIOUS && runner.memory.memoryIndex == 0) {
@@ -145,10 +99,6 @@ class Brainalyze implements BrainfuckListener {
 
     @Override
     void afterPerform(BrainfuckRunner runner, BrainfuckCommand command) {
-    }
-
-    int getActionsForCommand(BrainFCommand command) {
-        this.actionsPerCommand[command.ordinal()]
     }
 
     int[] array(ToIntFunction<MemoryCell> function, int fromIndex, int toIndex) {
