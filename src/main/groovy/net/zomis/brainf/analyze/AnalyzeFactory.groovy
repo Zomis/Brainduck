@@ -14,6 +14,9 @@ class AnalyzeFactory {
 
     AnalyzeFactory addAnalyzers(BrainfuckAnalyzer... analyzers) {
         for (BrainfuckAnalyzer analyzer : analyzers) {
+            if (analyzer == null) {
+                throw new IllegalArgumentException('Cannot add null analyzer')
+            }
             this.analyzers.add(analyzer)
         }
         this
