@@ -101,11 +101,6 @@ class Brainalyze implements BrainfuckListener {
         println 'Code instructions per command'
         printCommands(codeCommands)
         println()
-        println 'While loops analysis'
-        whileLoopCounts.sorted().forEach({entry ->
-            println "$entry.key $entry.value"
-        })
-        println()
         if (this.memoryIndexBelowZero) {
             println 'WARNING: Memory index goes below zero'
         }
@@ -170,37 +165,10 @@ class Brainalyze implements BrainfuckListener {
         if (command == BrainFCommand.WRITE) {
             cell.prints.add(codeIndex)
         }
-
-        if (command == BrainFCommand.WHILE) {
-            IndexCounter counter = whileLoopCounts.getOrCreate(runner.code.commandIndex)
-            int current = runner.memory.value
-            if (current == 0) {
-                counter.add(0)
-            } else {
-                whileLoopCounts.begin(counter)
-                cell.whileLoopStart.add(codeIndex)
-            }
-        }
-
-        if (command == BrainFCommand.END_WHILE) {
-            whileLoopCounts.recent().increase()
-            int startIndex = whileLoopCounts.recent().forIndex
-            int current = runner.memory.value
-            if (current == 0) {
-                whileLoopCounts.finishLast()
-                cell.whileLoopEnd.add(startIndex)
-            } else {
-                cell.whileLoopContinue.add(startIndex)
-            }
-        }
     }
 
     @Override
     void afterPerform(BrainfuckRunner runner, BrainfuckCommand command) {
-    }
-
-    IndexCounters getWhileLoopCounts() {
-        return this.whileLoopCounts
     }
 
     int getActionsForCommand(BrainFCommand command) {

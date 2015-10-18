@@ -4,6 +4,7 @@ import net.zomis.brainf.analyze.IndexCounters
 import net.zomis.brainf.analyze.MemoryCell
 import net.zomis.brainf.analyze.analyzers.MemoryValues
 import net.zomis.brainf.analyze.analyzers.ReadWriteAnalysis
+import net.zomis.brainf.analyze.analyzers.WhileLoopAnalysis
 import net.zomis.brainf.model.BrainF
 import net.zomis.brainf.model.classic.BrainFCommand
 import net.zomis.brainf.model.BrainfuckMemory
@@ -50,7 +51,7 @@ public class BrainTest extends BrainfuckTest {
         ]
         '''
         source.addCommands(commands)
-        analyze()
+        analyze(new WhileLoopAnalysis())
         analyze.print()
         println context.getLoopNames()
         cellTagsContains(analyze.cell(0), 'before')
@@ -89,8 +90,8 @@ public class BrainTest extends BrainfuckTest {
     @Test
     public void analyzeLoops() {
         source.addCommands("++[ > +++++[>+>+++<<-]>[>+<-]<[+-+-]> +++ << -]");
-        analyze()
-        IndexCounters counts = analyze.getWhileLoopCounts();
+        analyze(new WhileLoopAnalysis())
+        IndexCounters counts = analyze.get(WhileLoopAnalysis).getWhileLoopCounts()
         assert counts.size() == 4
         assert counts[2] == [2]
         assert counts[11] == [5, 5]
@@ -101,8 +102,8 @@ public class BrainTest extends BrainfuckTest {
     @Test
     public void loopOnce() {
         source.addCommands("+[-]");
-        analyze()
-        IndexCounters counts = analyze.getWhileLoopCounts();
+        analyze(new WhileLoopAnalysis())
+        IndexCounters counts = analyze.get(WhileLoopAnalysis).getWhileLoopCounts();
         assert counts.size() == 1
         assert counts[1] == [1]
     }

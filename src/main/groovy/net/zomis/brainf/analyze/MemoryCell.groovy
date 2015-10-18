@@ -20,10 +20,6 @@ class MemoryCell {
 
     private final Map<Class<?>, Object> analysis = [:]
 
-    IndexCounter whileLoopStart = new IndexCounter('loop-begin')
-    IndexCounter whileLoopContinue = new IndexCounter('loop-continue')
-    IndexCounter whileLoopEnd = new IndexCounter('loop-end')
-
     MemoryCell(int index) {
         this.index = index
     }
@@ -33,6 +29,9 @@ class MemoryCell {
         if (!obj) {
             obj = analyzer.createMemoryData()
             analysis.put(clazz, obj)
+        }
+        if (!obj) {
+            throw new IllegalStateException("Analyzer $analyzer does not create a memory data object of $clazz")
         }
         return (T) obj;
     }
@@ -61,8 +60,7 @@ class MemoryCell {
         Stream<CellTagger> taggers = this.analysis.values().stream()
             .filter({it instanceof CellTagger})
             .map({it as CellTagger})
-        Stream<CellTagger> oldTaggers = Stream.of(prints, userInputs,
-                whileLoopStart, whileLoopContinue, whileLoopEnd)
+        Stream<CellTagger> oldTaggers = Stream.of(prints, userInputs)
         Stream.concat(taggers, oldTaggers)
             .flatMap({it.tags(loopNames)})
             .sorted()
