@@ -3,6 +3,11 @@ package net.zomis.brainf
 import net.zomis.brainf.analyze.AnalyzeFactory
 import net.zomis.brainf.analyze.Brainalyze
 import net.zomis.brainf.analyze.BrainfuckAnalyzer
+import net.zomis.brainf.analyze.analyzers.GroovyCommandAnalysis
+import net.zomis.brainf.analyze.analyzers.IOAnalysis
+import net.zomis.brainf.analyze.analyzers.MemoryValues
+import net.zomis.brainf.analyze.analyzers.ReadWriteAnalysis
+import net.zomis.brainf.analyze.analyzers.WhileLoopAnalysis
 import net.zomis.brainf.model.BrainF
 import net.zomis.brainf.model.BrainfuckRunner
 import net.zomis.brainf.model.ListCode
@@ -36,4 +41,14 @@ class BrainfuckTest {
         brain.code.source = source
     }
 
+    void analyzeAll() {
+        BrainfuckAnalyzer[] analyzers = [
+              new GroovyCommandAnalysis(),
+              new IOAnalysis(),
+              new MemoryValues(),
+              new ReadWriteAnalysis(),
+              new WhileLoopAnalysis(),
+        ]
+        analyze(analyzers)
+    }
 }

@@ -206,7 +206,7 @@ public class BrainTest extends BrainfuckTest {
     @Test
     public void allCharacters() {
         source.addCommands(">>>>+++++++++++++++[<+++++++++++++++++>-]<[->[+>>]+[<<]>]")
-        analyze()
+        analyzeAll()
         analyze.print()
     }
 
