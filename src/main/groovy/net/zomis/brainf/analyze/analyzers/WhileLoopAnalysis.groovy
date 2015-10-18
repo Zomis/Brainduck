@@ -41,11 +41,11 @@ class WhileLoopAnalysis implements BrainfuckAnalyzer {
 
     @Override
     void print() {
-        println()
         println 'While loops analysis'
         whileLoopCounts.sorted().forEach({entry ->
             println "$entry.key $entry.value"
         })
+        println()
     }
 
     @Override

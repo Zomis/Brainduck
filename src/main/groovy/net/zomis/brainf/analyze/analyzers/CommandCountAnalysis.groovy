@@ -27,6 +27,7 @@ class CommandCountAnalysis implements BrainfuckAnalyzer {
         println()
         println 'Code instructions per command'
         printCommands(codeCommands)
+        println()
     }
 
     @Override
