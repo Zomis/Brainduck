@@ -17,7 +17,6 @@ class Brainalyze implements BrainfuckListener {
     private final int[] actionsPerCommand
     private final int[] codeCommands
     private final MemoryCell[] cells
-    private final List<Map> problematicCommands = []
     private final GroovyBFContext groovy
     @PackageScope final Map<Class<?>, Object> analysis = [:]
     private boolean memoryIndexBelowZero
@@ -64,18 +63,6 @@ class Brainalyze implements BrainfuckListener {
                 BrainFCommand cmd = command as BrainFCommand
                 analyze.codeCommands[cmd.ordinal()]++
             }
-            if (command instanceof GroovyBFContext.SpecialCommand) {
-                GroovyBFContext.SpecialCommand cmd = command as GroovyBFContext.SpecialCommand
-                for (int codeIndex = 0; codeIndex < cmd.code.length(); codeIndex++) {
-                    char ch = cmd.code.charAt(codeIndex)
-                    BrainFCommand bfCommand = BrainFCommand.getCommand(ch)
-                    if (bfCommand != BrainFCommand.NONE) {
-                        Map<String, Object> map = [index: i, codeIndex: codeIndex, command: bfCommand]
-                        analyze.problematicCommands << map
-                        break;
-                    }
-                }
-            }
         }
 
         for (int i = analyze.cells.length - 1; i >= 0; i--) {
@@ -112,9 +99,6 @@ class Brainalyze implements BrainfuckListener {
         println()
         this.analysis.values().forEach({it.print()})
         println()
-        for (Map problem : problematicCommands) {
-            println "Problematic command: $problem"
-        }
     }
 
     static void printCommands(int[] ints) {
