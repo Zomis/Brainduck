@@ -14,7 +14,6 @@ import java.util.stream.Stream
 class MemoryCell {
 
     final int index
-    boolean used
 
     private final Map<Class<?>, Object> analysis = [:]
 

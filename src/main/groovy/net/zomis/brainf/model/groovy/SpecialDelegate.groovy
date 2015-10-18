@@ -1,6 +1,8 @@
 package net.zomis.brainf.model.groovy
 
+import net.zomis.brainf.analyze.AnalyzeFactory
 import net.zomis.brainf.analyze.Brainalyze
+import net.zomis.brainf.analyze.analyzers.BrainfuckAnalyzers
 import net.zomis.brainf.model.BrainfuckCode
 import net.zomis.brainf.model.BrainfuckCommand
 import net.zomis.brainf.model.BrainfuckMemory
@@ -113,7 +115,9 @@ class SpecialDelegate {
             GroovyBFContext otherContext = new GroovyBFContext()
             other.code.source = ListCode.create(new GroovySupportConverter(otherContext,
                     new BrainfuckConverter()), url.text)
-            Brainalyze analyze = Brainalyze.analyze(other, otherContext)
+            Brainalyze analyze = new AnalyzeFactory()
+                .addAnalyzers(BrainfuckAnalyzers.availableAnalyzers)
+                .analyze(other, otherContext)
             println "Analyze for $file"
             analyze.print()
             println()

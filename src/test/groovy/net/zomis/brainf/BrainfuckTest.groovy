@@ -3,6 +3,7 @@ package net.zomis.brainf
 import net.zomis.brainf.analyze.AnalyzeFactory
 import net.zomis.brainf.analyze.Brainalyze
 import net.zomis.brainf.analyze.BrainfuckAnalyzer
+import net.zomis.brainf.analyze.analyzers.BrainfuckAnalyzers
 import net.zomis.brainf.analyze.analyzers.CommandCountAnalysis
 import net.zomis.brainf.analyze.analyzers.GroovyCommandAnalysis
 import net.zomis.brainf.analyze.analyzers.IOAnalysis
@@ -25,10 +26,6 @@ class BrainfuckTest {
     Brainalyze analyze
     GroovyBFContext context
 
-    void analyze() {
-        analyze = Brainalyze.analyze(brain, context)
-    }
-
     void analyze(BrainfuckAnalyzer... analyzers) {
         analyze = new AnalyzeFactory().addAnalyzers(analyzers).analyze(brain, context)
     }
@@ -44,15 +41,6 @@ class BrainfuckTest {
     }
 
     void analyzeAll() {
-        BrainfuckAnalyzer[] analyzers = [
-              new GroovyCommandAnalysis(),
-              new IOAnalysis(),
-              new MemoryValues(),
-              new ReadWriteAnalysis(),
-              new WhileLoopAnalysis(),
-              new CommandCountAnalysis(),
-              new MemoryIndexAnalysis(),
-        ]
-        analyze(analyzers)
+        analyze(BrainfuckAnalyzers.availableAnalyzers)
     }
 }

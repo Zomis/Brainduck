@@ -20,7 +20,9 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import net.zomis.brainf.analyze.AnalyzeFactory;
 import net.zomis.brainf.analyze.Brainalyze;
+import net.zomis.brainf.analyze.analyzers.BrainfuckAnalyzers;
 import net.zomis.brainf.model.BrainfuckRunner;
 import net.zomis.brainf.model.ListCode;
 import net.zomis.brainf.model.groovy.GroovyBFContext;
@@ -128,7 +130,9 @@ public class MainController implements Initializable {
     }
 
     @FXML private void analyze(ActionEvent event) {
-        Brainalyze analyze = Brainalyze.analyze(brain(), new GroovyBFContext());
+        Brainalyze analyze = new AnalyzeFactory()
+            .addAnalyzers(BrainfuckAnalyzers.getAvailableAnalyzers())
+            .analyze(brain(), new GroovyBFContext());
         analyze.print();
     }
 
