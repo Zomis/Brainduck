@@ -15,7 +15,6 @@ class MemoryCell {
 
     final int index
     boolean used
-    int value
     IndexCounter prints = new IndexCounter()
     IndexCounter userInputs = new IndexCounter()
 
@@ -44,18 +43,13 @@ class MemoryCell {
     }
 
     String toString(GroovyBFContext groovy) {
-        int value = this.value
         String hexAddress = String.format("%04X", index)
         String decAddress = String.format("%06d", index)
-
-        boolean specialChar = value >= 0 && value <= 13
-        char chrValue = specialChar ? 32 : value;
-        String decValue = String.format("%6d", value);
 
         String analysis = analysis.values().stream().map({obj -> String.valueOf(obj)}).collect(Collectors.joining('\t'))
         Map<String, Integer> tagsCount = resolveTags(groovy)
         String tags = tagsCount.isEmpty() ? '' : tagsCount.toString()
-        "Hex $hexAddress\tDec $decAddress\tValue $decValue '$chrValue' \t" +
+        "Hex $hexAddress\tDec $decAddress\t" +
             analysis +
             "$tags".toString()
     }

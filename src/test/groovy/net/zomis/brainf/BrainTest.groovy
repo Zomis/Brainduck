@@ -2,6 +2,7 @@ package net.zomis.brainf
 
 import net.zomis.brainf.analyze.IndexCounters
 import net.zomis.brainf.analyze.MemoryCell
+import net.zomis.brainf.analyze.analyzers.MemoryValues
 import net.zomis.brainf.analyze.analyzers.ReadWriteAnalysis
 import net.zomis.brainf.model.BrainF
 import net.zomis.brainf.model.classic.BrainFCommand
@@ -211,7 +212,7 @@ public class BrainTest extends BrainfuckTest {
     public void readsAndWrites() {
         source.addCommands(">> +++++ [->[+>>]+[<<]>]")
         // distribute values from 5 downto 1 across the tape
-        analyze(new ReadWriteAnalysis())
+        analyze(new MemoryValues(), new ReadWriteAnalysis())
         analyze.print()
         ReadWriteAnalysis readWrite = analyze.get(ReadWriteAnalysis)
         assert readWrite.maxMemory == 0x0B
