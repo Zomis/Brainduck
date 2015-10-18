@@ -1,5 +1,6 @@
 package net.zomis.brainf
 
+import net.zomis.brainf.analyze.analyzers.MemoryIndexAnalysis
 import net.zomis.brainf.analyze.analyzers.MemoryValues
 import org.junit.Test
 
@@ -8,15 +9,17 @@ class ValidateTest extends BrainfuckTest {
     @Test
     void moveNegativeIndex() {
         source.addCommands('+<<++')
-        analyze()
-        assert analyze.isMemoryIndexBelowZero()
+        analyze(new MemoryIndexAnalysis())
+        assert analyze.get(MemoryIndexAnalysis).isMemoryIndexBelowZero()
+        assert !analyze.get(MemoryIndexAnalysis).isMemoryIndexAboveMax()
     }
 
     @Test
     void stayPositiveIndex() {
         source.addCommands('+>+<++')
-        analyze()
-        assert !analyze.isMemoryIndexBelowZero()
+        analyze(new MemoryIndexAnalysis())
+        assert !analyze.get(MemoryIndexAnalysis).isMemoryIndexBelowZero()
+        assert !analyze.get(MemoryIndexAnalysis).isMemoryIndexAboveMax()
     }
 
     @Test

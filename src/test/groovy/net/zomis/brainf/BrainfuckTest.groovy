@@ -6,6 +6,7 @@ import net.zomis.brainf.analyze.BrainfuckAnalyzer
 import net.zomis.brainf.analyze.analyzers.CommandCountAnalysis
 import net.zomis.brainf.analyze.analyzers.GroovyCommandAnalysis
 import net.zomis.brainf.analyze.analyzers.IOAnalysis
+import net.zomis.brainf.analyze.analyzers.MemoryIndexAnalysis
 import net.zomis.brainf.analyze.analyzers.MemoryValues
 import net.zomis.brainf.analyze.analyzers.ReadWriteAnalysis
 import net.zomis.brainf.analyze.analyzers.WhileLoopAnalysis
@@ -50,6 +51,7 @@ class BrainfuckTest {
               new ReadWriteAnalysis(),
               new WhileLoopAnalysis(),
               new CommandCountAnalysis(),
+              new MemoryIndexAnalysis(),
         ]
         analyze(analyzers)
     }

@@ -16,7 +16,6 @@ class Brainalyze implements BrainfuckListener {
     private final MemoryCell[] cells
     private final GroovyBFContext groovy
     @PackageScope final Map<Class<?>, Object> analysis = [:]
-    private boolean memoryIndexBelowZero
     private int maxMemory
 
     public <T extends BrainfuckAnalyzer> T get(Class<T> clazz) {
@@ -58,10 +57,6 @@ class Brainalyze implements BrainfuckListener {
 
         println 'Brainfuck Analyze'
         println '-----------------'
-        if (this.memoryIndexBelowZero) {
-            println 'WARNING: Memory index goes below zero'
-        }
-        println()
         println 'Tape summary'
         for (int i = 0; i <= maxMemory; i++) {
             MemoryCell cell = cells[i]
@@ -79,10 +74,6 @@ class Brainalyze implements BrainfuckListener {
         }
         BrainFCommand command = (BrainFCommand) cmd
         MemoryCell cell = cells[runner.memory.memoryIndex]
-
-        if (command == BrainFCommand.PREVIOUS && runner.memory.memoryIndex == 0) {
-            this.memoryIndexBelowZero = true
-        }
 
         switch (command) {
             case BrainFCommand.ADD:
@@ -127,10 +118,6 @@ class Brainalyze implements BrainfuckListener {
             result[i] = obj ? function.applyAsLong(obj) : 0
         }
         result
-    }
-
-    boolean isMemoryIndexBelowZero() {
-        this.memoryIndexBelowZero
     }
 
 }
