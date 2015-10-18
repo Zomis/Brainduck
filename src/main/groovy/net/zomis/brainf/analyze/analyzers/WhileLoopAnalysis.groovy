@@ -29,6 +29,8 @@ class WhileLoopAnalysis implements BrainfuckAnalyzer {
     }
 
     private final IndexCounters whileLoopCounts = new IndexCounters()
+    private int bracketsOpened
+    private int bracketsClosed
 
     IndexCounters getWhileLoopCounts() {
         return this.whileLoopCounts
@@ -40,8 +42,24 @@ class WhileLoopAnalysis implements BrainfuckAnalyzer {
     }
 
     @Override
+    void beforeStart(BrainfuckRunner runner) {
+        for (int i = 0; i < runner.code.commandCount; i++) {
+            BrainfuckCommand command = runner.code.getCommandAt(i)
+            if (command == BrainFCommand.WHILE) {
+                bracketsOpened++
+            }
+            if (command == BrainFCommand.END_WHILE) {
+                bracketsClosed++
+            }
+        }
+    }
+
+    @Override
     void print() {
         println 'While loops analysis'
+        if (bracketsOpened != bracketsClosed) {
+            println "ERROR: Number of starting brackets ($bracketsOpened) mismatch number of ending brackets ($bracketsClosed)"
+        }
         whileLoopCounts.sorted().forEach({entry ->
             println "$entry.key $entry.value"
         })
@@ -63,7 +81,11 @@ class WhileLoopAnalysis implements BrainfuckAnalyzer {
         }
 
         if (command == BrainFCommand.END_WHILE) {
-            whileLoopCounts.recent().increase()
+            IndexCounter recent = whileLoopCounts.recent()
+            if (recent == null) {
+                return
+            }
+            recent.increase()
             int startIndex = whileLoopCounts.recent().forIndex
             int current = runner.memory.value
             if (current == 0) {
@@ -74,4 +96,17 @@ class WhileLoopAnalysis implements BrainfuckAnalyzer {
             }
         }
     }
+
+    int getBracketsOpened() {
+        this.@bracketsOpened
+    }
+
+    int getBracketsClosed() {
+        this.@bracketsClosed
+    }
+
+    boolean isBracketsMatching() {
+        this.bracketsClosed == this.bracketsOpened
+    }
+
 }

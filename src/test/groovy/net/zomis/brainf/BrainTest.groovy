@@ -118,6 +118,20 @@ public class BrainTest extends BrainfuckTest {
     }
 
     @Test
+    public void unbalanced1() {
+        source.addCommands("++[->+<] ]")
+        analyze(new WhileLoopAnalysis())
+        assert !analyze.get(WhileLoopAnalysis).bracketsMatching
+    }
+
+    @Test
+    public void unbalanced2() {
+        source.addCommands("++ [ [->+<]")
+        analyze(new WhileLoopAnalysis())
+        assert !analyze.get(WhileLoopAnalysis).bracketsMatching
+    }
+
+    @Test
     public void fizzBuzz() {
         source.addCommands(BrainfuckRunner.classLoader.getResource('fizzbuzz.bf').text);
         long start = System.nanoTime()
