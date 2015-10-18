@@ -17,7 +17,6 @@ class Brainalyze implements BrainfuckListener {
     private final int[] actionsPerCommand
     private final int[] codeCommands
     private final MemoryCell[] cells
-    private final IndexCounters whileLoopCounts = new IndexCounters()
     private final List<Map> problematicCommands = []
     private final GroovyBFContext groovy
     @PackageScope final Map<Class<?>, Object> analysis = [:]
@@ -147,10 +146,6 @@ class Brainalyze implements BrainfuckListener {
             this.memoryIndexBelowZero = true
         }
 
-        if (command == BrainFCommand.READ) {
-            cell.userInputs.add(codeIndex)
-        }
-
         switch (command) {
             case BrainFCommand.ADD:
             case BrainFCommand.SUBTRACT:
@@ -162,9 +157,6 @@ class Brainalyze implements BrainfuckListener {
                 break
         }
 
-        if (command == BrainFCommand.WRITE) {
-            cell.prints.add(codeIndex)
-        }
     }
 
     @Override

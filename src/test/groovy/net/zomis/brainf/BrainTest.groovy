@@ -2,6 +2,7 @@ package net.zomis.brainf
 
 import net.zomis.brainf.analyze.IndexCounters
 import net.zomis.brainf.analyze.MemoryCell
+import net.zomis.brainf.analyze.analyzers.IOAnalysis
 import net.zomis.brainf.analyze.analyzers.MemoryValues
 import net.zomis.brainf.analyze.analyzers.ReadWriteAnalysis
 import net.zomis.brainf.analyze.analyzers.WhileLoopAnalysis
@@ -70,7 +71,7 @@ public class BrainTest extends BrainfuckTest {
     public void userInputTag() {
         String commands = '++++[->,<]'
         brain = BrainF.createFromCodeAndInput(30, commands, 'INPUT')
-        analyze()
+        analyze(new IOAnalysis())
         cellTagsContains(analyze.cell(1), 'userInput')
     }
 
@@ -138,9 +139,9 @@ public class BrainTest extends BrainfuckTest {
     @Test
     public void printedMemory() {
         source.addCommands('>.<+++.[-.]')
-        analyze()
-        assert analyze.cell(0).prints.toString() == '[6, 9 * 3]' // printed by code index 6 once, code index 9 thrice
-        assert analyze.cell(1).prints.toString() == '[1]'
+        analyze(new IOAnalysis())
+        assert analyze.cell(0).data(IOAnalysis.CellIO).prints.toString() == '[6, 9 * 3]' // printed by code index 6 once, code index 9 thrice
+        assert analyze.cell(1).data(IOAnalysis.CellIO).prints.toString() == '[1]'
     }
 
     @Test

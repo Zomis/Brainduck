@@ -15,8 +15,6 @@ class MemoryCell {
 
     final int index
     boolean used
-    IndexCounter prints = new IndexCounter('print')
-    IndexCounter userInputs = new IndexCounter('userInput')
 
     private final Map<Class<?>, Object> analysis = [:]
 
@@ -60,8 +58,7 @@ class MemoryCell {
         Stream<CellTagger> taggers = this.analysis.values().stream()
             .filter({it instanceof CellTagger})
             .map({it as CellTagger})
-        Stream<CellTagger> oldTaggers = Stream.of(prints, userInputs)
-        Stream.concat(taggers, oldTaggers)
+        taggers
             .flatMap({it.tags(loopNames)})
             .sorted()
             .collect(countingCollector())
