@@ -46,4 +46,12 @@ class MemoryValues implements BrainfuckAnalyzer {
         }
     }
 
+    int getMinValue() {
+        this.@minValue
+    }
+
+    int getMaxValue() {
+        this.@maxValue
+    }
+
 }

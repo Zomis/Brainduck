@@ -1,6 +1,5 @@
 package net.zomis.brainf
 
-import net.zomis.brainf.analyze.MemoryCell
 import net.zomis.brainf.analyze.analyzers.MemoryValues
 import org.junit.Test
 
