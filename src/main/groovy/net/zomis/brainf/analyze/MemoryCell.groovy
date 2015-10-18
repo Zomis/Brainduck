@@ -15,14 +15,14 @@ class MemoryCell {
 
     final int index
     boolean used
-    IndexCounter prints = new IndexCounter()
-    IndexCounter userInputs = new IndexCounter()
+    IndexCounter prints = new IndexCounter('print')
+    IndexCounter userInputs = new IndexCounter('userInput')
 
     private final Map<Class<?>, Object> analysis = [:]
 
-    IndexCounter whileLoopStart = new IndexCounter()
-    IndexCounter whileLoopContinue = new IndexCounter()
-    IndexCounter whileLoopEnd = new IndexCounter()
+    IndexCounter whileLoopStart = new IndexCounter('loop-begin')
+    IndexCounter whileLoopContinue = new IndexCounter('loop-continue')
+    IndexCounter whileLoopEnd = new IndexCounter('loop-end')
 
     MemoryCell(int index) {
         this.index = index
@@ -58,12 +58,13 @@ class MemoryCell {
         Function<Integer, String> loopNames = {i ->
             groovy.getLoopName(i)
         }
-        Stream.of(prints.tags('print', loopNames),
-                userInputs.tags('userInput', loopNames),
-                whileLoopStart.tags('loop-begin', loopNames),
-                whileLoopContinue.tags('loop-continue', loopNames),
-                whileLoopEnd.tags('loop-end', loopNames))
-            .flatMap({it})
+        Stream<CellTagger> taggers = this.analysis.values().stream()
+            .filter({it instanceof CellTagger})
+            .map({it as CellTagger})
+        Stream<CellTagger> oldTaggers = Stream.of(prints, userInputs,
+                whileLoopStart, whileLoopContinue, whileLoopEnd)
+        Stream.concat(taggers, oldTaggers)
+            .flatMap({it.tags(loopNames)})
             .sorted()
             .collect(countingCollector())
     }

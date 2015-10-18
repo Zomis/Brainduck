@@ -33,7 +33,9 @@ class IndexCounters {
     }
 
     IndexCounter getOrCreate(int i) {
-        counters.putIfAbsent(i, new IndexCounter(forIndex: i))
+        def idxCounter = new IndexCounter('')
+        idxCounter.forIndex = i
+        counters.putIfAbsent(i, idxCounter)
         counters.get(i)
     }
 
