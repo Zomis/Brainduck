@@ -17,9 +17,19 @@ class Brainalyze {
     private final GroovyBFContext groovy
     @PackageScope final Map<Class<?>, Object> analysis = [:]
     private int maxMemory
+    private final List<InspectionResult> inspectionResults = []
 
     public <T extends BrainfuckAnalyzer> T get(Class<T> clazz) {
         return (T) analysis.get(clazz)
+    }
+
+    Brainalyze addInspectionResult(InspectionResult result) {
+        this.@inspectionResults.add(result)
+        this
+    }
+
+    List<InspectionResult> getInspectionResults() {
+        new ArrayList<InspectionResult>(this.@inspectionResults)
     }
 
     @PackageScope Brainalyze(BrainfuckRunner runner, GroovyBFContext groovy) {
