@@ -13,6 +13,7 @@ class BrainfuckAnalyzers {
                 new WhileLoopAnalysis(),
                 new CommandCountAnalysis(),
                 new MemoryIndexAnalysis(),
+                new PlusMinusOptimizer(),
         ]
         analyzers
     }
