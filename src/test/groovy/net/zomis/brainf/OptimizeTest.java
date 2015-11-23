@@ -27,6 +27,7 @@ public class OptimizeTest extends BrainfuckTest {
                 {"+>-<->+<", ""},
                 {"+>-<+>-<", "++>--<"},
                 {"<+>-<+>-", "<++>--"},
+                {">>-<+>", "+>->"},
 
         });
     }
