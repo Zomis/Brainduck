@@ -2,6 +2,11 @@ package net.zomis.brainf
 
 import net.zomis.brainf.analyze.IndexCounters
 import net.zomis.brainf.analyze.MemoryCell
+import net.zomis.brainf.analyze.analyzers.CommandCountAnalysis
+import net.zomis.brainf.analyze.analyzers.IOAnalysis
+import net.zomis.brainf.analyze.analyzers.MemoryValues
+import net.zomis.brainf.analyze.analyzers.ReadWriteAnalysis
+import net.zomis.brainf.analyze.analyzers.WhileLoopAnalysis
 import net.zomis.brainf.model.BrainF
 import net.zomis.brainf.model.classic.BrainFCommand
 import net.zomis.brainf.model.BrainfuckMemory
@@ -48,7 +53,7 @@ public class BrainTest extends BrainfuckTest {
         ]
         '''
         source.addCommands(commands)
-        analyze()
+        analyze(new WhileLoopAnalysis())
         analyze.print()
         println context.getLoopNames()
         cellTagsContains(analyze.cell(0), 'before')
@@ -67,7 +72,7 @@ public class BrainTest extends BrainfuckTest {
     public void userInputTag() {
         String commands = '++++[->,<]'
         brain = BrainF.createFromCodeAndInput(30, commands, 'INPUT')
-        analyze()
+        analyze(new IOAnalysis())
         cellTagsContains(analyze.cell(1), 'userInput')
     }
 
@@ -87,8 +92,8 @@ public class BrainTest extends BrainfuckTest {
     @Test
     public void analyzeLoops() {
         source.addCommands("++[ > +++++[>+>+++<<-]>[>+<-]<[+-+-]> +++ << -]");
-        analyze()
-        IndexCounters counts = analyze.getWhileLoopCounts();
+        analyze(new WhileLoopAnalysis())
+        IndexCounters counts = analyze.get(WhileLoopAnalysis).getWhileLoopCounts()
         assert counts.size() == 4
         assert counts[2] == [2]
         assert counts[11] == [5, 5]
@@ -99,8 +104,8 @@ public class BrainTest extends BrainfuckTest {
     @Test
     public void loopOnce() {
         source.addCommands("+[-]");
-        analyze()
-        IndexCounters counts = analyze.getWhileLoopCounts();
+        analyze(new WhileLoopAnalysis())
+        IndexCounters counts = analyze.get(WhileLoopAnalysis).getWhileLoopCounts();
         assert counts.size() == 1
         assert counts[1] == [1]
     }
@@ -113,31 +118,45 @@ public class BrainTest extends BrainfuckTest {
     }
 
     @Test
+    public void unbalanced1() {
+        source.addCommands("++[->+<] ]")
+        analyze(new WhileLoopAnalysis())
+        assert !analyze.get(WhileLoopAnalysis).bracketsMatching
+    }
+
+    @Test
+    public void unbalanced2() {
+        source.addCommands("++ [ [->+<]")
+        analyze(new WhileLoopAnalysis())
+        assert !analyze.get(WhileLoopAnalysis).bracketsMatching
+    }
+
+    @Test
     public void fizzBuzz() {
         source.addCommands(BrainfuckRunner.classLoader.getResource('fizzbuzz.bf').text);
         long start = System.nanoTime()
-        analyze()
+        analyzeAll()
         long stop = System.nanoTime()
         long ms = TimeUnit.MILLISECONDS.convert(stop - start, TimeUnit.NANOSECONDS)
         println "FizzBuzz analyze took $ms ms"
-        assert analyze.getActionsForCommand(BrainFCommand.WRITE) == brain.output.length()
+        assert analyze.get(CommandCountAnalysis).getActionsForCommand(BrainFCommand.WRITE) == brain.output.length()
         assert brain.output == fizzBuzzString(100)
     }
 
     @Test
     public void fizzBuzzMin() {
         source.addCommands(BrainfuckRunner.classLoader.getResource('fizzbuzz-min.bf').text);
-        analyze()
-        assert analyze.getActionsForCommand(BrainFCommand.WRITE) == brain.output.length()
+        analyzeAll()
+        assert analyze.get(CommandCountAnalysis).getActionsForCommand(BrainFCommand.WRITE) == brain.output.length()
         assert brain.output == fizzBuzzString(100)
     }
 
     @Test
     public void printedMemory() {
         source.addCommands('>.<+++.[-.]')
-        analyze()
-        assert analyze.cell(0).prints.toString() == '[6, 9 * 3]' // printed by code index 6 once, code index 9 thrice
-        assert analyze.cell(1).prints.toString() == '[1]'
+        analyze(new IOAnalysis())
+        assert analyze.cell(0).data(IOAnalysis.CellIO).prints.toString() == '[6, 9 * 3]' // printed by code index 6 once, code index 9 thrice
+        assert analyze.cell(1).data(IOAnalysis.CellIO).prints.toString() == '[1]'
     }
 
     @Test
@@ -202,7 +221,7 @@ public class BrainTest extends BrainfuckTest {
     @Test
     public void allCharacters() {
         source.addCommands(">>>>+++++++++++++++[<+++++++++++++++++>-]<[->[+>>]+[<<]>]")
-        analyze()
+        analyzeAll()
         analyze.print()
     }
 
@@ -210,9 +229,16 @@ public class BrainTest extends BrainfuckTest {
     public void readsAndWrites() {
         source.addCommands(">> +++++ [->[+>>]+[<<]>]")
         // distribute values from 5 downto 1 across the tape
-        analyze()
-        assert analyze.arrayLong({it.readCount}, 0, 12)  == [0, 5, 6, 10, 0, 8, 0, 6, 0, 4, 0, 2] as int[]
-        assert analyze.arrayLong({it.writeCount}, 0, 12) == [0, 0, 10, 5, 0, 4, 0, 3, 0, 2, 0, 1] as int[]
+        analyze(new MemoryValues(), new ReadWriteAnalysis())
+        analyze.print()
+        ReadWriteAnalysis readWrite = analyze.get(ReadWriteAnalysis)
+        assert readWrite.maxMemory == 0x0B
+        assert readWrite.cellsUsed == 7 // 5 cells gets values + 2 for loop check
+        assert readWrite.maxMemory + 1 - readWrite.cellsUsed == 5 // one at start + 4 between the values
+        assert analyze.arrayLong(ReadWriteAnalysis.ReadWriteData, {it.readCount}, 0, 12)  ==
+            [0, 5, 6, 10, 0, 8, 0, 6, 0, 4, 0, 2] as int[]
+        assert analyze.arrayLong(ReadWriteAnalysis.ReadWriteData, {it.writeCount}, 0, 12) ==
+            [0, 0, 10, 5, 0, 4, 0, 3, 0, 2, 0, 1] as int[]
     }
 
     @Test

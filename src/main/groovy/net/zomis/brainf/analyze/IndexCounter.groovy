@@ -9,11 +9,16 @@ import java.util.stream.Stream
  *
  * Can be used with for example while loops analysis, <code>[20 * 3, 1 * 4, 20 * 2] --> {1: 4, 20: 5}</code>
  */
-class IndexCounter {
+class IndexCounter implements CellTagger {
 
     int forIndex
     List<Integer> results = []
     Stack<AtomicInteger> started = new Stack<>()
+    private final String prefix
+
+    IndexCounter(String prefix) {
+        this.prefix = prefix
+    }
 
     void begin() {
         started.push(new AtomicInteger(0))
@@ -94,7 +99,8 @@ class IndexCounter {
         add(this.started.pop().get())
     }
 
-    Stream<String> tags(String prefix, Function<Integer, String> indexToStringFunction) {
+    @Override
+    Stream<String> tags(Function<Integer, String> indexToStringFunction) {
         tagNames(indexToStringFunction).stream().map({prefix + ' ' + it})
     }
 

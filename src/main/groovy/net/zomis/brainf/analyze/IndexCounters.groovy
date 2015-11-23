@@ -4,7 +4,7 @@ import java.util.stream.Stream
 
 class IndexCounters {
     private final Map<Integer, IndexCounter> counters = [:]
-    private final Stack<IndexCounter> recentCounters = new Stack<>()
+    private final Deque<IndexCounter> recentCounters = new LinkedList<>()
 
     Stream<Map.Entry<Integer, IndexCounter>> sorted() {
         counters.entrySet().stream().sorted(Comparator.comparingInt({it.key}))
@@ -16,7 +16,7 @@ class IndexCounters {
 
     void begin(IndexCounter counter) {
         assert counter : 'Cannot begin on null counter'
-        recentCounters.push(counter)
+        recentCounters.addLast(counter)
         counter.begin()
     }
 
@@ -25,15 +25,17 @@ class IndexCounters {
     }
 
     void finishLast() {
-        recentCounters.pop().finishLast()
+        recentCounters.removeLast().finishLast()
     }
 
     IndexCounter recent() {
-        recentCounters.peek()
+        recentCounters.peekLast()
     }
 
     IndexCounter getOrCreate(int i) {
-        counters.putIfAbsent(i, new IndexCounter(forIndex: i))
+        def idxCounter = new IndexCounter('')
+        idxCounter.forIndex = i
+        counters.putIfAbsent(i, idxCounter)
         counters.get(i)
     }
 

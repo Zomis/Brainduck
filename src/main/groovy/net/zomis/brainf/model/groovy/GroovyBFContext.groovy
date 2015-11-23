@@ -18,7 +18,7 @@ class GroovyBFContext {
     }
 
     BrainfuckCommand createCommand(String code) {
-        new SpecialCommand(code)
+        new SpecialCommand(this, code)
     }
 
     void addLoopName(int index, String name) {
@@ -40,29 +40,30 @@ class GroovyBFContext {
         afterRun.run()
     }
 
-    public class SpecialCommand implements BrainfuckCommand {
+    public static class SpecialCommand implements BrainfuckCommand {
         private final DelegatingScript script
         private final String code
+        private final GroovyBFContext context
 
-        SpecialCommand(String code) {
+        SpecialCommand(GroovyBFContext context, String code) {
             this.code = code
-            script = (DelegatingScript) shell.parse(code)
+            this.context = context
+            script = (DelegatingScript) context.shell.parse(code)
         }
 
         @Override
         void perform(BrainfuckRunner runner) {
-            script.setDelegate(new SpecialDelegate(GroovyBFContext.this, runner))
+            script.setDelegate(new SpecialDelegate(context, runner))
             script.run()
         }
 
         String getCode() {
-            this.code
+            return this.@code
         }
 
         @Override
-        String toString() {
-            String myCode = this.code
-            "SpecialCommand: $myCode"
+        public String toString() {
+            return 'GroovyCommand'
         }
 
     }

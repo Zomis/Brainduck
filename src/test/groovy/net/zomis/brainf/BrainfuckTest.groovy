@@ -1,6 +1,16 @@
 package net.zomis.brainf
 
+import net.zomis.brainf.analyze.AnalyzeFactory
 import net.zomis.brainf.analyze.Brainalyze
+import net.zomis.brainf.analyze.BrainfuckAnalyzer
+import net.zomis.brainf.analyze.analyzers.BrainfuckAnalyzers
+import net.zomis.brainf.analyze.analyzers.CommandCountAnalysis
+import net.zomis.brainf.analyze.analyzers.GroovyCommandAnalysis
+import net.zomis.brainf.analyze.analyzers.IOAnalysis
+import net.zomis.brainf.analyze.analyzers.MemoryIndexAnalysis
+import net.zomis.brainf.analyze.analyzers.MemoryValues
+import net.zomis.brainf.analyze.analyzers.ReadWriteAnalysis
+import net.zomis.brainf.analyze.analyzers.WhileLoopAnalysis
 import net.zomis.brainf.model.BrainF
 import net.zomis.brainf.model.BrainfuckRunner
 import net.zomis.brainf.model.ListCode
@@ -16,8 +26,8 @@ class BrainfuckTest {
     Brainalyze analyze
     GroovyBFContext context
 
-    void analyze() {
-        analyze = Brainalyze.analyze(brain, context)
+    void analyze(BrainfuckAnalyzer... analyzers) {
+        analyze = new AnalyzeFactory().addAnalyzers(analyzers).analyze(brain, context)
     }
 
     @Before
@@ -30,4 +40,7 @@ class BrainfuckTest {
         brain.code.source = source
     }
 
+    void analyzeAll() {
+        analyze(BrainfuckAnalyzers.availableAnalyzers)
+    }
 }

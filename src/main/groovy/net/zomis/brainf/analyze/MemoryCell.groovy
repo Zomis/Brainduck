@@ -8,51 +8,57 @@ import java.util.function.BinaryOperator
 import java.util.function.Function
 import java.util.function.Supplier
 import java.util.stream.Collector
+import java.util.stream.Collectors
 import java.util.stream.Stream
 
 class MemoryCell {
 
     final int index
-    int value
-    long readCount
-    long writeCount
-    IndexCounter prints = new IndexCounter()
-    IndexCounter userInputs = new IndexCounter()
-    IndexCounter whileLoopStart = new IndexCounter()
-    IndexCounter whileLoopContinue = new IndexCounter()
-    IndexCounter whileLoopEnd = new IndexCounter()
+
+    private final Map<Class<?>, Object> analysis = [:]
 
     MemoryCell(int index) {
         this.index = index
     }
 
+    public <T> T data(BrainfuckAnalyzer analyzer, Class<T> clazz) {
+        Object obj = analysis.get(clazz)
+        if (!obj) {
+            obj = analyzer.createMemoryData()
+            analysis.put(clazz, obj)
+        }
+        if (!obj) {
+            throw new IllegalStateException("Analyzer $analyzer does not create a memory data object of $clazz")
+        }
+        return (T) obj;
+    }
+
+    public <T> T data(Class<T> clazz) {
+        Object obj = analysis.get(clazz)
+        return (T) obj;
+    }
+
     String toString(GroovyBFContext groovy) {
-        int value = this.value
         String hexAddress = String.format("%04X", index)
         String decAddress = String.format("%06d", index)
 
-        boolean specialChar = value >= 0 && value <= 13
-        char chrValue = specialChar ? 32 : value;
-        String decValue = String.format("%6d", value);
-
-        String reads = String.format("%6d", this.readCount);
-        String writes = String.format("%6d", this.writeCount);
+        String analysis = analysis.values().stream().map({obj -> String.valueOf(obj)}).collect(Collectors.joining('\t'))
         Map<String, Integer> tagsCount = resolveTags(groovy)
         String tags = tagsCount.isEmpty() ? '' : tagsCount.toString()
-        "Hex $hexAddress\tDec $decAddress\tValue $decValue '$chrValue' \t" +
-            "Reads: $reads\tWrites: $writes $tags".toString()
+        "Hex $hexAddress\tDec $decAddress\t" +
+            analysis +
+            "$tags".toString()
     }
 
     Map<String, Integer> resolveTags(GroovyBFContext groovy) {
         Function<Integer, String> loopNames = {i ->
             groovy.getLoopName(i)
         }
-        Stream.of(prints.tags('print', loopNames),
-                userInputs.tags('userInput', loopNames),
-                whileLoopStart.tags('loop-begin', loopNames),
-                whileLoopContinue.tags('loop-continue', loopNames),
-                whileLoopEnd.tags('loop-end', loopNames))
-            .flatMap({it})
+        Stream<CellTagger> taggers = this.analysis.values().stream()
+            .filter({it instanceof CellTagger})
+            .map({it as CellTagger})
+        taggers
+            .flatMap({it.tags(loopNames)})
             .sorted()
             .collect(countingCollector())
     }
