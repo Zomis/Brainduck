@@ -23,6 +23,7 @@
                 <MenuItem text="_Step" onAction="#step">
                     <accelerator><KeyCodeCombination alt="UP" code="F7" control="UP" meta="UP" shift="UP" shortcut="UP" /></accelerator>
                 </MenuItem>
+                <MenuItem text="Run _X Steps" onAction="#runXTimes" />
                 <MenuItem text="Step _Out" onAction="#stepOut">
                     <accelerator><KeyCodeCombination alt="UP" code="F8" control="UP" meta="UP" shift="DOWN" shortcut="UP" /></accelerator>
                 </MenuItem>

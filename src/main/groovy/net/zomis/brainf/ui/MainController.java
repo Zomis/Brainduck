@@ -10,16 +10,17 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextInputDialog;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import net.zomis.brainf.analyze.AnalyzeFactory;
 import net.zomis.brainf.analyze.Brainalyze;
 import net.zomis.brainf.analyze.analyzers.BrainfuckAnalyzers;
@@ -57,7 +58,22 @@ public class MainController implements Initializable {
         runWith(new RunUntilLoopStartStrategy());
     }
 
-	@FXML
+    @FXML private void runXTimes(ActionEvent event) {
+        TextInputDialog dialog = new TextInputDialog("1");
+        dialog.setContentText("Run count");
+        dialog.setHeaderText("How many times do you want to run?");
+        dialog.getEditor().textProperty().addListener(new ChangeListener<String>() {
+            @Override public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    dialog.getEditor().setText(oldValue);
+                }
+            }
+        });
+        int count = Integer.parseInt(dialog.showAndWait().orElse("0"), 10);
+        runWith(new LimitedStepsStrategy(count));
+    }
+
+    @FXML
 	private void runToCursor(ActionEvent event) {
 		int index = currentTab.getCodeArea().getCaretPosition();
 		while (brain().getCode().getCommandIndex() < index) {
