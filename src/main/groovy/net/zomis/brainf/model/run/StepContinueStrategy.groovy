@@ -10,7 +10,7 @@ class StepContinueStrategy implements RunStrategy {
     private int loopEnd
     private int nextLoop
     private boolean performedOnce
-    private final RunStrategy singleStep = new SingleStepStrategy()
+    private final RunStrategy singleStep = new LimitedStepsStrategy()
 
     @Override
     boolean start(BrainfuckRunner runner) {

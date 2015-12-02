@@ -4,22 +4,31 @@ import net.zomis.brainf.model.classic.BrainFCommand
 import net.zomis.brainf.model.BrainfuckCommand
 import net.zomis.brainf.model.BrainfuckRunner
 
-class SingleStepStrategy implements RunStrategy {
+class LimitedStepsStrategy implements RunStrategy {
 
-    private boolean encountered
+    private int remaining
+    private final int count
+
+    LimitedStepsStrategy() {
+        this(1)
+    }
+
+    LimitedStepsStrategy(int count) {
+        this.count = count
+    }
 
     @Override
     boolean start(BrainfuckRunner runner) {
-        encountered = false
+        remaining = count
         return true
     }
 
     @Override
     boolean next(BrainfuckRunner runner) {
-        if (!encountered) {
+        if (remaining > 0) {
             BrainfuckCommand comm = runner.step();
             if (comm != BrainFCommand.NONE) {
-                encountered = true
+                remaining--
                 System.out.println("Step: " + comm);
             }
             return true

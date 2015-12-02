@@ -68,7 +68,7 @@ public class MainController implements Initializable {
 
     @FXML
 	private void step(ActionEvent event) {
-        runWith(new SingleStepStrategy());
+        runWith(new LimitedStepsStrategy());
 	}
 
     @FXML
