@@ -39,13 +39,17 @@ class TabController implements Initializable {
 		for (int i = 0; i < brain.getMemory().getMemorySize(); i++) {
 			memoryList.getItems().add("");
 		}
+        setupCodeArea()
+        codeArea.replaceText(0, 0, GroovyRead.read("fizzbuzz.bf"));
+    }
+
+    void setupCodeArea() {
         this.codeArea = new CodeArea();
         codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
         codeArea.richChanges().subscribe({change ->
             def highlighting = computeHighlighting(codeArea.getCaretPosition(), codeArea.getText())
             codeArea.setStyleSpans(0, highlighting)
         })
-        codeArea.replaceText(0, 0, GroovyRead.read("fizzbuzz.bf"));
         codeArea.setOnKeyReleased({
             stage.setTitle(String.format("BrainDuck pos %d col %d", codeArea.getCaretPosition(), codeArea.getCaretColumn()));
         });
@@ -55,8 +59,8 @@ class TabController implements Initializable {
         AnchorPane.setRightAnchor(codeArea, 0d);
         AnchorPane.setLeftAnchor(codeArea, 0d);
         AnchorPane.setBottomAnchor(codeArea, 0d);
+        codePane.getChildren().clear()
         codePane.getChildren().add(codeArea);
-
     }
 
     static int findMatching(String commands, int commandIndex, char decrease, char increase, int direction) {

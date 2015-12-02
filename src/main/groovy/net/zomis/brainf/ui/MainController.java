@@ -129,6 +129,14 @@ public class MainController implements Initializable {
         runWith(new StepContinueStrategy());
     }
 
+    @FXML private void codeAreaFix(ActionEvent event) {
+        String code = currentTab.getCodeArea().getText();
+        int index = currentTab.getCodeArea().getCaretPosition();
+        currentTab.setupCodeArea();
+        currentTab.getCodeArea().replaceText(code);
+        currentTab.getCodeArea().positionCaret(index);
+    }
+
     @FXML private void analyze(ActionEvent event) {
         Brainalyze analyze = new AnalyzeFactory()
             .addAnalyzers(BrainfuckAnalyzers.getAvailableAnalyzers())
