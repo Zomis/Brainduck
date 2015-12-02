@@ -47,7 +47,6 @@
       <HBox prefHeight="20.0" prefWidth="200.0">
            <children>
                <Button mnemonicParsing="false" onAction="#codeAreaFix" text="Fix bug with editing code" />
-               <Button mnemonicParsing="false" onAction="#saveCode" text="Save code" />
                <Button mnemonicParsing="false" onAction="#step" text="Run Step" />
                <Button mnemonicParsing="false" onAction="#repeat" text="Repeat" />
                <Button mnemonicParsing="false" onAction="#runToCursor" text="Run to cursor" />

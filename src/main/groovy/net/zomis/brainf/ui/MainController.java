@@ -77,6 +77,10 @@ public class MainController implements Initializable {
             // do not allow multiple runs at the same time
             return;
         }
+        if (currentTab.isCodeModified()) {
+            currentTab.setCodeModified(false);
+            this.saveCode();
+        }
         this.exec.execute(() -> {
             this.codeRunning.set(true);
             this.runSwitch.set(true);
@@ -145,12 +149,7 @@ public class MainController implements Initializable {
     }
 
     private void update() {
-		currentTab.getCodeArea().selectRange(brain().getCode().getCommandIndex(), brain().getCode().getCommandIndex() + 1);
-		currentTab.getOutput().setText(brain().getOutput());
-
-		for (int i = 0; i < brain().getMemory().getMemorySize(); i++) {
-			currentTab.getMemoryList().getItems().set(i, memoryText(i));
-		}
+        currentTab.update();
 	}
 
 	private String memoryText(int i) {
@@ -159,7 +158,7 @@ public class MainController implements Initializable {
 		return Integer.toString(i, 16) + "\t" + value + "\t" + String.valueOf(ch).trim() + "\t" + (brain().getMemory().getMemoryIndex() == i ? "x" : "");
 	}
 
-    @FXML private void saveCode(ActionEvent event) {
+    private void saveCode() {
         brain().getCode().setSource(ListCode.create(currentTab.getCodeArea().getText()));
         brain().reset();
     }

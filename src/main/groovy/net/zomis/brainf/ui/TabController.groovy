@@ -24,8 +24,9 @@ class TabController implements Initializable {
 
     CodeArea codeArea;
     final BrainfuckRunner brain = BrainF.createUsingSystemInputWithMemorySize(0x1000);
+    boolean codeModified
 
-    private void update() {
+    void update() {
         codeArea.selectRange(brain.getCode().getCommandIndex(), brain.getCode().getCommandIndex() + 1);
         output.setText(brain.getOutput());
 
@@ -47,6 +48,7 @@ class TabController implements Initializable {
         this.codeArea = new CodeArea();
         codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
         codeArea.richChanges().subscribe({change ->
+            codeModified = true
             def highlighting = computeHighlighting(codeArea.getCaretPosition(), codeArea.getText())
             codeArea.setStyleSpans(0, highlighting)
         })
