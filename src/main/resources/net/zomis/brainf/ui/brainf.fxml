@@ -10,7 +10,7 @@
         <menus>
           <Menu text="_File">
             <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
+              <MenuItem mnemonicParsing="false" text="Close" onAction="#close" />
             </items>
           </Menu>
           <Menu text="_Edit">

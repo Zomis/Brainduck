@@ -207,4 +207,8 @@ public class MainController implements Initializable {
         stage.setOnCloseRequest(e -> exec.shutdownNow());
     }
 
+    @FXML void close() {
+        stage.close();
+    }
+
 }
