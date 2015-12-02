@@ -52,6 +52,11 @@ public class MainController implements Initializable {
 		exec.scheduleWithFixedDelay(() -> this.step(null), 100, 100, TimeUnit.MILLISECONDS);
 	}
 
+    @FXML
+    private void runUntilLoopStart(ActionEvent event) {
+        runWith(new RunUntilLoopStartStrategy());
+    }
+
 	@FXML
 	private void runToCursor(ActionEvent event) {
 		int index = currentTab.getCodeArea().getCaretPosition();
