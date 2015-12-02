@@ -85,6 +85,9 @@ public class MainController implements Initializable {
     }
 
     private void runWith(RunStrategy strategy) {
+        if (brain().getCode().getNextCommand() == null) {
+            brain().reset();
+        }
         if (codeRunning.get()) {
             System.out.println("--- Code already running, cannot start " + strategy);
             // do not allow multiple runs at the same time
