@@ -73,10 +73,7 @@ class BrainfuckCode {
     }
 
     BrainfuckCommand getCommandAt(int index) {
-        if (source == null) {
-            return null
-        }
-        source.getCommand(index)
+        source?.getCommand(index)
     }
 
 }
