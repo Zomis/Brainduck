@@ -44,15 +44,6 @@ public class MainController implements Initializable {
 	
 	private ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
 	
-	@FXML
-	private void repeat(ActionEvent event) {
-		System.out.println("Repeat");
-//		for (int i = 0; i < 100; i++) {
-//			brain.step();
-//		}
-		exec.scheduleWithFixedDelay(() -> this.step(null), 100, 100, TimeUnit.MILLISECONDS);
-	}
-
     @FXML
     private void runUntilLoopStart(ActionEvent event) {
         runWith(new RunUntilLoopStartStrategy());
