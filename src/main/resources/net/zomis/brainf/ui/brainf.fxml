@@ -36,6 +36,9 @@
                 <MenuItem text="_Run" onAction="#runCode">
                     <accelerator><KeyCodeCombination alt="UP" code="F9" control="UP" meta="UP" shift="UP" shortcut="UP" /></accelerator>
                 </MenuItem>
+                <MenuItem text="Run to _cursor" onAction="#runToCursor">
+                    <accelerator><KeyCodeCombination alt="UP" code="F4" control="UP" meta="UP" shift="UP" shortcut="UP" /></accelerator>
+                </MenuItem>
                 <MenuItem text="S_top" onAction="#stopRunning">
                     <accelerator><KeyCodeCombination alt="UP" code="F2" control="DOWN" meta="UP" shift="UP" shortcut="UP" /></accelerator>
                 </MenuItem>
@@ -53,7 +56,6 @@
                <Button mnemonicParsing="false" onAction="#codeAreaFix" text="Fix bug with editing code" />
                <Button mnemonicParsing="false" onAction="#step" text="Run Step" />
                <Button mnemonicParsing="false" onAction="#repeat" text="Repeat" />
-               <Button mnemonicParsing="false" onAction="#runToCursor" text="Run to cursor" />
                <Button mnemonicParsing="false" onAction="#analyze" text="Analyze" />
            </children>
       </HBox>
