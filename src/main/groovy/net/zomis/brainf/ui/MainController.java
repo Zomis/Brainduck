@@ -75,6 +75,7 @@ public class MainController implements Initializable {
 
     @FXML
 	private void runToCursor(ActionEvent event) {
+        currentTab.saveCodeIfRequired();
 		int index = currentTab.getCodeArea().getCaretPosition();
 		while (brain().getCode().getCommandIndex() < index) {
 			brain().step();
@@ -98,10 +99,7 @@ public class MainController implements Initializable {
             // do not allow multiple runs at the same time
             return;
         }
-        if (currentTab.isCodeModified()) {
-            currentTab.setCodeModified(false);
-            this.saveCode();
-        }
+        currentTab.saveCodeIfRequired();
         this.exec.execute(() -> {
             this.codeRunning.set(true);
             this.runSwitch.set(true);
@@ -178,11 +176,6 @@ public class MainController implements Initializable {
 		char ch = (char) (value < 0 ? 256 + value : value);
 		return Integer.toString(i, 16) + "\t" + value + "\t" + String.valueOf(ch).trim() + "\t" + (brain().getMemory().getMemoryIndex() == i ? "x" : "");
 	}
-
-    private void saveCode() {
-        brain().getCode().setSource(ListCode.create(currentTab.getCodeArea().getText()));
-        brain().reset();
-    }
 
     private BrainfuckRunner brain() {
         return currentTab.getBrain();

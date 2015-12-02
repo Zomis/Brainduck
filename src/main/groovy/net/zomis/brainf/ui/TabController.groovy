@@ -7,6 +7,7 @@ import javafx.scene.control.TextArea
 import javafx.scene.layout.AnchorPane
 import javafx.stage.Stage
 import net.zomis.brainf.model.BrainF
+import net.zomis.brainf.model.ListCode
 import net.zomis.brainf.model.classic.BrainFCommand
 import net.zomis.brainf.model.BrainfuckRunner
 import org.fxmisc.richtext.CodeArea
@@ -129,4 +130,11 @@ class TabController implements Initializable {
         return Integer.toString(i, 16) + "\t" + value + "\t" + String.valueOf(ch).trim() + "\t" + (brain.getMemory().getMemoryIndex() == i ? "x" : "");
     }
 
+    void saveCodeIfRequired() {
+        if (codeModified) {
+            codeModified = false
+            brain.code.setSource(ListCode.create(codeArea.text));
+            brain.reset();
+        }
+    }
 }
