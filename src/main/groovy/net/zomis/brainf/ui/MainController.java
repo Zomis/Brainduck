@@ -155,6 +155,7 @@ public class MainController implements Initializable {
     }
 
     @FXML private void analyze(ActionEvent event) {
+        currentTab.saveCodeIfRequired();
         Brainalyze analyze = new AnalyzeFactory()
             .addAnalyzers(BrainfuckAnalyzers.getAvailableAnalyzers())
             .analyze(brain(), new GroovyBFContext());
