@@ -7,10 +7,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -34,8 +31,6 @@ public class MainController implements Initializable {
     @FXML private TabPane tabs;
 
     private final Stage stage;
-    private final AtomicBoolean runSwitch = new AtomicBoolean();
-    private final AtomicBoolean codeRunning = new AtomicBoolean();
     private final Map<Tab, TabController> tabMap = new HashMap<>();
 
     public MainController(Stage stage) {
@@ -81,57 +76,11 @@ public class MainController implements Initializable {
 
     @FXML
     private void stopRunning(ActionEvent event) {
-        runSwitch.set(false);
+        currentTab().stopRun();
     }
 
     private void runWith(RunStrategy strategy) {
-        if (brain().getCode().getNextCommand() == null) {
-            brain().reset();
-        }
-        if (codeRunning.get()) {
-            System.out.println("--- Code already running, cannot start " + strategy);
-            // do not allow multiple runs at the same time
-            return;
-        }
-        currentTab().saveCodeIfRequired();
-        this.exec.execute(() -> {
-            this.codeRunning.set(true);
-            this.runSwitch.set(true);
-            final AtomicInteger runTimes = new AtomicInteger();
-            int count = brain().run(new RunStrategy() {
-                @Override
-                public boolean start(BrainfuckRunner runner) {
-                    return strategy.start(runner);
-                }
-
-                @Override
-                public boolean next(BrainfuckRunner runner) {
-                    if (Thread.interrupted()) {
-                        stopCode();
-                        return false;
-                    }
-                    if (!runSwitch.get()) {
-                        stopCode();
-                        return false;
-                    }
-                    return strategy.next(runner);
-                }
-
-                private void stopCode() {
-                    runSwitch.set(true);
-                    codeRunning.set(false);
-                }
-            });
-            if (count == 0) {
-                System.out.println(strategy + " not started");
-            }
-            if (Platform.isFxApplicationThread()) {
-                update();
-            } else {
-                Platform.runLater(() -> update());
-            }
-            codeRunning.set(false);
-        });
+        currentTab().run(exec, strategy);
     }
 
     @FXML private void stepOut(ActionEvent event) {
