@@ -33,3 +33,7 @@
 .string {
     -fx-fill: blue;
 }
+
+#output {
+    -fx-font-family: monospace;
+}
