@@ -25,11 +25,6 @@
               <MenuItem mnemonicParsing="false" text="Close" onAction="#close" />
             </items>
           </Menu>
-          <Menu text="_Edit">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
-            </items>
-          </Menu>
           <Menu mnemonicParsing="true" text="_Run/Debug">
             <items>
                 <MenuItem text="_Step" onAction="#step">
