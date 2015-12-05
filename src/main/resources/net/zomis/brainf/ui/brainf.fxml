@@ -10,6 +10,18 @@
         <menus>
           <Menu text="_File">
             <items>
+                <MenuItem text="_New" onAction="#newTab">
+                    <accelerator><KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" /></accelerator>
+                </MenuItem>
+                <MenuItem text="_Open" onAction="#openFile">
+                    <accelerator><KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" /></accelerator>
+                </MenuItem>
+                <MenuItem text="_Save" onAction="#saveFile">
+                    <accelerator><KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" /></accelerator>
+                </MenuItem>
+                <MenuItem text="_Close" onAction="#closeTab">
+                    <accelerator><KeyCodeCombination alt="UP" code="W" control="DOWN" meta="UP" shift="UP" shortcut="UP" /></accelerator>
+                </MenuItem>
               <MenuItem mnemonicParsing="false" text="Close" onAction="#close" />
             </items>
           </Menu>

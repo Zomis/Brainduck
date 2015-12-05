@@ -1,5 +1,6 @@
 package net.zomis.brainf.ui;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextInputDialog;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import net.zomis.brainf.analyze.AnalyzeFactory;
 import net.zomis.brainf.analyze.Brainalyze;
@@ -32,6 +34,7 @@ public class MainController implements Initializable {
 
     private final Stage stage;
     private final Map<Tab, TabController> tabMap = new HashMap<>();
+    private final FileChooser openDialog = new FileChooser();
 
     public MainController(Stage stage) {
         this.stage = stage;
@@ -81,6 +84,32 @@ public class MainController implements Initializable {
 
     private void runWith(RunStrategy strategy) {
         currentTab().run(exec, strategy);
+    }
+
+    @FXML private void newTab(ActionEvent event) {
+        createTab("untitled");
+        tabs.getSelectionModel().selectLast();
+    }
+
+    @FXML private void openFile(ActionEvent event) {
+        File file = openDialog.showOpenDialog(stage);
+        if (file != null) {
+            TabController tab = createTab(file.getName());
+            tab.setCode(GroovyRead.file(file));
+            tab.getLoadSave().setFile(file);
+            tabs.getSelectionModel().selectLast();
+        }
+    }
+
+    @FXML private void saveFile(ActionEvent event) {
+        currentTab().getLoadSave().save(stage, currentTab().getCode());
+    }
+
+    @FXML private void closeTab(ActionEvent event) {
+        if (currentTab().getLoadSave().closeRequest(stage, currentTab().getCode())) {
+            Tab selected = tabs.getTabs().remove(tabs.getSelectionModel().getSelectedIndex());
+            tabMap.remove(selected);
+        }
     }
 
     @FXML private void stepOut(ActionEvent event) {
@@ -147,7 +176,14 @@ public class MainController implements Initializable {
     @Override
 	public void initialize(URL url, ResourceBundle resource) {
         createTab("untitled1").setCode(GroovyRead.read("fizzbuzz.bf"));
-        stage.setOnCloseRequest(e -> exec.shutdownNow());
+        stage.setOnCloseRequest(e -> {
+            boolean closeAllTabs = tabMap.values().stream().allMatch(tc -> tc.getLoadSave().closeRequest(stage, tc.getCode()));
+            if (closeAllTabs) {
+                exec.shutdownNow();
+            } else {
+                e.consume();
+            }
+        });
     }
 
     @FXML void close() {

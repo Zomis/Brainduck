@@ -7,7 +7,9 @@ import javafx.scene.control.ListView
 import javafx.scene.control.Tab
 import javafx.scene.control.TextArea
 import javafx.scene.layout.AnchorPane
+import javafx.stage.FileChooser
 import javafx.stage.Stage
+import javafx.stage.Window
 import net.zomis.brainf.model.BrainF
 import net.zomis.brainf.model.ListCode
 import net.zomis.brainf.model.classic.BrainFCommand
@@ -32,6 +34,7 @@ class TabController implements Initializable {
     private Tab tab;
     private final AtomicBoolean runSwitch = new AtomicBoolean();
     private final AtomicBoolean codeRunning = new AtomicBoolean();
+    LoadSaveHandler loadSave
 
     CodeArea codeArea;
     final BrainfuckRunner brain = BrainF.createUsingSystemInputWithMemorySize(0x1000);
@@ -63,6 +66,7 @@ class TabController implements Initializable {
         codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
         codeArea.richChanges().subscribe({change ->
             codeModified = true
+            loadSave.modified()
             def highlighting = computeHighlighting(codeArea.getCaretPosition(), codeArea.getText())
             codeArea.setStyleSpans(0, highlighting)
         })
@@ -154,6 +158,7 @@ class TabController implements Initializable {
     void setup(Tab tab, Stage stage) {
         this.@tab = tab
         this.@stage = stage
+        this.loadSave = new LoadSaveHandler(this, tab);
     }
 
     public Tab getTab() {
@@ -213,4 +218,9 @@ class TabController implements Initializable {
     void stopRun() {
         runSwitch.set(false)
     }
+
+    public String getCode() {
+        return codeArea.getText();
+    }
+
 }
