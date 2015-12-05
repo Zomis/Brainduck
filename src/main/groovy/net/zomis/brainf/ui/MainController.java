@@ -2,10 +2,11 @@ package net.zomis.brainf.ui;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -25,7 +26,6 @@ import net.zomis.brainf.analyze.AnalyzeFactory;
 import net.zomis.brainf.analyze.Brainalyze;
 import net.zomis.brainf.analyze.analyzers.BrainfuckAnalyzers;
 import net.zomis.brainf.model.BrainfuckRunner;
-import net.zomis.brainf.model.ListCode;
 import net.zomis.brainf.model.groovy.GroovyBFContext;
 import net.zomis.brainf.model.run.*;
 
@@ -33,10 +33,10 @@ public class MainController implements Initializable {
 
     @FXML private TabPane tabs;
 
-    private TabController currentTab;
     private final Stage stage;
     private final AtomicBoolean runSwitch = new AtomicBoolean();
     private final AtomicBoolean codeRunning = new AtomicBoolean();
+    private final Map<Tab, TabController> tabMap = new HashMap<>();
 
     public MainController(Stage stage) {
         this.stage = stage;
@@ -66,8 +66,8 @@ public class MainController implements Initializable {
 
     @FXML
 	private void runToCursor(ActionEvent event) {
-        currentTab.saveCodeIfRequired();
-		int index = currentTab.getCodeArea().getCaretPosition();
+        currentTab().saveCodeIfRequired();
+		int index = currentTab().getCodeArea().getCaretPosition();
 		while (brain().getCode().getCommandIndex() < index) {
 			brain().step();
 		}
@@ -93,7 +93,7 @@ public class MainController implements Initializable {
             // do not allow multiple runs at the same time
             return;
         }
-        currentTab.saveCodeIfRequired();
+        currentTab().saveCodeIfRequired();
         this.exec.execute(() -> {
             this.codeRunning.set(true);
             this.runSwitch.set(true);
@@ -147,15 +147,15 @@ public class MainController implements Initializable {
     }
 
     @FXML private void codeAreaFix(ActionEvent event) {
-        String code = currentTab.getCodeArea().getText();
-        int index = currentTab.getCodeArea().getCaretPosition();
-        currentTab.setupCodeArea();
-        currentTab.getCodeArea().replaceText(code);
-        currentTab.getCodeArea().positionCaret(index);
+        String code = currentTab().getCodeArea().getText();
+        int index = currentTab().getCodeArea().getCaretPosition();
+        currentTab().setupCodeArea();
+        currentTab().getCodeArea().replaceText(code);
+        currentTab().getCodeArea().positionCaret(index);
     }
 
     @FXML private void analyze(ActionEvent event) {
-        currentTab.saveCodeIfRequired();
+        currentTab().saveCodeIfRequired();
         Brainalyze analyze = new AnalyzeFactory()
             .addAnalyzers(BrainfuckAnalyzers.getAvailableAnalyzers())
             .analyze(brain(), new GroovyBFContext());
@@ -163,7 +163,7 @@ public class MainController implements Initializable {
     }
 
     private void update() {
-        currentTab.update();
+        currentTab().update();
 	}
 
 	private String memoryText(int i) {
@@ -173,30 +173,48 @@ public class MainController implements Initializable {
 	}
 
     private BrainfuckRunner brain() {
-        return currentTab.getBrain();
+        return currentTab().getBrain();
+    }
+
+    public TabController createTab(String tabTitle) {
+        FXMLLoader loader = new FXMLLoader(TabController.class.getResource("tabcontent.fxml"));
+        try {
+            Parent root = loader.load();
+            Tab tab = new Tab(tabTitle);
+            tab.setContent(root);
+            TabController controller = loader.getController();
+            System.out.println(stage);
+            controller.setup(tab, stage);
+            tabMap.put(tab, controller);
+            tabs.getTabs().add(tab);
+            return controller;
+        } catch (IOException e) {
+            e.printStackTrace();
+            tabs.getTabs().add(new Tab(e.getMessage()));
+            return null;
+        }
     }
 
     @Override
 	public void initialize(URL url, ResourceBundle resource) {
-        FXMLLoader loader = new FXMLLoader(TabController.class.getResource("tabcontent.fxml"));
-        try {
-            Parent root = loader.load();
-            Tab tab = new Tab("untitled1");
-            tab.setContent(root);
-            TabController controller = loader.getController();
-            System.out.println(stage);
-            controller.setStage(stage);
-            currentTab = controller;
-            tabs.getTabs().add(tab);
-        } catch (IOException e) {
-            e.printStackTrace();
-            tabs.getTabs().add(new Tab(e.getMessage()));
-        }
+        createTab("untitled1").setCode(GroovyRead.read("fizzbuzz.bf"));
         stage.setOnCloseRequest(e -> exec.shutdownNow());
     }
 
     @FXML void close() {
         stage.close();
+    }
+
+    public void setCurrentTab(TabController tab) {
+        if (tab == null) {
+            return;
+        }
+        tabs.getSelectionModel().select(tab.getTab());
+    }
+
+    public TabController currentTab() {
+        Tab selected = tabs.getSelectionModel().getSelectedItem();
+        return tabMap.get(selected);
     }
 
 }

@@ -3,6 +3,7 @@ package net.zomis.brainf.ui
 import javafx.fxml.FXML
 import javafx.fxml.Initializable
 import javafx.scene.control.ListView
+import javafx.scene.control.Tab
 import javafx.scene.control.TextArea
 import javafx.scene.layout.AnchorPane
 import javafx.stage.Stage
@@ -21,7 +22,8 @@ class TabController implements Initializable {
     @FXML AnchorPane codePane
     @FXML TextArea output
 
-    Stage stage;
+    private Stage stage;
+    private Tab tab;
 
     CodeArea codeArea;
     final BrainfuckRunner brain = BrainF.createUsingSystemInputWithMemorySize(0x1000);
@@ -42,7 +44,10 @@ class TabController implements Initializable {
 			memoryList.getItems().add("");
 		}
         setupCodeArea()
-        codeArea.replaceText(0, 0, GroovyRead.read("fizzbuzz.bf"));
+    }
+
+    void setCode(String code) {
+        codeArea.replaceText(0, 0, code);
     }
 
     void setupCodeArea() {
@@ -137,4 +142,14 @@ class TabController implements Initializable {
             brain.reset();
         }
     }
+
+    void setup(Tab tab, Stage stage) {
+        this.@tab = tab
+        this.@stage = stage
+    }
+
+    public Tab getTab() {
+        return this.@tab;
+    }
+
 }
