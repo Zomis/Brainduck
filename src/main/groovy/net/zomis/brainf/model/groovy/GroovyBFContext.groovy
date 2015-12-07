@@ -63,7 +63,7 @@ class GroovyBFContext {
 
         @Override
         public String toString() {
-            return 'GroovyCommand'
+            return 'GroovyCommand: ' + this.@code
         }
 
     }
