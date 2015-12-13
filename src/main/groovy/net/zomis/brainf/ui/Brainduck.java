@@ -39,7 +39,9 @@ public class Brainduck extends Application {
                 for (File file : dragBoard.getFiles()) {
                     tab = controller.createTab(file.getName());
                     if (tab != null) {
+                        tab.getLoadSave().setFile(file);
                         tab.setCode(GroovyRead.file(file));
+                        tab.getLoadSave().notModified();
                     }
                 }
                 controller.setCurrentTab(tab);
