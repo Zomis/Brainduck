@@ -97,6 +97,7 @@ public class MainController implements Initializable {
             TabController tab = createTab(file.getName());
             tab.setCode(GroovyRead.file(file));
             tab.getLoadSave().setFile(file);
+            tab.getLoadSave().notModified();
             tabs.getSelectionModel().selectLast();
         }
     }
