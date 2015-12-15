@@ -17,7 +17,7 @@ install: ":"
 before_script:
 - export GRADLE_OPTS='-Dorg.gradle.daemon=false'
 - chmod +x gradlew
-script: "./gradlew test --info"
+script: "./gradlew dist --info"
 deploy:
   provider: releases
   api_key:
