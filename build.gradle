@@ -7,6 +7,10 @@ buildscript {
     }
 }
 
+plugins {
+    id 'net.researchgate.release' version '2.1.2'
+}
+
 apply plugin: 'application'
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'java'

@@ -22,6 +22,7 @@ deploy:
   provider: releases
   api_key:
     secure: vho6lUj1sCwUvbPojgT6QO7j5SOhHRt6IeyKkAosLbxFWHqgBtEW5XxNBwMhtVE9Wczvip3suTpP6MvrschQpTl1JRaOZBrLXUTrESN6Ih3+lFyqCFOvc6/AxySvvxqSEQXnnEHdpMm4LaEuabYsbo25xqTjXCTHmLynvYJcKYo=
-  file: dist/brainduck.jar
+  file_glob: true
+  file: "build/libs/Brainduck*.jar"
   on:
-    repo: Zomis/Brainduck
+    tags: true
