@@ -18,7 +18,6 @@ apply plugin: 'maven'
 apply plugin: 'groovy'
 
 group = 'net.zomis'
-version = '0.0.1-SNAPSHOT'
 
 description = "Brainfuck Java interpreter and utility"
 
