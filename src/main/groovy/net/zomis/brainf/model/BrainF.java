@@ -1,7 +1,5 @@
 package net.zomis.brainf.model;
 
-import net.zomis.brainf.model.BrainfuckMemory;
-import net.zomis.brainf.model.BrainfuckRunner;
 import net.zomis.brainf.model.input.FixedInput;
 import net.zomis.brainf.model.input.NoInput;
 import net.zomis.brainf.model.input.QueueInput;

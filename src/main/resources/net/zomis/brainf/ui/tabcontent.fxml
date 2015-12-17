@@ -12,6 +12,13 @@
                 <AnchorPane fx:id="codePane" prefHeight="Infinity" prefWidth="Infinity" />
             </items>
         </SplitPane>
-        <TextArea fx:id="output" text="Output" />
+        <BorderPane>
+            <center>
+                <TextArea fx:id="output" text="Output" />
+            </center>
+            <bottom>
+                <TextField fx:id="input" text="" onAction="#performInput" />
+            </bottom>
+        </BorderPane>
     </items>
 </SplitPane>

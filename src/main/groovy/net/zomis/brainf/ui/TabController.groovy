@@ -1,15 +1,15 @@
 package net.zomis.brainf.ui
 
 import javafx.application.Platform
+import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.fxml.Initializable
 import javafx.scene.control.ListView
 import javafx.scene.control.Tab
 import javafx.scene.control.TextArea
+import javafx.scene.control.TextField
 import javafx.scene.layout.AnchorPane
-import javafx.stage.FileChooser
 import javafx.stage.Stage
-import javafx.stage.Window
 import net.zomis.brainf.model.BrainF
 import net.zomis.brainf.model.ListCode
 import net.zomis.brainf.model.classic.BrainFCommand
@@ -39,8 +39,9 @@ class TabController implements Initializable {
     LoadSaveHandler loadSave
 
     CodeArea codeArea;
-    final BrainfuckRunner brain = BrainF.createUsingQueueWithMemorySize(inputQueue, 0x1000);
+    @FXML TextField input
     final BlockingQueue<Integer> inputQueue = new LinkedBlockingQueue<>()
+    final BrainfuckRunner brain = BrainF.createUsingQueueWithMemorySize(inputQueue, 0x1000);
     boolean codeModified
 
     void update() {
@@ -155,6 +156,7 @@ class TabController implements Initializable {
             codeModified = false
             brain.code.setSource(ListCode.create(codeArea.text));
             brain.reset();
+            inputQueue.clear()
         }
     }
 
@@ -171,6 +173,7 @@ class TabController implements Initializable {
     void run(ScheduledExecutorService exec, RunStrategy strategy) {
         if (brain.code.getNextCommand() == null) {
             brain.reset();
+            inputQueue.clear()
         }
         if (codeRunning.get()) {
             System.out.println("--- Code already running, cannot start " + strategy);
@@ -224,6 +227,11 @@ class TabController implements Initializable {
 
     public String getCode() {
         return codeArea.getText();
+    }
+
+    @FXML public void performInput(ActionEvent event) {
+        input.text.chars().forEach({ inputQueue.add(it) })
+        input.text = ""
     }
 
 }
