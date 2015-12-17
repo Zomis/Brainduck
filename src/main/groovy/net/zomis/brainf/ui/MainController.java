@@ -176,7 +176,9 @@ public class MainController implements Initializable {
 
     @Override
 	public void initialize(URL url, ResourceBundle resource) {
-        createTab("untitled1").setCode(GroovyRead.read("fizzbuzz.bf"));
+        TabController tab = createTab("untitled1");
+        tab.setCode(GroovyRead.read("fizzbuzz.bf"));
+        tab.getLoadSave().notModified();
         stage.setOnCloseRequest(e -> {
             boolean closeAllTabs = tabMap.values().stream().allMatch(tc -> tc.getLoadSave().closeRequest(stage, tc.getCode()));
             if (closeAllTabs) {
