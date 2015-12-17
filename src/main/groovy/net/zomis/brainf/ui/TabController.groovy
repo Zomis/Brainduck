@@ -20,6 +20,8 @@ import org.fxmisc.richtext.LineNumberFactory
 import org.fxmisc.richtext.StyleSpans
 import org.fxmisc.richtext.StyleSpansBuilder
 
+import java.util.concurrent.BlockingQueue
+import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -37,7 +39,8 @@ class TabController implements Initializable {
     LoadSaveHandler loadSave
 
     CodeArea codeArea;
-    final BrainfuckRunner brain = BrainF.createUsingSystemInputWithMemorySize(0x1000);
+    final BrainfuckRunner brain = BrainF.createUsingQueueWithMemorySize(inputQueue, 0x1000);
+    final BlockingQueue<Integer> inputQueue = new LinkedBlockingQueue<>()
     boolean codeModified
 
     void update() {

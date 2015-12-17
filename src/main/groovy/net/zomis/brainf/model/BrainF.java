@@ -2,17 +2,18 @@ package net.zomis.brainf.model;
 
 import net.zomis.brainf.model.BrainfuckMemory;
 import net.zomis.brainf.model.BrainfuckRunner;
+import net.zomis.brainf.model.input.FixedInput;
+import net.zomis.brainf.model.input.NoInput;
+import net.zomis.brainf.model.input.QueueInput;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
+import java.util.concurrent.BlockingQueue;
 
 public class BrainF {
 	public static BrainfuckRunner createFromCodeAndInput(int memorySize, String code, String input) {
-		return createFromCodeAndInput(memorySize, code, new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
+		return createFromCodeAndInput(memorySize, code, new FixedInput(input));
 	}
 	
-	public static BrainfuckRunner createFromCodeAndInput(int memorySize, String code, InputStream inputStream) {
+	public static BrainfuckRunner createFromCodeAndInput(int memorySize, String code, BrainfuckInput inputStream) {
 		return new BrainfuckRunner(memorySize, code, inputStream);
 	}
 	
@@ -29,7 +30,10 @@ public class BrainF {
 	}
 	
 	public static BrainfuckRunner createUsingSystemInputWithMemorySize(int memorySize) {
-		return new BrainfuckRunner(memorySize, System.in);
+		return new BrainfuckRunner(memorySize, new NoInput());
 	}
-	
+
+	public static BrainfuckRunner createUsingQueueWithMemorySize(BlockingQueue<Integer> input, int memorySize) {
+		return new BrainfuckRunner(memorySize, new QueueInput(input));
+	}
 }

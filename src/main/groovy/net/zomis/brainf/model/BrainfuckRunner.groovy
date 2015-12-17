@@ -6,7 +6,7 @@ class BrainfuckRunner {
 
     final BrainfuckMemory memory
     final BrainfuckCode code
-    final InputStream input;
+    final BrainfuckInput input;
     private final StringBuilder output
     private BrainfuckListener listener = new BrainfuckListener() {
         @Override
@@ -16,19 +16,19 @@ class BrainfuckRunner {
         void afterPerform(BrainfuckRunner runner, BrainfuckCommand command) {}
     }
 
-    BrainfuckRunner(BrainfuckMemory memory, BrainfuckCode code, InputStream input, StringBuilder output) {
+    BrainfuckRunner(BrainfuckMemory memory, BrainfuckCode code, BrainfuckInput input, StringBuilder output) {
         this.memory = memory
         this.code = code
         this.input = input
         this.output = output
     }
 
-    BrainfuckRunner(int memorySize, String code, InputStream input) {
+    BrainfuckRunner(int memorySize, String code, BrainfuckInput input) {
         this(memorySize, input);
         this.code.source = ListCode.create(code)
     }
 
-    BrainfuckRunner(int memorySize, InputStream input) {
+    BrainfuckRunner(int memorySize, BrainfuckInput input) {
         memory = new BrainfuckMemory(memorySize);
         this.input = input;
         this.output = new StringBuilder()

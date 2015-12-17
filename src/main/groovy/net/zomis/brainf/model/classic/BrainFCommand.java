@@ -1,6 +1,7 @@
 package net.zomis.brainf.model.classic;
 
 import net.zomis.brainf.model.BrainfuckCommand;
+import net.zomis.brainf.model.BrainfuckException;
 import net.zomis.brainf.model.BrainfuckRunner;
 
 import java.io.IOException;
@@ -24,7 +25,7 @@ public enum BrainFCommand implements BrainfuckCommand {
         int value = 0;
         try {
             value = r.getInput().read();
-        } catch (IOException e) {
+        } catch (BrainfuckException e) {
             throw new RuntimeException(e);
         }
         r.getMemory().setMemory(value);
