@@ -129,7 +129,7 @@ class EditorStyle {
         if (position == -1) {
             return
         }
-        Collection<String> style = Collections.singleton('highlighted')
+        Collection<String> style = Arrays.asList('loop', 'highlighted')
         codeArea.setStyle(position, position + 1, style)
     }
 

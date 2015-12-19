@@ -14,8 +14,7 @@
 }
 
 .highlighted {
-    -fx-fill: orange;
-    -fx-font-weight: bold;
+    -fx-background-fill: yellow;
 }
 
 .keyword {
