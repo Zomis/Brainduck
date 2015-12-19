@@ -1,9 +1,15 @@
+import org.ajoberstar.grgit.Grgit
+
+import java.time.Instant
+import java.time.format.DateTimeFormatter
+
 buildscript {
     repositories {
         jcenter()
     }
     dependencies {
         classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.1'
+        classpath 'org.ajoberstar:gradle-git:1.2.0'
     }
 }
 
@@ -44,3 +50,22 @@ task dist << {
 }
 dist.dependsOn 'shadowJar'
 dist.dependsOn 'test'
+
+task fixVersion << {
+    def dir = new File(buildDir, 'resources/main')
+    dir.mkdirs()
+
+    def repo = Grgit.open(project.file('.'))
+    def date = DateTimeFormatter.ISO_INSTANT.format(Instant.now())
+    def branchName = repo.branch.getCurrent().getName()
+    def commitHash = repo.log(maxCommits: 1)[0].id
+    def version = project.version
+    def fileContents = new StringBuilder()
+    fileContents.append "version=$version\n"
+    fileContents.append "branch=$branchName\n"
+    fileContents.append "commit=$commitHash\n"
+    fileContents.append "date=$date\n"
+
+    new File(dir, 'version.dat').text = fileContents.toString()
+}
+processResources.dependsOn 'fixVersion'
