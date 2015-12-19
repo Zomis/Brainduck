@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -13,9 +14,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import net.zomis.brainf.analyze.AnalyzeFactory;
@@ -197,5 +196,32 @@ public class MainController {
         TabController tab = createTab("untitled1");
         tab.setCode(GroovyRead.read("fizzbuzz.bf"));
         tab.getLoadSave().notModified();
+    }
+
+    @FXML void aboutDialog(ActionEvent event) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        Properties versionInfo = new Properties();
+        String version = "???";
+        String branch = "???";
+        String hash = "????????";
+        String date = "???";
+        String exception = null;
+        try {
+            versionInfo.load(getClass().getClassLoader().getResourceAsStream("version.dat"));
+            version = versionInfo.getProperty("version");
+            branch = versionInfo.getProperty("branch");
+            hash = versionInfo.getProperty("commit");
+            date = versionInfo.getProperty("date");
+        } catch (IOException e) {
+            exception = e.getLocalizedMessage();
+        }
+        alert.setTitle("Brainduck " + versionInfo.getProperty("version"));
+        alert.setHeaderText(alert.getTitle());
+        alert.setContentText("Version " + version +
+                "\nBuilt on " + date +
+                "\nBuilt from branch " + branch +
+                "\nCommit hash id " + hash.substring(0, 8) +
+                (exception != null ? "\n" + exception : "") + "\n\nhttps://github.com/Zomis/Brainduck");
+        alert.showAndWait();
     }
 }
