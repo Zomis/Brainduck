@@ -1,5 +1,7 @@
 package net.zomis.brainf.ui;
 
+import com.beust.jcommander.JCommander;
+import com.beust.jcommander.ParameterException;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -9,6 +11,9 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.stage.Stage;
+import net.zomis.brainf.model.*;
+import net.zomis.brainf.model.input.ConsoleInput;
+import net.zomis.brainf.model.input.ConsoleOutput;
 
 import java.io.File;
 
@@ -57,7 +62,26 @@ public class Brainduck extends Application {
 	}
 
 	public static void main(String[] args) {
-		launch(args);
+        if (args.length == 0) {
+            launch(args);
+        } else {
+            CommandLineOptions options = new CommandLineOptions();
+            JCommander jcommander = new JCommander(options);
+            try {
+                jcommander.parse(args);
+            } catch (ParameterException ex) {
+                System.out.println(ex.getMessage());
+                jcommander.usage();
+                return;
+            }
+            for (String file : options.main) {
+                BrainfuckCode code = new BrainfuckCode();
+                code.setSource(ListCode.create(GroovyRead.file(new File(file))));
+                BrainfuckRunner runner = new BrainfuckRunner(new BrainfuckMemory(30000), code,
+                        new ConsoleInput(), new ConsoleOutput());
+                runner.run();
+            }
+        }
 	}
 
 	
