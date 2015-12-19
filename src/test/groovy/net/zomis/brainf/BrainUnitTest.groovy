@@ -1,18 +1,24 @@
 package net.zomis.brainf
 
-import net.zomis.brainf.model.BrainF
+import net.zomis.brainf.model.BrainfuckCode
+import net.zomis.brainf.model.BrainfuckMemory
 import net.zomis.brainf.model.BrainfuckRunner
 import net.zomis.brainf.model.ListCode
+import net.zomis.brainf.model.input.NoInput
+import net.zomis.brainf.model.input.StringBuilderOutput
 import org.junit.Before
 import org.junit.Test
 
 class BrainUnitTest {
 
     BrainfuckRunner runner
+    StringBuilder output
 
     @Before
     void setup() {
-        runner = BrainF.createWithDefaultSize()
+        output = new StringBuilder()
+        runner = new BrainfuckRunner(new BrainfuckMemory(),
+                new BrainfuckCode(), new NoInput(), new StringBuilderOutput(output))
     }
 
     @Test

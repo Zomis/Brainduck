@@ -116,7 +116,7 @@ public class BrainTest extends BrainfuckTest {
     public void printAlphabet() {
         source.addCommands("++++++[>++++++++++>++++<<-]>+++++>++[-<.+>]");
         brain.run();
-        assert brain.getOutput() == "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        assert output.toString() == "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     }
 
     @Test
@@ -141,16 +141,16 @@ public class BrainTest extends BrainfuckTest {
         long stop = System.nanoTime()
         long ms = TimeUnit.MILLISECONDS.convert(stop - start, TimeUnit.NANOSECONDS)
         println "FizzBuzz analyze took $ms ms"
-        assert analyze.get(CommandCountAnalysis).getActionsForCommand(BrainFCommand.WRITE) == brain.output.length()
-        assert brain.output == fizzBuzzString(100)
+        assert analyze.get(CommandCountAnalysis).getActionsForCommand(BrainFCommand.WRITE) == output.length()
+        assert output.toString() == fizzBuzzString(100)
     }
 
     @Test
     public void fizzBuzzMin() {
         source.addCommands(BrainfuckRunner.classLoader.getResource('fizzbuzz-min.bf').text);
         analyzeAll()
-        assert analyze.get(CommandCountAnalysis).getActionsForCommand(BrainFCommand.WRITE) == brain.output.length()
-        assert brain.output == fizzBuzzString(100)
+        assert analyze.get(CommandCountAnalysis).getActionsForCommand(BrainFCommand.WRITE) == output.length()
+        assert output.toString() == fizzBuzzString(100)
     }
 
     @Test

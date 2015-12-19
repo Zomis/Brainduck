@@ -110,8 +110,9 @@ class SpecialDelegate {
         groovyContext.afterRun = {
             before.run()
             String myOutput = runner.output
+            StringBuilder otherOutput = new StringBuilder()
             BrainfuckRunner other = new BrainfuckRunner(new BrainfuckMemory(runner.memory.size), new BrainfuckCode(),
-                null, new StringBuilderOutput())
+                null, new StringBuilderOutput(otherOutput))
             URL url = findFile(file)
             GroovyBFContext otherContext = new GroovyBFContext()
             other.code.source = ListCode.create(new GroovySupportConverter(otherContext,
@@ -123,8 +124,7 @@ class SpecialDelegate {
             analyze.print()
             println()
             println()
-            String otherOutput = other.output
-            assert myOutput == otherOutput
+            assert myOutput == otherOutput.toString()
         }
     }
 

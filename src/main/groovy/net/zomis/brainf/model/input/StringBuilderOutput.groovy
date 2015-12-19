@@ -6,11 +6,6 @@ class StringBuilderOutput implements BrainfuckOutput {
 
     private final StringBuilder output
 
-    @Deprecated
-    StringBuilderOutput() {
-        this(new StringBuilder())
-    }
-
     StringBuilderOutput(StringBuilder output) {
         this.output = output
     }

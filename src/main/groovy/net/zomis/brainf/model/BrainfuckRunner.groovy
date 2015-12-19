@@ -25,20 +25,6 @@ class BrainfuckRunner {
     }
 
     @Deprecated
-    BrainfuckRunner(int memorySize, String code, BrainfuckInput input) {
-        this(memorySize, input);
-        this.code.source = ListCode.create(code)
-    }
-
-    @Deprecated
-    BrainfuckRunner(int memorySize, BrainfuckInput input) {
-        memory = new BrainfuckMemory(memorySize);
-        this.input = input;
-        this.output = new StringBuilderOutput()
-        this.code = new BrainfuckCode()
-    }
-
-    @Deprecated
     String getOutput() {
         return output.toString();
     }
