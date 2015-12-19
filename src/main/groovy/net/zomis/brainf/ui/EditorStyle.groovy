@@ -1,13 +1,17 @@
 package net.zomis.brainf.ui
 
+import net.zomis.brainf.analyze.Brainalyze
 import net.zomis.brainf.model.classic.BrainFCommand
 import org.fxmisc.richtext.CodeArea
 import org.fxmisc.richtext.StyleSpans
 import org.fxmisc.richtext.StyleSpansBuilder
 
+import java.util.function.Supplier
+
 class EditorStyle {
 
     private final CodeArea codeArea
+    Set<Integer> highlightCodeIndexes
 
     EditorStyle(CodeArea codeArea) {
         this.codeArea = codeArea
@@ -68,6 +72,8 @@ class EditorStyle {
         BrainFCommand command = BrainFCommand.getCommand(ch)
         if (command == BrainFCommand.NONE) {
             return 'comment'
+        } else if (highlightCodeIndexes?.contains(pos)) {
+            return 'highlighted'
         } else if (command.isLoop()) {
             return 'loop'
         } else if (command == BrainFCommand.READ || command == BrainFCommand.WRITE) {
@@ -131,7 +137,7 @@ class EditorStyle {
         codeArea.setStyle(position, position + 1, style)
     }
 
-    static EditorStyle setup(CodeArea codeArea, Runnable onModified, Runnable onCaretChange) {
+    static EditorStyle setup(CodeArea codeArea, Supplier<Brainalyze> analyze, Runnable onModified, Runnable onCaretChange) {
         EditorStyle styleApplier = new EditorStyle(codeArea)
         codeArea.richChanges().subscribe({change ->
 //            println "rich change $change properties ${change.properties} pos ${change.position} inserted " +

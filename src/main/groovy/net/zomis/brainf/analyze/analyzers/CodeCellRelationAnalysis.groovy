@@ -55,4 +55,13 @@ class CodeCellRelationAnalysis implements BrainfuckAnalyzer {
     @Override
     void afterPerform(MemoryCell cell, BrainfuckRunner runner, BrainfuckCommand command) {
     }
+
+    Set<Integer> codeAccessedBy(Iterable<? extends Integer> indexes) {
+        Set<Integer> result = new HashSet<>()
+        for (Integer idx : indexes) {
+            result.addAll(cellsToCode.getOrDefault(idx, Collections.emptySet()))
+        }
+        result
+    }
+
 }

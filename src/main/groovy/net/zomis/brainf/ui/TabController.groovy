@@ -1,24 +1,30 @@
 package net.zomis.brainf.ui
 
 import javafx.application.Platform
+import javafx.collections.ListChangeListener
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.fxml.Initializable
 import javafx.scene.control.ListView
+import javafx.scene.control.SelectionMode
 import javafx.scene.control.Tab
 import javafx.scene.control.TextArea
 import javafx.scene.control.TextField
 import javafx.scene.layout.AnchorPane
 import javafx.stage.Stage
+import net.zomis.brainf.analyze.AnalyzeFactory
+import net.zomis.brainf.analyze.Brainalyze
+import net.zomis.brainf.analyze.analyzers.BrainfuckAnalyzers
+import net.zomis.brainf.analyze.analyzers.CodeCellRelationAnalysis
 import net.zomis.brainf.model.BrainF
+import net.zomis.brainf.model.BrainfuckCommand
+import net.zomis.brainf.model.BrainfuckListener
 import net.zomis.brainf.model.ListCode
-import net.zomis.brainf.model.classic.BrainFCommand
 import net.zomis.brainf.model.BrainfuckRunner
+import net.zomis.brainf.model.groovy.GroovyBFContext
 import net.zomis.brainf.model.run.RunStrategy
 import org.fxmisc.richtext.CodeArea
 import org.fxmisc.richtext.LineNumberFactory
-import org.fxmisc.richtext.StyleSpans
-import org.fxmisc.richtext.StyleSpansBuilder
 
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
@@ -42,14 +48,19 @@ class TabController implements Initializable {
     @FXML TextField input
     final BlockingQueue<Integer> inputQueue = new LinkedBlockingQueue<>()
     BrainfuckRunner brain
+    private Brainalyze analyze
+    private EditorStyle styleController
     boolean codeModified
+    boolean memoryListUpdate
 
     void update() {
         codeArea.selectRange(brain.getCode().getCommandIndex(), brain.getCode().getCommandIndex() + 1);
 
+        memoryListUpdate = false
         for (int i = 0; i < brain.getMemory().getMemorySize(); i++) {
             this.memoryList.getItems().set(i, memoryText(i));
         }
+        memoryListUpdate = true
     }
 
     @Override
@@ -58,6 +69,18 @@ class TabController implements Initializable {
 		for (int i = 0; i < brain.getMemory().getMemorySize(); i++) {
 			memoryList.getItems().add("");
 		}
+        memoryList.selectionModel.selectionMode = SelectionMode.MULTIPLE
+        memoryList.selectionModel.selectedIndices.addListener(new ListChangeListener<Integer>() {
+            @Override
+            void onChanged(ListChangeListener.Change<? extends Integer> c) {
+                if (analyze == null || !memoryListUpdate) {
+                    return
+                }
+                println "Memory List Selection Change: $c changed to $c.list class ${c.getClass()}"
+                styleController.highlightCodeIndexes = analyze?.get(CodeCellRelationAnalysis)?.codeAccessedBy(c.list)
+                styleController.applyAll()
+            }
+        })
         setupCodeArea()
     }
 
@@ -68,9 +91,10 @@ class TabController implements Initializable {
     void setupCodeArea() {
         this.codeArea = new CodeArea();
         codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
-        EditorStyle.setup(codeArea, {
+        styleController = EditorStyle.setup(codeArea, {analyze}, {
             codeModified = true
             loadSave.modified()
+            analyze = null
         }, {stage.title = String.format("BrainDuck pos %d col %d", codeArea.getCaretPosition(), codeArea.getCaretColumn())})
         codeArea.setPrefWidth(600);
         codeArea.setPrefHeight(600);
@@ -171,6 +195,15 @@ class TabController implements Initializable {
     @FXML public void performInput(ActionEvent event) {
         input.text.chars().forEach({ inputQueue.add(it) })
         input.text = ""
+    }
+
+    void performAnalyze() {
+        saveCodeIfRequired()
+        brain.reset()
+        analyze = new AnalyzeFactory()
+            .addAnalyzers(BrainfuckAnalyzers.getAvailableAnalyzers())
+            .analyze(brain, new GroovyBFContext())
+        analyze.print()
     }
 
 }

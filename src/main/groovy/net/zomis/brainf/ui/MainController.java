@@ -126,12 +126,7 @@ public class MainController {
     }
 
     @FXML private void analyze(ActionEvent event) {
-        currentTab().saveCodeIfRequired();
-        currentTab().getBrain().reset();
-        Brainalyze analyze = new AnalyzeFactory()
-            .addAnalyzers(BrainfuckAnalyzers.getAvailableAnalyzers())
-            .analyze(brain(), new GroovyBFContext());
-        analyze.print();
+        currentTab().performAnalyze();
     }
 
     private void update() {
