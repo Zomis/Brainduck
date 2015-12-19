@@ -69,13 +69,16 @@ class TabController implements Initializable {
         this.codeArea = new CodeArea();
         codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
         codeArea.richChanges().subscribe({change ->
-            codeModified = true
-            loadSave.modified()
-            def highlighting = EditorStyle.computeHighlighting(codeArea.getCaretPosition(), codeArea.getText())
+            if (change.removed.text != change.inserted.text) {
+                codeModified = true
+                loadSave.modified()
+            }
+            def highlighting = EditorStyle.computeHighlighting(codeArea)
             codeArea.setStyleSpans(0, highlighting)
         })
         codeArea.setOnKeyReleased({
             stage.setTitle(String.format("BrainDuck pos %d col %d", codeArea.getCaretPosition(), codeArea.getCaretColumn()));
+            EditorStyle.applyHighlights(codeArea)
         });
         codeArea.setPrefWidth(600);
         codeArea.setPrefHeight(600);
