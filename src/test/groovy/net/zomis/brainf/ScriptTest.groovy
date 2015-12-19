@@ -1,21 +1,25 @@
 package net.zomis.brainf
 
 import net.zomis.brainf.dsl.BrainDSL
+import net.zomis.brainf.model.BrainF
 import net.zomis.brainf.model.BrainfuckMemory
 import net.zomis.brainf.model.BrainfuckRunner
+import net.zomis.brainf.model.input.NoInput
+import net.zomis.brainf.model.input.StringBuilderOutput
 import org.junit.Test
 
 class ScriptTest {
 
-    BrainfuckMemory runBrainfuck(String dslCode) {
+    static BrainfuckMemory runBrainfuck(String dslCode) {
         String code = run(dslCode)
         println code
-        def runner = new BrainfuckRunner(BrainfuckMemory.DEFAULT_MEMORY_SIZE, code, null)
+        def runner = new BrainfuckRunner(new BrainfuckMemory(), BrainF.code(code),
+                new NoInput(), new StringBuilderOutput(new StringBuilder()))
         runner.run()
         runner.getMemory()
     }
 
-    private String run(String code) {
+    private static String run(String code) {
         new BrainDSL().runScript(code).code
     }
 
