@@ -139,8 +139,7 @@ class EditorStyle {
             if (change.removed.text != change.inserted.text) {
                 onModified.run()
             }
-            def highlighting = styleApplier.computeHighlighting()
-            codeArea.setStyleSpans(0, highlighting)
+            styleApplier.applyAll()
         })
         // codeArea.caretPositionProperty().addListener()
         codeArea.setOnKeyReleased({
@@ -148,5 +147,10 @@ class EditorStyle {
             styleApplier.applyHighlights()
         })
         styleApplier
+    }
+
+    void applyAll() {
+        def highlighting = computeHighlighting()
+        codeArea.setStyleSpans(0, highlighting)
     }
 }
