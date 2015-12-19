@@ -12,6 +12,7 @@ import net.zomis.brainf.model.ListCode
 import net.zomis.brainf.model.SubCommand
 import net.zomis.brainf.model.classic.BrainFCommand
 import net.zomis.brainf.model.classic.BrainfuckConverter
+import net.zomis.brainf.model.input.StringBuilderOutput
 
 import java.nio.file.Files
 import java.nio.file.Path
@@ -110,7 +111,7 @@ class SpecialDelegate {
             before.run()
             String myOutput = runner.output
             BrainfuckRunner other = new BrainfuckRunner(new BrainfuckMemory(runner.memory.size), new BrainfuckCode(),
-                null, new StringBuilder())
+                null, new StringBuilderOutput())
             URL url = findFile(file)
             GroovyBFContext otherContext = new GroovyBFContext()
             other.code.source = ListCode.create(new GroovySupportConverter(otherContext,

@@ -41,12 +41,11 @@ class TabController implements Initializable {
     CodeArea codeArea;
     @FXML TextField input
     final BlockingQueue<Integer> inputQueue = new LinkedBlockingQueue<>()
-    final BrainfuckRunner brain = BrainF.createUsingQueueWithMemorySize(inputQueue, 0x1000);
+    BrainfuckRunner brain
     boolean codeModified
 
     void update() {
         codeArea.selectRange(brain.getCode().getCommandIndex(), brain.getCode().getCommandIndex() + 1);
-        output.setText(brain.getOutput());
 
         for (int i = 0; i < brain.getMemory().getMemorySize(); i++) {
             this.memoryList.getItems().set(i, memoryText(i));
@@ -55,6 +54,7 @@ class TabController implements Initializable {
 
     @Override
     void initialize(URL location, ResourceBundle resources) {
+        brain = BrainF.createUsingQueueWithMemorySize(inputQueue, 0x1000, new TextAppender(output));
 		for (int i = 0; i < brain.getMemory().getMemorySize(); i++) {
 			memoryList.getItems().add("");
 		}
@@ -92,6 +92,7 @@ class TabController implements Initializable {
         if (codeModified) {
             codeModified = false
             brain.code.setSource(ListCode.create(codeArea.text));
+            output.text = ''
             brain.reset();
             inputQueue.clear()
         }
@@ -110,6 +111,7 @@ class TabController implements Initializable {
     void run(ScheduledExecutorService exec, RunStrategy strategy) {
         if (brain.code.getNextCommand() == null) {
             brain.reset();
+            output.text = ''
             inputQueue.clear()
         }
         if (codeRunning.get()) {

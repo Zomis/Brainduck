@@ -31,7 +31,8 @@ public class BrainF {
 		return new BrainfuckRunner(memorySize, new NoInput());
 	}
 
-	public static BrainfuckRunner createUsingQueueWithMemorySize(BlockingQueue<Integer> input, int memorySize) {
-		return new BrainfuckRunner(memorySize, new QueueInput(input));
+	public static BrainfuckRunner createUsingQueueWithMemorySize(BlockingQueue<Integer> input,
+             int memorySize, BrainfuckOutput output) {
+		return new BrainfuckRunner(new BrainfuckMemory(memorySize), new BrainfuckCode(), new QueueInput(input), output);
 	}
 }

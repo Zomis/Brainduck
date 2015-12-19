@@ -1,5 +1,6 @@
 package net.zomis.brainf.model
 
+import net.zomis.brainf.model.input.StringBuilderOutput
 import net.zomis.brainf.model.run.RunStrategy
 
 class BrainfuckRunner {
@@ -7,7 +8,7 @@ class BrainfuckRunner {
     final BrainfuckMemory memory
     final BrainfuckCode code
     final BrainfuckInput input;
-    private final StringBuilder output
+    private final BrainfuckOutput output
     private BrainfuckListener listener = new BrainfuckListener() {
         @Override
         void beforePerform(BrainfuckRunner runner, BrainfuckCommand command) {}
@@ -16,7 +17,7 @@ class BrainfuckRunner {
         void afterPerform(BrainfuckRunner runner, BrainfuckCommand command) {}
     }
 
-    BrainfuckRunner(BrainfuckMemory memory, BrainfuckCode code, BrainfuckInput input, StringBuilder output) {
+    BrainfuckRunner(BrainfuckMemory memory, BrainfuckCode code, BrainfuckInput input, BrainfuckOutput output) {
         this.memory = memory
         this.code = code
         this.input = input
@@ -31,15 +32,16 @@ class BrainfuckRunner {
     BrainfuckRunner(int memorySize, BrainfuckInput input) {
         memory = new BrainfuckMemory(memorySize);
         this.input = input;
-        this.output = new StringBuilder()
+        this.output = new StringBuilderOutput()
         this.code = new BrainfuckCode()
     }
 
+    @Deprecated
     String getOutput() {
         return output.toString();
     }
 
-    StringBuilder getOutputBuilder() {
+    BrainfuckOutput getOutputBuilder() {
         return output
     }
 
@@ -64,7 +66,6 @@ class BrainfuckRunner {
     void reset() {
         memory.reset();
         code.resetIndex();
-        output.setLength(0);
     }
 
     void perform(BrainfuckCommand command) {
@@ -89,8 +90,8 @@ class BrainfuckRunner {
         count
     }
 
-    void appendOutput(char write) {
-        output.append(write);
+    void appendOutput(char value) {
+        output.write(value);
     }
 
 }
