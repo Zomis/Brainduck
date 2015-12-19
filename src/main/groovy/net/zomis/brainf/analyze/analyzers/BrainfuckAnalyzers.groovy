@@ -14,6 +14,7 @@ class BrainfuckAnalyzers {
                 new CommandCountAnalysis(),
                 new MemoryIndexAnalysis(),
                 new PlusMinusOptimizer(),
+                new CodeCellRelationAnalysis(),
         ]
         analyzers
     }
