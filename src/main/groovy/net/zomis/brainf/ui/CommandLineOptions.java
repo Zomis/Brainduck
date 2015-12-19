@@ -5,7 +5,11 @@ import com.beust.jcommander.Parameter;
 import java.util.List;
 
 public class CommandLineOptions {
+
     @Parameter
     List<String> main;
+
+    @Parameter(names = "-analyze")
+    boolean analyze = false;
 
 }

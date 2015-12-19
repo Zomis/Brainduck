@@ -11,7 +11,11 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.stage.Stage;
+import net.zomis.brainf.analyze.AnalyzeFactory;
+import net.zomis.brainf.analyze.Brainalyze;
+import net.zomis.brainf.analyze.analyzers.BrainfuckAnalyzers;
 import net.zomis.brainf.model.*;
+import net.zomis.brainf.model.groovy.GroovyBFContext;
 import net.zomis.brainf.model.input.ConsoleInput;
 import net.zomis.brainf.model.input.ConsoleOutput;
 
@@ -75,16 +79,24 @@ public class Brainduck extends Application {
                 return;
             }
             for (String file : options.main) {
-                BrainfuckCode code = new BrainfuckCode();
-                code.setSource(ListCode.create(GroovyRead.file(new File(file))));
-                BrainfuckRunner runner = new BrainfuckRunner(new BrainfuckMemory(30000), code,
-                        new ConsoleInput(), new ConsoleOutput());
-                runner.run();
+                perform(file, options);
             }
         }
 	}
 
-	
-	
-	
+    private static void perform(String file, CommandLineOptions options) {
+        BrainfuckCode code = new BrainfuckCode();
+        code.setSource(ListCode.create(GroovyRead.file(new File(file))));
+        BrainfuckRunner runner = new BrainfuckRunner(new BrainfuckMemory(30000), code,
+                new ConsoleInput(), new ConsoleOutput());
+        if (!options.analyze) {
+            runner.run();
+        } else {
+            Brainalyze analyze = new AnalyzeFactory()
+                    .addAnalyzers(BrainfuckAnalyzers.getAvailableAnalyzers())
+                    .analyze(runner, new GroovyBFContext());
+            analyze.print();
+        }
+    }
+
 }
