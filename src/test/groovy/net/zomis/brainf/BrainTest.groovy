@@ -11,6 +11,8 @@ import net.zomis.brainf.model.BrainF
 import net.zomis.brainf.model.classic.BrainFCommand
 import net.zomis.brainf.model.BrainfuckMemory
 import net.zomis.brainf.model.BrainfuckRunner
+import net.zomis.brainf.model.input.FixedInput
+import net.zomis.brainf.model.input.StringBuilderOutput
 import net.zomis.brainf.model.run.StepContinueStrategy
 import net.zomis.brainf.model.run.StepOutStrategy
 import org.junit.Test
@@ -71,7 +73,7 @@ public class BrainTest extends BrainfuckTest {
     @Test(timeout = 1000L)
     public void userInputTag() {
         String commands = '++++[->,<]'
-        brain = BrainF.createFromCodeAndInput(30, commands, 'INPUT')
+        brain = new BrainfuckRunner(new BrainfuckMemory(30), BrainF.code(commands), new FixedInput('INPUT'), null)
         analyze(new IOAnalysis())
         cellTagsContains(analyze.cell(1), 'userInput')
     }
@@ -255,9 +257,11 @@ $ bf '+' * 3
 
     @Test
     public void input() {
-        BrainfuckRunner brain = BrainF.createFromCodeAndInput(BrainfuckMemory.DEFAULT_MEMORY_SIZE, "+++,.", "a");
+        def str = new StringBuilder()
+        BrainfuckRunner brain = new BrainfuckRunner(new BrainfuckMemory(), BrainF.code("+++,."),
+          new FixedInput("a"), new StringBuilderOutput(str));
         brain.run();
-        assert "a" == brain.getOutput()
+        assert "a" == str.toString()
     }
 
     @Test

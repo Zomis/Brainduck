@@ -12,6 +12,10 @@ class BrainfuckMemory {
     int minValue = 0
     int maxValue = 255
 
+    BrainfuckMemory() {
+        this(DEFAULT_MEMORY_SIZE)
+    }
+
     BrainfuckMemory(int size) {
         this.size = size
         this.memory = new int[size]

@@ -4,7 +4,16 @@ import net.zomis.brainf.model.BrainfuckOutput
 
 class StringBuilderOutput implements BrainfuckOutput {
 
-    private final StringBuilder output = new StringBuilder()
+    private final StringBuilder output
+
+    @Deprecated
+    StringBuilderOutput() {
+        this(new StringBuilder())
+    }
+
+    StringBuilderOutput(StringBuilder output) {
+        this.output = output
+    }
 
     @Override
     void write(char value) {

@@ -15,14 +15,6 @@ public class BrainF {
 		return new BrainfuckRunner(memorySize, code, inputStream);
 	}
 	
-	public static BrainfuckRunner createFromCode(String code) {
-		return createFromCodeAndInput(BrainfuckMemory.DEFAULT_MEMORY_SIZE, code, "");
-	}
-	
-	public static BrainfuckRunner createFromCode(int memorySize, String code) {
-		return createFromCodeAndInput(memorySize, code, "");
-	}
-	
 	public static BrainfuckRunner createWithDefaultSize() {
 		return createUsingSystemInputWithMemorySize(BrainfuckMemory.DEFAULT_MEMORY_SIZE);
 	}
@@ -35,4 +27,10 @@ public class BrainF {
              int memorySize, BrainfuckOutput output) {
 		return new BrainfuckRunner(new BrainfuckMemory(memorySize), new BrainfuckCode(), new QueueInput(input), output);
 	}
+
+    public static BrainfuckCode code(String code) {
+        BrainfuckCode bfCode = new BrainfuckCode();
+        bfCode.setSource(ListCode.create(code));
+        return bfCode;
+    }
 }
