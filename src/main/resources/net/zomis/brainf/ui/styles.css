@@ -9,6 +9,9 @@
 .comment {
 	-fx-fill: cadetblue;
 }
+.io {
+	-fx-fill: blue;
+}
 
 .highlighted {
     -fx-fill: orange;

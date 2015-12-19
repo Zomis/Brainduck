@@ -72,6 +72,8 @@ class EditorStyle {
             return 'loop'
         } else if (command == BrainFCommand.NONE) {
             return 'comment'
+        } else if (command == BrainFCommand.READ || command == BrainFCommand.WRITE) {
+            return 'io'
         } else {
             return 'code'
         }
