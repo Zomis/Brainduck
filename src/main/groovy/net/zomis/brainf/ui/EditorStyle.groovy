@@ -136,8 +136,8 @@ class EditorStyle {
     static EditorStyle setup(CodeArea codeArea, Runnable onModified, Runnable onCaretChange) {
         EditorStyle styleApplier = new EditorStyle(codeArea)
         codeArea.richChanges().subscribe({change ->
-            println "rich change $change properties ${change.properties} pos ${change.position} inserted " +
-                    "${change.inserted} removed ${change.removed}"
+//            println "rich change $change properties ${change.properties} pos ${change.position} inserted " +
+//                    "${change.inserted} removed ${change.removed}"
             if (change.removed.text != change.inserted.text) {
                 onModified.run()
             }
