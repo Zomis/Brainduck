@@ -43,7 +43,7 @@ class EditorStyle {
         println "startLoop: $startLoop and end $endLoop pos $pos"
         StyleSpansBuilder<Collection<String>> builder = new StyleSpansBuilder<>()
         int current = 0
-        int[] highlighted = highlights(codeArea)
+        Set<Integer> highlighted = highlights(codeArea)
         String currentClass = null;
         for (int i = 0; i < text.length(); i++) {
             char ch = text.charAt(i);
@@ -61,17 +61,15 @@ class EditorStyle {
         builder.create()
     }
 
-    static String cssFor(int[] highlighted, int pos, char ch) {
-        for (int i : highlighted) {
-            if (i == pos) {
-                return 'highlighted'
-            }
+    private String cssFor(Set<Integer> highlighted, int pos, char ch) {
+        if (highlighted.contains(pos)) {
+            return 'highlighted'
         }
         BrainFCommand command = BrainFCommand.getCommand(ch)
-        if (command.isLoop()) {
-            return 'loop'
-        } else if (command == BrainFCommand.NONE) {
+        if (command == BrainFCommand.NONE) {
             return 'comment'
+        } else if (command.isLoop()) {
+            return 'loop'
         } else if (command == BrainFCommand.READ || command == BrainFCommand.WRITE) {
             return 'io'
         } else {
@@ -86,12 +84,12 @@ class EditorStyle {
         }
     }
 
-    static int[] highlights(CodeArea codeArea) {
+    static Set<Integer> highlights(CodeArea codeArea) {
         int pos = codeArea.caretPosition
         String before = codeArea.getText(pos - 1, pos)
         String after = codeArea.getText(pos, pos + 1)
         String text = codeArea.text
-        int[] result = [-1, -1, -1, -1] as int[]
+        Set<Integer> result = new HashSet<>()
         boolean highlighted = false
         if (!before.isEmpty()) {
             BrainFCommand command = BrainFCommand.getCommand(before.charAt(0))
@@ -99,8 +97,8 @@ class EditorStyle {
                 println "caret move before"
                 highlighted = true
                 int startLoop = findMatching(text, pos - 1, '[' as char, ']' as char, -1)
-                result[0] = pos - 1
-                result[1] = startLoop
+                result << pos - 1
+                result << startLoop
                 // find match before and highlight
             }
         }
@@ -110,8 +108,8 @@ class EditorStyle {
                 println "caret move after"
                 highlighted = true
                 int endLoop = findMatching(text, pos, ']' as char, '[' as char, 1)
-                result[2] = pos
-                result[3] = endLoop
+                result << pos
+                result << endLoop
                 // find match after and highlight
             }
         }
@@ -119,8 +117,8 @@ class EditorStyle {
             int startLoop = findMatching(text, pos, '[' as char, ']' as char, -1)
             int endLoop = findMatching(text, pos - 1, ']' as char, '[' as char, 1)
             println "caret move loops $startLoop $endLoop"
-            result[0] = startLoop
-            result[1] = endLoop
+            result << startLoop
+            result << endLoop
         }
         result
     }
