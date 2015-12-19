@@ -7,6 +7,12 @@ import org.fxmisc.richtext.StyleSpansBuilder
 
 class EditorStyle {
 
+    private final CodeArea codeArea
+
+    EditorStyle(CodeArea codeArea) {
+        this.codeArea = codeArea
+    }
+
     static int findMatching(String commands, int commandIndex, char decrease, char increase, int direction) {
         int index = commandIndex
         int matching = 1;
@@ -29,7 +35,7 @@ class EditorStyle {
         index
     }
 
-    static StyleSpans<? extends Collection<String>> computeHighlighting(CodeArea codeArea) {
+    StyleSpans<? extends Collection<String>> computeHighlighting() {
         int pos = codeArea.caretPosition
         String text = codeArea.text
         int startLoop = findMatching(text, pos, '[' as char, ']' as char, -1)
@@ -71,10 +77,10 @@ class EditorStyle {
         }
     }
 
-    static void applyHighlights(CodeArea codeArea) {
+    void applyHighlights() {
         int[] highlights = highlights(codeArea)
         for (int i : highlights) {
-            loopStyle(codeArea, i)
+            loopStyle(i)
         }
     }
 
@@ -117,11 +123,30 @@ class EditorStyle {
         result
     }
 
-    static void loopStyle(CodeArea codeArea, int position) {
+    void loopStyle(int position) {
         if (position == -1) {
             return
         }
         Collection<String> style = Collections.singleton('highlighted')
         codeArea.setStyle(position, position + 1, style)
+    }
+
+    static EditorStyle setup(CodeArea codeArea, Runnable onModified, Runnable onCaretChange) {
+        EditorStyle styleApplier = new EditorStyle(codeArea)
+        codeArea.richChanges().subscribe({change ->
+            println "rich change $change properties ${change.properties} pos ${change.position} inserted " +
+                    "${change.inserted} removed ${change.removed}"
+            if (change.removed.text != change.inserted.text) {
+                onModified.run()
+            }
+            def highlighting = styleApplier.computeHighlighting()
+            codeArea.setStyleSpans(0, highlighting)
+        })
+        // codeArea.caretPositionProperty().addListener()
+        codeArea.setOnKeyReleased({
+            onCaretChange.run()
+            styleApplier.applyHighlights()
+        })
+        styleApplier
     }
 }
