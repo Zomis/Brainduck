@@ -2,10 +2,8 @@ package net.zomis.brainf.ui;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -14,7 +12,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -28,18 +25,14 @@ import net.zomis.brainf.model.BrainfuckRunner;
 import net.zomis.brainf.model.groovy.GroovyBFContext;
 import net.zomis.brainf.model.run.*;
 
-public class MainController implements Initializable {
+public class MainController {
 
     @FXML private TabPane tabs;
 
-    private final Stage stage;
+    private Stage stage;
     private final Map<Tab, TabController> tabMap = new HashMap<>();
     private final FileChooser openDialog = new FileChooser();
 
-    public MainController(Stage stage) {
-        this.stage = stage;
-	}
-	
 	private ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
 	
     @FXML
@@ -175,21 +168,6 @@ public class MainController implements Initializable {
         }
     }
 
-    @Override
-	public void initialize(URL url, ResourceBundle resource) {
-        TabController tab = createTab("untitled1");
-        tab.setCode(GroovyRead.read("fizzbuzz.bf"));
-        tab.getLoadSave().notModified();
-        stage.setOnCloseRequest(e -> {
-            boolean closeAllTabs = tabMap.values().stream().allMatch(tc -> tc.getLoadSave().closeRequest(stage, tc.getCode()));
-            if (closeAllTabs) {
-                exec.shutdownNow();
-            } else {
-                e.consume();
-            }
-        });
-    }
-
     @FXML void close() {
         stage.close();
     }
@@ -206,4 +184,18 @@ public class MainController implements Initializable {
         return tabMap.get(selected);
     }
 
+    public void initStage(Stage primaryStage) {
+        this.stage = primaryStage;
+        stage.setOnCloseRequest(e -> {
+            boolean closeAllTabs = tabMap.values().stream().allMatch(tc -> tc.getLoadSave().closeRequest(stage, tc.getCode()));
+            if (closeAllTabs) {
+                exec.shutdownNow();
+            } else {
+                e.consume();
+            }
+        });
+        TabController tab = createTab("untitled1");
+        tab.setCode(GroovyRead.read("fizzbuzz.bf"));
+        tab.getLoadSave().notModified();
+    }
 }

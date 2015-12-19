@@ -19,9 +19,9 @@ public class Brainduck extends Application {
 		
         primaryStage.setTitle("BrainDuck");
         FXMLLoader loader = new FXMLLoader(MainController.class.getResource("brainf.fxml"));
-        MainController controller = new MainController(primaryStage);
-        loader.setController(controller);
         Parent root = loader.load();
+        MainController controller = loader.getController();
+        controller.initStage(primaryStage);
         Scene scene = new Scene(root);
         scene.setOnDragOver(event -> {
             Dragboard db = event.getDragboard();
