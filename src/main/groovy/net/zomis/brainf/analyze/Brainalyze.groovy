@@ -18,6 +18,7 @@ class Brainalyze {
     @PackageScope final Map<Class<?>, Object> analysis = [:]
     private int maxMemory
     private final List<InspectionResult> inspectionResults = []
+    @PackageScope long timeSpent
 
     public <T extends BrainfuckAnalyzer> T get(Class<T> clazz) {
         return (T) analysis.get(clazz)
@@ -59,6 +60,8 @@ class Brainalyze {
         }
         println()
         this.analysis.values().forEach({it.print()})
+        println()
+        println("Analyze completed in ${timeSpent / 1000000.0} ms")
         println()
     }
 

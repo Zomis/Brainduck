@@ -23,6 +23,7 @@ class AnalyzeFactory {
     }
 
     Brainalyze analyze(BrainfuckRunner runner, GroovyBFContext groovyContext) {
+        long time = System.nanoTime()
         Brainalyze analyze = new Brainalyze(runner, groovyContext)
         for (BrainfuckAnalyzer analyzer : analyzers) {
             analyzer.beforeStart(runner)
@@ -31,6 +32,7 @@ class AnalyzeFactory {
         runner.setListener(new AnalyzeProgress(analyzers, analyze))
         runner.run()
         analyzers*.after(analyze, runner)
+        analyze.timeSpent = System.nanoTime() - time
         analyze
     }
 
