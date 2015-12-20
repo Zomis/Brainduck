@@ -17,8 +17,6 @@ import net.zomis.brainf.analyze.Brainalyze
 import net.zomis.brainf.analyze.analyzers.BrainfuckAnalyzers
 import net.zomis.brainf.analyze.analyzers.CodeCellRelationAnalysis
 import net.zomis.brainf.model.BrainF
-import net.zomis.brainf.model.BrainfuckCommand
-import net.zomis.brainf.model.BrainfuckListener
 import net.zomis.brainf.model.ListCode
 import net.zomis.brainf.model.BrainfuckRunner
 import net.zomis.brainf.model.groovy.GroovyBFContext
@@ -95,7 +93,17 @@ class TabController implements Initializable {
             codeModified = true
             loadSave.modified()
             analyze = null
-        }, {stage.title = String.format("BrainDuck pos %d col %d", codeArea.getCaretPosition(), codeArea.getCaretColumn())})
+        }, {
+            stage.title = String.format("BrainDuck pos %d col %d", codeArea.getCaretPosition(), codeArea.getCaretColumn())
+            memoryListUpdate = false
+            memoryList.selectionModel.clearSelection()
+            def cellsAccessed = analyze?.get(CodeCellRelationAnalysis)?.codeToCells?.
+                    getOrDefault(codeArea.caretPosition, Collections.emptySet())
+            cellsAccessed?.forEach({
+                memoryList.selectionModel.select(it)
+            })
+            memoryListUpdate = true
+        })
         codeArea.setPrefWidth(600);
         codeArea.setPrefHeight(600);
         AnchorPane.setTopAnchor(codeArea, 0d);
