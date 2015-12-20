@@ -5,6 +5,7 @@ import net.zomis.brainf.analyze.BrainfuckAnalyzer
 import net.zomis.brainf.analyze.MemoryCell
 import net.zomis.brainf.model.BrainfuckCommand
 import net.zomis.brainf.model.BrainfuckRunner
+import net.zomis.brainf.model.classic.BrainFCommand
 
 class CodeCellRelationAnalysis implements BrainfuckAnalyzer {
 
@@ -45,7 +46,9 @@ class CodeCellRelationAnalysis implements BrainfuckAnalyzer {
 
     @Override
     void beforePerform(MemoryCell cell, BrainfuckRunner runner, BrainfuckCommand command) {
-//        def data = cell.data(this, CodeCellRelationship)
+        if (command == BrainFCommand.NONE) {
+            return
+        }
         int codeIndex = runner.code.commandIndex
         int cellIndex = runner.memory.memoryIndex
         add(cellsToCode, cellIndex, codeIndex)
