@@ -25,16 +25,20 @@ class TextGenerator {
         result << textCellGroup
 
         for (int i = 0; i < cells; i++) {
+            // Calculate diffs and find biggest diff
             TextCellGroup splittingGroup = result.stream().max(Comparator.<TextCellGroup>comparingInt({it.maxDiff})).get()
             if (splittingGroup.maxDiff <= 0) {
                 break
             }
+
+            // Split into a new group
             int splittedValue = splittingGroup.valueToSplit
             def newCellGroup = new TextCellGroup(splittedValue)
             List<TextCellGroup> newResults = result.stream().mapToInt({it.startValue})
                     .mapToObj({new TextCellGroup(it)}).collect(Collectors.toList())
             newResults << newCellGroup
 
+            // Add all values to the most optimal group
             Arrays.stream(values).forEachOrdered({value ->
                 newResults.stream().min(Comparator.<TextCellGroup>comparingInt({it.diffIfAdd(value)})).get().add(value)
             })
@@ -100,12 +104,15 @@ class TextGenerator {
         int oldGroup = 0
         StringBuilder str = new StringBuilder()
         for (int value : values) {
+            // Go to the cell where this value should be written
             int groupNumber = findGroupForValue(textCellGroups, value, groupIndexes)
             if (oldGroup != groupNumber) {
                 str.append('\n')
                 str.append(change(groupNumber - oldGroup, '>', '<'))
             }
             TextCellGroup group = textCellGroups[groupNumber]
+
+            // Adjust cell to the value and print
             int oldIndex = groupIndexes[groupNumber]
             int oldValue = value
             if (oldIndex != -1) {
@@ -117,12 +124,6 @@ class TextGenerator {
             str.append('.')
             oldGroup = groupNumber
         }
-
-        /*
-        * for each value:
-        * 1. go to the group for that value
-        * 2. adjust the current value for that group to the value and print
-        */
         str.toString()
     }
 
