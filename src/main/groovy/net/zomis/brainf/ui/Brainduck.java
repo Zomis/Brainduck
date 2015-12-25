@@ -2,15 +2,6 @@ package net.zomis.brainf.ui;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
-import javafx.application.Application;
-import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
-import javafx.stage.Stage;
 import net.zomis.brainf.analyze.AnalyzeFactory;
 import net.zomis.brainf.analyze.Brainalyze;
 import net.zomis.brainf.analyze.analyzers.BrainfuckAnalyzers;
@@ -20,8 +11,6 @@ import net.zomis.brainf.model.input.ConsoleInput;
 import net.zomis.brainf.model.input.ConsoleOutput;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.Map;
 
 public class Brainduck {
 
