@@ -1,8 +1,21 @@
 package net.zomis.brainf.tools.textgen
 
+import net.zomis.brainf.tools.WeightedPerformanceScorer
+
 import java.util.stream.Collectors
 
 class TextGenerator {
+
+    private final WeightedPerformanceScorer scorer
+
+    TextGenerator() {
+        // use `code length` + `runtime length` for a good combination of speed and code length to find the best
+        this(new WeightedPerformanceScorer(1, 1))
+    }
+
+    TextGenerator(WeightedPerformanceScorer scorer) {
+        this.scorer = scorer
+    }
 
     static List<TextCellGroup> groupIntoCells(int[] values, int cells) {
         List<TextCellGroup> result = []
@@ -129,8 +142,8 @@ class TextGenerator {
         return ch * Math.abs(diff)
     }
 
-    static String createMultiplicationLoopForNumbers(int[] values) {
-        int divisor = TextGenFactorization.factorize(values)
+    String createMultiplicationLoopForNumbers(int[] values) {
+        int divisor = TextGenFactorization.factorize(values, scorer)
         StringBuilder str = new StringBuilder()
         str.append('+' * divisor)
         str.append('[-\n')

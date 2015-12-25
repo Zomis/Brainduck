@@ -1,5 +1,7 @@
 package net.zomis.brainf.tools.textgen
 
+import net.zomis.brainf.tools.WeightedPerformanceScorer
+
 class TextGenFactorization {
 
     /*
@@ -53,7 +55,7 @@ Runtime length: a * LOOP + 1 + AFTER where:
         cs
     }
 
-    static int factorize(int[] values) {
+    static int factorize(int[] values, WeightedPerformanceScorer scorer) {
         int best = 0
         int bestScore = Integer.MAX_VALUE
         int max = Arrays.stream(values).max().getAsInt()
@@ -69,7 +71,7 @@ Runtime length: a * LOOP + 1 + AFTER where:
             int loopRuntimeLength = 2 + bSum + numChars * 2
             int afterLoopRuntime = cSum + numChars
             int runtimeLength = a * loopRuntimeLength + 1 + afterLoopRuntime
-            int score = codeLength + runtimeLength
+            int score = scorer.score(codeLength, runtimeLength)
             if (score < bestScore) {
                 bestScore = score
                 best = a
