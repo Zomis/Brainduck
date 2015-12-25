@@ -56,7 +56,7 @@ class CommandCountAnalysis implements BrainfuckAnalyzer {
             if (count > 0) {
                 println "$command: $count"
             }
-            if (it != BrainFCommand.NONE) {
+            if (command != BrainFCommand.NONE) {
                 sum += count
             }
         })
