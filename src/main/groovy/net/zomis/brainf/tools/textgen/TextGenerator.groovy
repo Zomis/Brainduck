@@ -59,26 +59,21 @@ class TextGenerator {
 
     void writeOnce(String text, int cells) {
         println "Write once with $cells cells: $text"
+        // Get ASCII values for text
         int[] values = text.chars().toArray()
-//        int[] sorted = Arrays.copyOf(values, values.length)
-//        Arrays.sort(sorted)
+
+        // Group into maximum `cells` groups
         List<TextCellGroup> grouped = groupIntoCells(values, cells)
-        /*
-        * 1. ASCII values
-        * 2. Sort
-        * 3. Group into max `cells` groups
-        * 4. Use multiplication to create the first number in each group as it appear in the string
-        * 5. Go to the different cells and print and modify
-        * 6. Figure out the best order for the cell values
-        *
-        * use `code.length` + `runtime.length` for a good combination of speed and code length to find the best
-        *
-        * Try "Hello, World!" with only 2 cells. Order the chars are written in is extremely important
-        * Is there any extreme case when "<<." is more expensive than "+." ?
-        */
+
+        // Use multiplication to create the first number in each group as it appear in the string
         int[] startNumbers = grouped.stream().mapToInt({it.startValue}).toArray()
         String multiplication = createMultiplicationLoopForNumbers(startNumbers)
+
+        // Go to the different cells and print and modify
         String printRest = printValuesWithGroups(values, grouped)
+
+        // TODO: Figure out the best order for the cells
+
         println values
         println grouped
         println multiplication
