@@ -1,6 +1,4 @@
-package net.zomis.brainf.tools
-
-import net.zomis.brainf.tools.textgen.TextCellGroup
+package net.zomis.brainf.tools.textgen
 
 import java.util.stream.Collectors
 

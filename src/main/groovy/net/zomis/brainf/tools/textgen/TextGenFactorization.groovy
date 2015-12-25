@@ -1,4 +1,4 @@
-package net.zomis.brainf.tools
+package net.zomis.brainf.tools.textgen
 
 class TextGenFactorization {
 
