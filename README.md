@@ -27,11 +27,13 @@ Brainduck is a tool for Brainfuck written in Java and Groovy
 
 ### Try it
 
-    git clone git@github.com:Zomis/BrainDuck.git
-    cd BrainDuck
-    gradlew build
+    git clone git@github.com:Zomis/Brainduck.git
+    cd Brainduck
+    ./gradlew dist
 
-A .tar and .zip file can be found in `BrainDuck/build/distributions/`, unpack and run file in `bin` directory.
+A `*-all.jar` file can be found in `Brainduck/build/libs/`, run it with `java -jar *-all.jar`
+
+Or download the latest `*-all.jar` version [from my Jenkins](http://stats.zomis.net:53654/job/brainduck/ws/build/libs/)
 
 ### See also
 
