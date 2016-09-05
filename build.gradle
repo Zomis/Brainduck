@@ -78,15 +78,15 @@ github {
     def tokenFile = file('github.token')
     String lastTag = Grgit.open().tag.list().last().fullName
     lastTag = lastTag.substring(lastTag.lastIndexOf('/') + 1)
-    token = tokenFile.exists() ? tokenFile.text : tokenFile.absolutePath + ' missing'
-    tagName = lastTag + '-test'
+    token = tokenFile.exists() ? tokenFile.text.trim() : tokenFile.absolutePath + ' missing'
+    tagName = lastTag
     targetCommitish = 'master'
     name = lastTag
 //    body = '# Brainduck\n\nRelease notes and stuff'
     assets = [
-        'build/libs/*-all.jar'
+        'build/libs/' + project.name + '-' + project.version + '-all.jar'
     ]
-    draft = true
-    prerelease = true
+    draft = false
+    prerelease = false
 }
 // githubRelease.dependsOn release
