@@ -75,7 +75,7 @@ processResources.dependsOn 'fixVersion'
 github {
     owner = 'Zomis'
     repo = 'Brainduck'
-    def tokenFile = file('githubtoken')
+    def tokenFile = file('github.token')
     def lastTag = Grgit.open().tag.list().last().fullName
     token = tokenFile.exists() ? tokenFile.text : tokenFile.absolutePath + ' missing'
     tagName = lastTag + '-test'
