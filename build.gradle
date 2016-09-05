@@ -15,6 +15,7 @@ buildscript {
 
 plugins {
     id 'net.researchgate.release' version '2.1.2'
+    id 'co.riiid.gradle' version "0.4.2"
 }
 
 apply plugin: 'application'
@@ -56,7 +57,7 @@ task fixVersion << {
     def dir = new File(buildDir, 'resources/main')
     dir.mkdirs()
 
-    def repo = Grgit.open(project.file('.'))
+    def repo = Grgit.open()
     def date = DateTimeFormatter.ISO_INSTANT.format(Instant.now())
     def branchName = repo.branch.getCurrent().getName()
     def commitHash = repo.log(maxCommits: 1)[0].id
@@ -70,3 +71,21 @@ task fixVersion << {
     new File(dir, 'version.dat').text = fileContents.toString()
 }
 processResources.dependsOn 'fixVersion'
+
+github {
+    owner = 'Zomis'
+    repo = 'Brainduck'
+    def tokenFile = file('githubtoken')
+    def lastTag = Grgit.open().tag.list().last().fullName
+    token = tokenFile.exists() ? tokenFile.text : tokenFile.absolutePath + ' missing'
+    tagName = lastTag + '-test'
+    targetCommitish = 'master'
+    name = lastTag
+//    body = '# Brainduck\n\nRelease notes and stuff'
+    assets = [
+        'build/libs/*-all.jar'
+    ]
+    draft = true
+    prerelease = true
+}
+// githubRelease.dependsOn release
