@@ -76,7 +76,8 @@ github {
     owner = 'Zomis'
     repo = 'Brainduck'
     def tokenFile = file('github.token')
-    def lastTag = Grgit.open().tag.list().last().fullName
+    String lastTag = Grgit.open().tag.list().last().fullName
+    lastTag = lastTag.substring(lastTag.lastIndexOf('/') + 1)
     token = tokenFile.exists() ? tokenFile.text : tokenFile.absolutePath + ' missing'
     tagName = lastTag + '-test'
     targetCommitish = 'master'
