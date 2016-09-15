@@ -27,10 +27,12 @@ class ListCode implements CodeRetriever {
         commands.size()
     }
 
+    static GroovySupportConverter newGroovyConverter() {
+        return new GroovySupportConverter(new GroovyBFContext(), new BrainfuckConverter())
+    }
+
     static ListCode create(String code) {
-        BrainfuckCodeConverter converter = new GroovySupportConverter(
-            new GroovyBFContext(), new BrainfuckConverter())
-        create(converter, code)
+        create(newGroovyConverter(), code)
     }
 
     static ListCode create(BrainfuckCodeConverter converter, String code) {

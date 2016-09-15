@@ -12,7 +12,7 @@ import java.util.regex.Pattern
 class GroovySupportConverter implements BrainfuckCodeConverter {
 
     private final BrainfuckCodeConverter next
-    private final GroovyBFContext groovyContext
+    final GroovyBFContext groovyContext
 
     GroovySupportConverter(GroovyBFContext context, BrainfuckCodeConverter next) {
         this.groovyContext = context

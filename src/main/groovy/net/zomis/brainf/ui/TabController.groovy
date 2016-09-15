@@ -17,9 +17,11 @@ import net.zomis.brainf.analyze.Brainalyze
 import net.zomis.brainf.analyze.analyzers.BrainfuckAnalyzers
 import net.zomis.brainf.analyze.analyzers.CodeCellRelationAnalysis
 import net.zomis.brainf.model.BrainF
+import net.zomis.brainf.model.BrainfuckCodeConverter
 import net.zomis.brainf.model.ListCode
 import net.zomis.brainf.model.BrainfuckRunner
 import net.zomis.brainf.model.groovy.GroovyBFContext
+import net.zomis.brainf.model.groovy.GroovySupportConverter
 import net.zomis.brainf.model.run.RunStrategy
 import org.fxmisc.richtext.CodeArea
 import org.fxmisc.richtext.LineNumberFactory
@@ -50,6 +52,7 @@ class TabController implements Initializable {
     private EditorStyle styleController
     boolean codeModified
     boolean memoryListUpdate
+    GroovySupportConverter converter
 
     void update() {
         codeArea.selectRange(brain.getCode().getCommandIndex(), brain.getCode().getCommandIndex() + 1);
@@ -117,13 +120,19 @@ class TabController implements Initializable {
     private String memoryText(int i) {
         int value = brain.getMemory().getMemory(i);
         char ch = (char) (value < 0 ? 256 + value : value);
-        return Integer.toString(i, 16) + "\t" + value + "\t" + String.valueOf(ch).trim() + "\t" + (brain.getMemory().getMemoryIndex() == i ? "x" : "");
+        Map<String, Integer> cellNameMap = converter.groovyContext.getCellNames(i)
+        String memoryCellNames = cellNameMap ? cellNameMap.toString() : ""
+        return Integer.toString(i, 16) + "\t" + value + "\t" +
+            String.valueOf(ch).trim() + "\t" +
+            (brain.getMemory().getMemoryIndex() == i ? "x" : "") + "\t" +
+            memoryCellNames;
     }
 
     void saveCodeIfRequired() {
         if (codeModified) {
             codeModified = false
-            brain.code.setSource(ListCode.create(codeArea.text));
+            converter = ListCode.newGroovyConverter();
+            brain.code.setSource(ListCode.create(converter, codeArea.text));
             output.text = ''
             brain.reset();
             inputQueue.clear()

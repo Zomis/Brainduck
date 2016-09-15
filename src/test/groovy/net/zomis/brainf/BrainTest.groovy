@@ -70,6 +70,19 @@ public class BrainTest extends BrainfuckTest {
         }).mapToInt({it.key.count('duplicate')}).max().orElse(0) == 1 // do not expect any duplicate tag names
     }
 
+    @Test
+    public void namedCells() {
+        String commands = '''
+        +++
+        >
+        $ name 'test'
+        ++[-]
+        '''
+        source.addCommands(commands)
+        analyze(new WhileLoopAnalysis())
+        assert analyze.cell(1).resolveTags(context).get('test') == 1
+    }
+
     @Test(timeout = 1000L)
     public void userInputTag() {
         String commands = '++++[->,<]'

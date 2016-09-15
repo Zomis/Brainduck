@@ -40,6 +40,10 @@ class SpecialDelegate {
     static final Predicate<BrainfuckCommand> IS_WHILE_START = { it == BrainFCommand.WHILE }
     static final Predicate<BrainfuckCommand> IS_WHILE_END = {it == BrainFCommand.END_WHILE}
 
+    boolean name(String name) {
+        groovyContext.addCellName(runner.memory.memoryIndex, name)
+    }
+
     void nextLoop(String tagName) {
         int index = findCode(IS_WHILE_START, 1)
         groovyContext.addLoopName(index, tagName)

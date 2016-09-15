@@ -57,10 +57,13 @@ class MemoryCell {
         Stream<CellTagger> taggers = this.analysis.values().stream()
             .filter({it instanceof CellTagger})
             .map({it as CellTagger})
-        taggers
+        Map<String, Integer> result = taggers
             .flatMap({it.tags(loopNames)})
             .sorted()
             .collect(countingCollector())
+        Map<String, Integer> cellNames = groovy.getCellNames(this.index)
+        cellNames.entrySet().forEach({result.merge(it.key, it.value, {a, b -> a + b})})
+        result
     }
 
     public static <T> Collector<T, ?, Map<T, Integer>> countingCollector() {

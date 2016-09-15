@@ -9,6 +9,11 @@ class GroovyBFContext {
 
     GroovyShell shell
     private Map<Integer, Set<String>> loopNames = new HashMap<>()
+
+    /**
+     * Map of memory index with value: Map of name and occurrences
+     */
+    private Map<Integer, Map<String, Integer>> cellNames = new HashMap<>()
     @PackageScope Runnable afterRun = {}
 
     GroovyBFContext() {
@@ -38,6 +43,18 @@ class GroovyBFContext {
 
     void postExecute() {
         afterRun.run()
+    }
+
+    boolean addCellName(int memoryIndex, String name) {
+        cellNames.putIfAbsent(memoryIndex, new HashMap<String, Integer>())
+
+        Map<String, Integer> currentCellNames = cellNames.get(memoryIndex)
+        int newCount = currentCellNames.merge(name, 1, {a, b -> a + b})
+        return newCount > 1
+    }
+
+    Map<String, Integer> getCellNames(int i) {
+        cellNames.get(i)
     }
 
     public static class SpecialCommand implements BrainfuckCommand {
