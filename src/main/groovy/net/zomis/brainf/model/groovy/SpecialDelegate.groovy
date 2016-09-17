@@ -44,6 +44,11 @@ class SpecialDelegate {
         groovyContext.addCellName(runner.memory.memoryIndex, name)
     }
 
+    boolean hasName(String name) {
+        Map<String, Integer> nameMap = groovyContext.getCellNames(runner.memory.memoryIndex)
+        return nameMap == null ? false : nameMap.containsKey(name)
+    }
+
     void nextLoop(String tagName) {
         int index = findCode(IS_WHILE_START, 1)
         groovyContext.addLoopName(index, tagName)
