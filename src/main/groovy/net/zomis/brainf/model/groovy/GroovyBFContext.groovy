@@ -10,6 +10,7 @@ class GroovyBFContext {
     GroovyShell shell
     WrapBehavior memoryWrap = WrapBehavior.ALLOW
     WrapBehavior valueWrap = WrapBehavior.ALLOW
+    boolean pause
     private Map<Integer, Set<String>> loopNames = new HashMap<>()
 
     /**

@@ -186,6 +186,10 @@ class TabController implements Initializable {
                     int oldCommandIndex = runner.code.commandIndex
                     try {
                         boolean result = strategy.next(runner);
+                        if (converter.groovyContext.pause) {
+                            converter.groovyContext.pause = false
+                            return false;
+                        }
                         return result;
                     } catch (AssertionError ex) {
                         ex.printStackTrace()

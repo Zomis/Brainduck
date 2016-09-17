@@ -44,6 +44,10 @@ class SpecialDelegate {
         runner.memory.minValue = value
     }
 
+    void pause() {
+        groovyContext.pause = true
+    }
+
     void maxValue(int value) {
         runner.memory.maxValue = value
     }
