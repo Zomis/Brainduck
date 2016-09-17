@@ -181,7 +181,15 @@ class TabController implements Initializable {
                         stopCode();
                         return false;
                     }
-                    return strategy.next(runner);
+                    int oldCommandIndex = runner.code.commandIndex
+                    try {
+                        boolean result = strategy.next(runner);
+                        return result;
+                    } catch (AssertionError ex) {
+                        ex.printStackTrace()
+                        runner.code.commandIndex = oldCommandIndex
+                        return false;
+                    }
                 }
 
                 private void stopCode() {
