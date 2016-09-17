@@ -30,6 +30,11 @@ class PlusMinusOptimizer implements BrainfuckAnalyzer {
     }
 
     @Override
+    void print() {
+        results.each {println it}
+    }
+
+    @Override
     void beforePerform(MemoryCell cell, BrainfuckRunner runner, BrainfuckCommand command) {
         if (!(command instanceof BrainFCommand)) {
             return

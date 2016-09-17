@@ -20,4 +20,9 @@ class InspectionResult {
         this.description = description
     }
 
+    @Override
+    String toString() {
+        return "[$commandIndexStart--$commandIndexEnd] $severity: $description"
+    }
+
 }
