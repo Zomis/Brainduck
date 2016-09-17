@@ -32,7 +32,7 @@ class CodeCellRelationAnalysis implements BrainfuckAnalyzer {
 
     @Override
     void print() {
-        println 'Code to cells'
+/*        println 'Code to cells'
         codeToCells.forEach({key, value ->
             println "$key --> $value"
         })
@@ -41,7 +41,7 @@ class CodeCellRelationAnalysis implements BrainfuckAnalyzer {
         cellsToCode.forEach({key, value ->
             println "$key --> $value"
         })
-        println ''
+        println ''*/
     }
 
     @Override
