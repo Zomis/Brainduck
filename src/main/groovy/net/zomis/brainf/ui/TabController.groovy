@@ -190,7 +190,7 @@ class TabController implements Initializable {
                 }
             });
             if (count == 0) {
-                System.out.println(strategy + " not started");
+                System.out.println(strategy.toString() + " not started");
             }
             if (Platform.isFxApplicationThread()) {
                 update();
