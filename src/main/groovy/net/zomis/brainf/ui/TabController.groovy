@@ -163,7 +163,7 @@ class TabController implements Initializable {
             return;
         }
         saveCodeIfRequired();
-        exec.execute({
+        execute(exec, {
             this.codeRunning.set(true);
             this.runSwitch.set(true);
             final AtomicInteger runTimes = new AtomicInteger();
@@ -213,6 +213,19 @@ class TabController implements Initializable {
             }
             codeRunning.set(false);
         });
+    }
+
+    static void execute(ScheduledExecutorService executor, Runnable runnable) {
+        executor.execute(new Runnable() {
+            @Override
+            void run() {
+                try {
+                    runnable.run()
+                } catch (AssertionError | RuntimeException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        })
     }
 
     void stopRun() {
