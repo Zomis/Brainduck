@@ -23,10 +23,29 @@ class SpecialDelegate {
 
     private final BrainfuckRunner runner
     private final GroovyBFContext groovyContext
+    public final WrapBehavior CRASH = WrapBehavior.CRASH
+    public final WrapBehavior ALLOW = WrapBehavior.ALLOW
+    public final WrapBehavior BLOCK = WrapBehavior.BLOCK
 
     SpecialDelegate(GroovyBFContext groovyContext, BrainfuckRunner runner) {
         this.groovyContext = groovyContext
         this.runner = runner
+    }
+
+    void wrapValue(WrapBehavior behavior) {
+        groovyContext.setValueWrap(behavior)
+    }
+
+    void wrapMemory(WrapBehavior behavior) {
+        groovyContext.setMemoryWrap(behavior)
+    }
+
+    void minValue(int value) {
+        runner.memory.minValue = value
+    }
+
+    void maxValue(int value) {
+        runner.memory.maxValue = value
     }
 
     int getValue() {

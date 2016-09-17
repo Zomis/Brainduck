@@ -8,6 +8,8 @@ import org.codehaus.groovy.control.CompilerConfiguration
 class GroovyBFContext {
 
     GroovyShell shell
+    WrapBehavior memoryWrap = WrapBehavior.ALLOW
+    WrapBehavior valueWrap = WrapBehavior.ALLOW
     private Map<Integer, Set<String>> loopNames = new HashMap<>()
 
     /**

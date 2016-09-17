@@ -21,6 +21,7 @@ import net.zomis.brainf.model.BrainfuckCodeConverter
 import net.zomis.brainf.model.ListCode
 import net.zomis.brainf.model.BrainfuckRunner
 import net.zomis.brainf.model.groovy.GroovyBFContext
+import net.zomis.brainf.model.groovy.GroovyListener
 import net.zomis.brainf.model.groovy.GroovySupportConverter
 import net.zomis.brainf.model.run.RunStrategy
 import org.fxmisc.richtext.CodeArea
@@ -133,6 +134,7 @@ class TabController implements Initializable {
             codeModified = false
             converter = ListCode.newGroovyConverter();
             brain.code.setSource(ListCode.create(converter, codeArea.text));
+            brain.setListener(new GroovyListener(converter.groovyContext))
             output.text = ''
             brain.reset();
             inputQueue.clear()
