@@ -62,7 +62,9 @@ class MemoryCell {
             .sorted()
             .collect(countingCollector())
         Map<String, Integer> cellNames = groovy.getCellNames(this.index)
-        cellNames.entrySet().forEach({result.merge(it.key, it.value, {a, b -> a + b})})
+        if (cellNames != null) {
+            cellNames.entrySet().forEach({result.merge(it.key, it.value, {a, b -> a + b})})
+        }
         result
     }
 
