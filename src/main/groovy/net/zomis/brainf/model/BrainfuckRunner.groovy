@@ -1,6 +1,6 @@
 package net.zomis.brainf.model
 
-import net.zomis.brainf.model.input.StringBuilderOutput
+import net.zomis.brainf.model.ast.tree.SyntaxTree
 import net.zomis.brainf.model.run.RunStrategy
 
 class BrainfuckRunner {
@@ -8,6 +8,8 @@ class BrainfuckRunner {
     final BrainfuckMemory memory
     final BrainfuckCode code
     final BrainfuckInput input;
+    private SyntaxTree syntaxTree;
+
     private final BrainfuckOutput output
     private BrainfuckListener listener = new BrainfuckListener() {
         @Override
