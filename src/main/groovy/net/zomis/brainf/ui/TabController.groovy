@@ -1,6 +1,5 @@
 package net.zomis.brainf.ui
 
-import javafx.application.Platform
 import javafx.collections.ListChangeListener
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
@@ -17,7 +16,6 @@ import net.zomis.brainf.analyze.Brainalyze
 import net.zomis.brainf.analyze.analyzers.BrainfuckAnalyzers
 import net.zomis.brainf.analyze.analyzers.CodeCellRelationAnalysis
 import net.zomis.brainf.model.BrainF
-import net.zomis.brainf.model.BrainfuckCodeConverter
 import net.zomis.brainf.model.ListCode
 import net.zomis.brainf.model.BrainfuckRunner
 import net.zomis.brainf.model.groovy.GroovyBFContext
@@ -30,8 +28,6 @@ import org.fxmisc.richtext.LineNumberFactory
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.ScheduledExecutorService
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicInteger
 
 class TabController implements Initializable {
 
@@ -41,8 +37,7 @@ class TabController implements Initializable {
 
     private Stage stage;
     private Tab tab;
-    private final AtomicBoolean runSwitch = new AtomicBoolean();
-    private final AtomicBoolean codeRunning = new AtomicBoolean();
+    private BFTask task;
     LoadSaveHandler loadSave
 
     CodeArea codeArea;
@@ -157,79 +152,20 @@ class TabController implements Initializable {
             output.text = ''
             inputQueue.clear()
         }
-        if (codeRunning.get()) {
+        if (task && task.running) {
             System.out.println("--- Code already running, cannot start " + strategy);
             // do not allow multiple runs at the same time
             return;
         }
         saveCodeIfRequired();
-        execute(exec, {
-            this.codeRunning.set(true);
-            this.runSwitch.set(true);
-            final AtomicInteger runTimes = new AtomicInteger();
-            int count = brain.run(new RunStrategy() {
-                @Override
-                public boolean start(BrainfuckRunner runner) {
-                    return strategy.start(runner);
-                }
-
-                @Override
-                public boolean next(BrainfuckRunner runner) {
-                    if (Thread.interrupted()) {
-                        stopCode();
-                        return false;
-                    }
-                    if (!runSwitch.get()) {
-                        stopCode();
-                        return false;
-                    }
-                    int oldCommandIndex = runner.code.commandIndex
-                    try {
-                        boolean result = strategy.next(runner);
-                        if (converter.groovyContext.pause) {
-                            converter.groovyContext.pause = false
-                            return false;
-                        }
-                        return result;
-                    } catch (AssertionError ex) {
-                        ex.printStackTrace()
-                        runner.code.commandIndex = oldCommandIndex
-                        return false;
-                    }
-                }
-
-                private void stopCode() {
-                    runSwitch.set(true);
-                    codeRunning.set(false);
-                }
-            });
-            if (count == 0) {
-                System.out.println(strategy.toString() + " not started");
-            }
-            if (Platform.isFxApplicationThread()) {
-                update();
-            } else {
-                Platform.runLater({update()});
-            }
-            codeRunning.set(false);
-        });
-    }
-
-    static void execute(ScheduledExecutorService executor, Runnable runnable) {
-        executor.execute(new Runnable() {
-            @Override
-            void run() {
-                try {
-                    runnable.run()
-                } catch (AssertionError | RuntimeException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        })
+        BFTask task = new BFTask(brain, converter, strategy);
+        task.setOnSucceeded({e -> println "Success"})
+        task.setOnFailed({e -> println "Failed"})
+        exec.submit(task);
     }
 
     void stopRun() {
-        runSwitch.set(false)
+        task?.cancel(true)
     }
 
     public String getCode() {
