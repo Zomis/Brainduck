@@ -24,7 +24,9 @@ public class Parser {
         int repeatedTokens = 1;
         for (Token token : tokens) {
             inner = depth.peek();
-            inner.getTokens().add(token);
+            if (!(token instanceof BFToken) || ((BFToken)token).command != BrainFCommand.WHILE) {
+                inner.getTokens().add(token);
+            }
             if (tokensEqual(token, lastToken)) {
                 repeatedTokens++;
 //            } else if (tokensOpposite(token, lastToken)) {
@@ -39,13 +41,15 @@ public class Parser {
                 if (token instanceof BFToken) {
                     BFToken bft = (BFToken) token;
                     if (bft.command == BrainFCommand.WHILE) {
-                        depth.add(new LoopInstructionSyntax());
+                        LoopInstructionSyntax loopSyntax = new LoopInstructionSyntax();
+                        depth.add(loopSyntax);
+                        loopSyntax.getTokens().add(token);
                     }
                     if (bft.command == BrainFCommand.END_WHILE) {
-                        depth.pop();
+                        SyntaxTree loopSyntax = depth.pop();
                         SyntaxTree current = depth.peek();
                         current.getTokens().addAll(inner.getTokens());
-                        current.syntax.add(inner);
+                        current.syntax.add(loopSyntax);
                     }
                 }
 

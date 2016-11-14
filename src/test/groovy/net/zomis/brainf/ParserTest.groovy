@@ -35,6 +35,7 @@ class ParserTest {
     public void loop() {
         Parser parser = new Parser();
         SyntaxTree tree = parser.parse(tokenize("++[>+[-]]+"));
+        assert tree.tokens.size() == 10
         assert tree.syntax.size() == 3
         assert (tree.syntax[0] as ChangeValueSyntax).value == 2;
         assert (tree.syntax[2] as ChangeValueSyntax).value == 1;
@@ -43,10 +44,12 @@ class ParserTest {
         assert subTree.syntax.size() == 3;
         assert (subTree.syntax[0] as ChangePointerSyntax).value == 1
         assert (subTree.syntax[1] as ChangeValueSyntax).value == 1
+        assert subTree.tokens.size() == 7
 
         subTree = (subTree.syntax[2] as LoopInstructionSyntax)
         assert subTree.syntax.size() == 1
         assert (subTree.syntax[0] as ChangeValueSyntax).value == -1
+        assert subTree.tokens.size() == 3
     }
 
     private static List<Token> tokenize(String s) {
