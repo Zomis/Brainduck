@@ -45,6 +45,7 @@ public class Parser {
                         depth.pop();
                         SyntaxTree current = depth.peek();
                         current.getTokens().addAll(inner.getTokens());
+                        current.syntax.add(inner);
                     }
                 }
 
@@ -86,6 +87,9 @@ public class Parser {
                     return new PrintSyntax();
                 case READ:
                     return new ReadSyntax();
+                case WHILE:
+                case END_WHILE:
+                    return null;
                 default:
                     throw new IllegalArgumentException("Unexpected BFCommand type: " + bft.command);
             }

@@ -6,7 +6,9 @@ import net.zomis.brainf.model.ast.Lexer
 import net.zomis.brainf.model.ast.Token
 import net.zomis.brainf.model.ast.tree.ChangePointerSyntax
 import net.zomis.brainf.model.ast.tree.ChangeValueSyntax
+import net.zomis.brainf.model.ast.tree.LoopInstructionSyntax
 import net.zomis.brainf.model.ast.tree.Parser
+import net.zomis.brainf.model.ast.tree.Syntax
 import net.zomis.brainf.model.ast.tree.SyntaxTree
 import net.zomis.brainf.model.classic.BrainFCommand
 import org.junit.Test
@@ -27,6 +29,24 @@ class ParserTest {
         assert tree.syntax.size() == 2
         assert (tree.syntax[0] as ChangeValueSyntax).value == 3;
         assert (tree.syntax[1] as ChangePointerSyntax).value == 2;
+    }
+
+    @Test
+    public void loop() {
+        Parser parser = new Parser();
+        SyntaxTree tree = parser.parse(tokenize("++[>+[-]]+"));
+        assert tree.syntax.size() == 3
+        assert (tree.syntax[0] as ChangeValueSyntax).value == 2;
+        assert (tree.syntax[2] as ChangeValueSyntax).value == 1;
+
+        SyntaxTree subTree = (tree.syntax[1] as LoopInstructionSyntax)
+        assert subTree.syntax.size() == 3;
+        assert (subTree.syntax[0] as ChangePointerSyntax).value == 1
+        assert (subTree.syntax[1] as ChangeValueSyntax).value == 1
+
+        subTree = (subTree.syntax[2] as LoopInstructionSyntax)
+        assert subTree.syntax.size() == 1
+        assert (subTree.syntax[0] as ChangeValueSyntax).value == -1
     }
 
     private static List<Token> tokenize(String s) {
