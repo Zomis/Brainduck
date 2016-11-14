@@ -24,6 +24,7 @@ class ValidateTest extends BrainfuckTest {
 
     @Test
     void valueRange() {
+        brain.memory.minValue = -10
         source.addCommands('-[+]++')
         analyze(new MemoryValues())
         assert analyze.get(MemoryValues).minValue == -1
