@@ -1,5 +1,6 @@
 package net.zomis.brainf.ui
 
+import javafx.application.Platform
 import javafx.scene.control.TextArea
 import net.zomis.brainf.model.BrainfuckOutput
 
@@ -12,7 +13,7 @@ class TextAppender implements BrainfuckOutput {
 
     @Override
     void write(char value) {
-        textArea.appendText(String.valueOf(value))
+        Platform.runLater({ textArea.appendText(String.valueOf(value)) })
     }
 
 }
