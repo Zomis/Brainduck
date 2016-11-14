@@ -65,12 +65,12 @@ class BrainfuckMemory {
     void memoryBoundsCheck() {
         int diff = memory[memoryIndex] - minValue
         if (diff < 0) {
-            memory[memoryIndex] = maxValue + diff
+            memory[memoryIndex] = maxValue + diff + 1
         }
 
         diff = maxValue - memory[memoryIndex]
-        if (diff > 0) {
-            memory[memoryIndex] = maxValue - diff
+        if (diff < 0) {
+            memory[memoryIndex] = minValue - diff - 1
         }
     }
 
