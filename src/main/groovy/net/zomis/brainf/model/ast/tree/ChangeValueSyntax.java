@@ -19,4 +19,10 @@ public class ChangeValueSyntax extends Syntax {
 
     }
 
+    @Override
+    public String toString() {
+        return "ChangeValueSyntax{" +
+                "value=" + value +
+                '}';
+    }
 }

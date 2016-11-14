@@ -19,4 +19,11 @@ public class ChangePointerSyntax extends Syntax {
 
     }
 
+    @Override
+    public String toString() {
+        return "ChangePointerSyntax{" +
+                "value=" + value +
+                '}';
+    }
+
 }

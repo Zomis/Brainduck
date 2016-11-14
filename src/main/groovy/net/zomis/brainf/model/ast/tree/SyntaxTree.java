@@ -13,4 +13,12 @@ public class SyntaxTree extends Syntax {
     public void perform(BrainfuckRunner runner) {
 
     }
+
+    @Override
+    public String toString() {
+        return "SyntaxTree{" +
+                "syntax=" + syntax +
+                '}';
+    }
+
 }

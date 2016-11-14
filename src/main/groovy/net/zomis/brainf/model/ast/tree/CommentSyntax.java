@@ -16,4 +16,9 @@ public class CommentSyntax extends Syntax {
 
     }
 
+    @Override
+    public String toString() {
+        return "CommentSyntax{" + token.text + '}';
+    }
+
 }

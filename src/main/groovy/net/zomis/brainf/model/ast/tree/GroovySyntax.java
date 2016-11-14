@@ -15,4 +15,9 @@ public class GroovySyntax extends Syntax {
     public void perform(BrainfuckRunner runner) {
 
     }
+
+    @Override
+    public String toString() {
+        return "GroovySyntax{" + token.code + '}';
+    }
 }
