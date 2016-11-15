@@ -12,6 +12,7 @@ import net.zomis.brainf.model.ListCode
 import net.zomis.brainf.model.SubCommand
 import net.zomis.brainf.model.classic.BrainFCommand
 import net.zomis.brainf.model.classic.BrainfuckConverter
+import net.zomis.brainf.model.input.QueueInput
 import net.zomis.brainf.model.input.StringBuilderOutput
 
 import java.nio.file.Files
@@ -34,6 +35,25 @@ class SpecialDelegate {
 
     void wrapValue(WrapBehavior behavior) {
         groovyContext.setValueWrap(behavior)
+    }
+
+    void input(String text) {
+        if (runner.input instanceof QueueInput) {
+            QueueInput input = runner.input as QueueInput
+            text.chars.each {input.queue.offer((int) it.charValue())}
+        }
+    }
+
+    void input(int value) {
+        if (runner.input instanceof QueueInput) {
+            QueueInput input = runner.input as QueueInput
+            input.queue.offer(value)
+        }
+    }
+
+    void inputLine(String text) {
+        input(text)
+        input(10)
     }
 
     void wrapMemory(WrapBehavior behavior) {

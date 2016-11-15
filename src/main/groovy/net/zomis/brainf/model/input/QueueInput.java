@@ -14,6 +14,10 @@ public class QueueInput implements BrainfuckInput {
         this.queue = input;
     }
 
+    public BlockingQueue<Integer> getQueue() {
+        return queue;
+    }
+
     @Override
     public int read() throws BrainfuckException {
         try {
