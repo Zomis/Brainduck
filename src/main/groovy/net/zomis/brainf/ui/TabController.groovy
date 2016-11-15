@@ -238,6 +238,7 @@ class TabController implements Initializable {
 
     @FXML public void performInput(ActionEvent event) {
         input.text.chars().forEach({ inputQueue.add(it) })
+        inputQueue.add(10)
         input.text = ""
     }
 
