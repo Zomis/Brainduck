@@ -49,6 +49,7 @@ class TabController implements Initializable {
     boolean codeModified
     boolean memoryListUpdate
     GroovySupportConverter converter
+    private MainController callback
 
     void update() {
         codeArea.selectRange(brain.getCode().getCommandIndex(), brain.getCode().getCommandIndex() + 1);
@@ -136,9 +137,10 @@ class TabController implements Initializable {
         }
     }
 
-    void setup(Tab tab, Stage stage) {
+    void setup(Tab tab, Stage stage, MainController callback) {
         this.@tab = tab
         this.@stage = stage
+        this.@callback = callback
         this.loadSave = new LoadSaveHandler(this, tab);
     }
 
@@ -159,8 +161,15 @@ class TabController implements Initializable {
         }
         saveCodeIfRequired();
         BFTask task = new BFTask(brain, converter, strategy);
-        task.setOnSucceeded({e -> println "Success"})
-        task.setOnFailed({e -> println "Failed"})
+        task.setOnSucceeded({e ->
+            println "Success"
+            update()
+        })
+        task.setOnFailed({e ->
+            println "Failed"
+            update()
+        })
+        callback.taskStarted(task);
         exec.submit(task);
     }
 

@@ -2,9 +2,11 @@ package net.zomis.brainf.ui;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -13,17 +15,22 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import net.zomis.brainf.model.BrainfuckRunner;
 import net.zomis.brainf.model.run.*;
+import org.controlsfx.control.StatusBar;
+import org.controlsfx.control.TaskProgressView;
 
-public class MainController {
+public class MainController implements Initializable {
 
     @FXML private TabPane tabs;
     @FXML private StatusBar statusBar;
+    TaskProgressView<BFTask> tasks = new TaskProgressView<>();
 
     private Stage stage;
     private final Map<Tab, TabController> tabMap = new HashMap<>();
@@ -148,7 +155,7 @@ public class MainController {
             tab.setContent(root);
             TabController controller = loader.getController();
             System.out.println(stage);
-            controller.setup(tab, stage);
+            controller.setup(tab, stage, this);
             tabMap.put(tab, controller);
             tabs.getTabs().add(tab);
             return controller;
@@ -216,4 +223,23 @@ public class MainController {
                 (exception != null ? "\n" + exception : "") + "\n\nhttps://github.com/Zomis/Brainduck");
         alert.showAndWait();
     }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        statusBar.setOnMouseClicked(e -> {
+            Stage st = new Stage();
+            Scene sc = new Scene(tasks);
+            st.setScene(sc);
+            st.centerOnScreen();
+            st.show();
+        });
+        statusBar.setText("Hello World");
+    }
+
+    public void taskStarted(BFTask task) {
+        tasks.getTasks().add(task);
+        statusBar.progressProperty().bind(task.progressProperty());
+        statusBar.textProperty().bind(task.messageProperty());
+    }
+
 }
