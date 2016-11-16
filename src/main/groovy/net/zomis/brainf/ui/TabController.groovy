@@ -160,7 +160,7 @@ class TabController implements Initializable {
             return;
         }
         saveCodeIfRequired();
-        BFTask task = new BFTask(brain, converter, strategy);
+        BFTask task = new BFTask(tab.getText(), brain, converter, strategy);
         task.setOnSucceeded({e ->
             println "Success"
             update()

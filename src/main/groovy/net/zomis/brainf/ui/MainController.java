@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -239,7 +240,8 @@ public class MainController implements Initializable {
     public void taskStarted(BFTask task) {
         tasks.getTasks().add(task);
         statusBar.progressProperty().bind(task.progressProperty());
-        statusBar.textProperty().bind(task.messageProperty());
+        statusBar.textProperty().bind(Bindings.concat(task.titleProperty(), ": ",
+            task.messageProperty()));
     }
 
 }

@@ -12,8 +12,10 @@ public class BFTask extends Task<Void> {
     private final BrainfuckRunner brain;
     private final RunStrategy strategy;
     private final GroovySupportConverter converter;
+    private final String name;
 
-    public BFTask(BrainfuckRunner brain, GroovySupportConverter converter, RunStrategy strategy) {
+    public BFTask(String name, BrainfuckRunner brain, GroovySupportConverter converter, RunStrategy strategy) {
+        this.name = name;
         this.brain = brain;
         this.converter = converter;
         this.strategy = strategy;
@@ -21,9 +23,14 @@ public class BFTask extends Task<Void> {
 
     @Override
     protected Void call() throws Exception {
+        String strategyName = strategy.getClass().getSimpleName().replace("Strategy", "");
+        updateTitle(name + ": " + strategyName);
         try {
-            final AtomicLong runTimes = new AtomicLong();
             int count = brain.run(new RunStrategy() {
+                private int lowestCode;
+                private int highestCode;
+                private long runTimes;
+
                 @Override
                 public boolean start(BrainfuckRunner runner) {
                     return strategy.start(runner);
@@ -36,11 +43,14 @@ public class BFTask extends Task<Void> {
                         return false;
                     }
                     if (isCancelled()) {
+                        updateMessage("Cancelled!");
                         return false;
                     }
                     int oldCommandIndex = runner.getCode().getCommandIndex();
                     try {
                         boolean result = strategy.next(runner);
+                        runTimes++;
+                        updateProgressMessage(runner);
                         if (converter.getGroovyContext().isPause()) {
                             converter.getGroovyContext().setPause(false);
                             return false;
@@ -52,12 +62,26 @@ public class BFTask extends Task<Void> {
                         return false;
                     }
                 }
+
+                private void updateProgressMessage(BrainfuckRunner runner) {
+                    int codeIndex = runner.getCode().getCommandIndex();
+                    lowestCode = Math.min(codeIndex, lowestCode);
+                    highestCode = Math.max(codeIndex, highestCode);
+                    updateMessage("Running step " + runTimes +
+                        ". Lowest code used " + lowestCode +
+                        ". Current code " + codeIndex +
+                        ". Highest code " + highestCode);
+                    updateProgress(runTimes, -1);
+                }
             });
-            if (count == 0) {
-                System.out.println(strategy.toString() + " not started");
+            if (count != 0) {
+                updateMessage("Completed with " + count + " steps.");
+            } else {
+                updateMessage("Unable to start.");
             }
-            updateProgress(runTimes.get(), 0);
+            updateProgress(count, count);
         } catch (AssertionError | RuntimeException ex) {
+            updateMessage("Failed: " + ex);
             ex.printStackTrace();
         }
         return null;
