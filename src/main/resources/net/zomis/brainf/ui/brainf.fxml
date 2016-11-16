@@ -5,68 +5,68 @@
 <?import javafx.scene.layout.*?>
 
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.zomis.brainf.ui.MainController">
-   <children>
-      <MenuBar>
-        <menus>
-          <Menu text="_File">
-            <items>
-                <MenuItem text="_New" onAction="#newTab">
-                    <accelerator><KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" /></accelerator>
-                </MenuItem>
-                <MenuItem text="_Open" onAction="#openFile">
-                    <accelerator><KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" /></accelerator>
-                </MenuItem>
-                <MenuItem text="_Save" onAction="#saveFile">
-                    <accelerator><KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" /></accelerator>
-                </MenuItem>
-                <MenuItem text="_Close" onAction="#closeTab">
-                    <accelerator><KeyCodeCombination alt="UP" code="W" control="DOWN" meta="UP" shift="UP" shortcut="UP" /></accelerator>
-                </MenuItem>
-              <MenuItem mnemonicParsing="false" text="Close" onAction="#close" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="true" text="_Run/Debug">
-            <items>
-                <MenuItem text="_Step" onAction="#step">
-                    <accelerator><KeyCodeCombination alt="UP" code="F7" control="UP" meta="UP" shift="UP" shortcut="UP" /></accelerator>
-                </MenuItem>
-                <MenuItem text="Run _X Steps" onAction="#runXTimes" />
-                <MenuItem text="Step _Out" onAction="#stepOut">
-                    <accelerator><KeyCodeCombination alt="UP" code="F8" control="UP" meta="UP" shift="DOWN" shortcut="UP" /></accelerator>
-                </MenuItem>
-                <MenuItem text="Step _Continue" onAction="#stepContinue">
-                    <accelerator><KeyCodeCombination alt="UP" code="F8" control="UP" meta="UP" shift="UP" shortcut="UP" /></accelerator>
-                </MenuItem>
-                <MenuItem text="Run until _Loop start" onAction="#runUntilLoopStart">
-                    <accelerator><KeyCodeCombination alt="UP" code="F7" control="UP" meta="UP" shift="DOWN" shortcut="UP" /></accelerator>
-                </MenuItem>
-                <MenuItem text="_Run" onAction="#runCode">
-                    <accelerator><KeyCodeCombination alt="UP" code="F9" control="UP" meta="UP" shift="UP" shortcut="UP" /></accelerator>
-                </MenuItem>
-                <MenuItem text="Run to _cursor" onAction="#runToCursor">
-                    <accelerator><KeyCodeCombination alt="UP" code="F4" control="UP" meta="UP" shift="UP" shortcut="UP" /></accelerator>
-                </MenuItem>
-                <MenuItem text="S_top" onAction="#stopRunning">
-                    <accelerator><KeyCodeCombination alt="UP" code="F2" control="DOWN" meta="UP" shift="UP" shortcut="UP" /></accelerator>
-                </MenuItem>
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" onAction="#aboutDialog" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
-      <HBox prefHeight="20.0" prefWidth="200.0">
-           <children>
-               <Button mnemonicParsing="false" onAction="#codeAreaFix" text="Fix bug with editing code" />
-               <Button mnemonicParsing="false" onAction="#analyze" text="Analyze" />
-           </children>
-      </HBox>
-      <TabPane fx:id="tabs" prefHeight="768.0" prefWidth="1024.0" tabClosingPolicy="UNAVAILABLE">
-        <tabs>
-        </tabs>
-      </TabPane>
-   </children>
+    <children>
+        <MenuBar>
+            <menus>
+                <Menu text="_File">
+                    <items>
+                        <MenuItem text="_New" onAction="#newTab">
+                            <accelerator><KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" /></accelerator>
+                        </MenuItem>
+                        <MenuItem text="_Open" onAction="#openFile">
+                            <accelerator><KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" /></accelerator>
+                        </MenuItem>
+                        <MenuItem text="_Save" onAction="#saveFile">
+                            <accelerator><KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" /></accelerator>
+                        </MenuItem>
+                        <MenuItem text="_Close" onAction="#closeTab">
+                            <accelerator><KeyCodeCombination alt="UP" code="W" control="DOWN" meta="UP" shift="UP" shortcut="UP" /></accelerator>
+                        </MenuItem>
+                        <MenuItem mnemonicParsing="false" text="Close" onAction="#close" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="true" text="_Run/Debug">
+                    <items>
+                        <MenuItem text="_Step" onAction="#step">
+                            <accelerator><KeyCodeCombination alt="UP" code="F7" control="UP" meta="UP" shift="UP" shortcut="UP" /></accelerator>
+                        </MenuItem>
+                        <MenuItem text="Run _X Steps" onAction="#runXTimes" />
+                        <MenuItem text="Step _Out" onAction="#stepOut">
+                            <accelerator><KeyCodeCombination alt="UP" code="F8" control="UP" meta="UP" shift="DOWN" shortcut="UP" /></accelerator>
+                        </MenuItem>
+                        <MenuItem text="Step _Continue" onAction="#stepContinue">
+                            <accelerator><KeyCodeCombination alt="UP" code="F8" control="UP" meta="UP" shift="UP" shortcut="UP" /></accelerator>
+                        </MenuItem>
+                        <MenuItem text="Run until _Loop start" onAction="#runUntilLoopStart">
+                            <accelerator><KeyCodeCombination alt="UP" code="F7" control="UP" meta="UP" shift="DOWN" shortcut="UP" /></accelerator>
+                        </MenuItem>
+                        <MenuItem text="_Run" onAction="#runCode">
+                            <accelerator><KeyCodeCombination alt="UP" code="F9" control="UP" meta="UP" shift="UP" shortcut="UP" /></accelerator>
+                        </MenuItem>
+                        <MenuItem text="Run to _cursor" onAction="#runToCursor">
+                            <accelerator><KeyCodeCombination alt="UP" code="F4" control="UP" meta="UP" shift="UP" shortcut="UP" /></accelerator>
+                        </MenuItem>
+                        <MenuItem text="S_top" onAction="#stopRunning">
+                            <accelerator><KeyCodeCombination alt="UP" code="F2" control="DOWN" meta="UP" shift="UP" shortcut="UP" /></accelerator>
+                        </MenuItem>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="About" onAction="#aboutDialog" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+        <HBox prefHeight="20.0" prefWidth="200.0">
+            <children>
+                <Button mnemonicParsing="false" onAction="#codeAreaFix" text="Fix bug with editing code" />
+                <Button mnemonicParsing="false" onAction="#analyze" text="Analyze" />
+            </children>
+        </HBox>
+        <TabPane fx:id="tabs" prefHeight="768.0" prefWidth="1024.0" tabClosingPolicy="UNAVAILABLE">
+            <tabs>
+            </tabs>
+        </TabPane>
+    </children>
 </VBox>
