@@ -17,11 +17,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import net.zomis.brainf.analyze.AnalyzeFactory;
-import net.zomis.brainf.analyze.Brainalyze;
-import net.zomis.brainf.analyze.analyzers.BrainfuckAnalyzers;
 import net.zomis.brainf.model.BrainfuckRunner;
-import net.zomis.brainf.model.groovy.GroovyBFContext;
 import net.zomis.brainf.model.run.*;
 
 public class MainController {
