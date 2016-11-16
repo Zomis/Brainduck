@@ -23,6 +23,7 @@ import net.zomis.brainf.model.run.*;
 public class MainController {
 
     @FXML private TabPane tabs;
+    @FXML private StatusBar statusBar;
 
     private Stage stage;
     private final Map<Tab, TabController> tabMap = new HashMap<>();

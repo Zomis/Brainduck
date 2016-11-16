@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import org.controlsfx.control.*?>
 <?import javafx.scene.input.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -68,5 +69,7 @@
             <tabs>
             </tabs>
         </TabPane>
+        <StatusBar fx:id="statusBar">
+        </StatusBar>
     </children>
 </VBox>
