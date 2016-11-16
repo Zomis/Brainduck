@@ -95,6 +95,7 @@ class TabController implements Initializable {
             analyze = null
         }, {
             stage.title = String.format("BrainDuck pos %d col %d", codeArea.getCaretPosition(), codeArea.getCaretColumn())
+            callback.positionText.text = String.format("pos %d, col %d", codeArea.getCaretPosition(), codeArea.getCaretColumn())
             memoryListUpdate = false
             memoryList.selectionModel.clearSelection()
             def cellsAccessed = analyze?.get(CodeCellRelationAnalysis)?.codeToCells?.

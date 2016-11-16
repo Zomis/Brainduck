@@ -34,6 +34,7 @@ public class MainController implements Initializable {
     @FXML private StatusBar statusBar;
     TaskProgressView<Task<?>> tasks = new TaskProgressView<>();
     private final Stage taskPopup = new Stage();
+    private final Label positionText = new Label();
 
     private Stage stage;
     private final Map<Tab, TabController> tabMap = new HashMap<>();
@@ -227,8 +228,13 @@ public class MainController implements Initializable {
         alert.showAndWait();
     }
 
+    public Label getPositionText() {
+        return positionText;
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        statusBar.getRightItems().add(positionText);
         statusBar.setOnMouseClicked(e -> taskPopup.show());
         statusBar.setText("Hello World");
 
