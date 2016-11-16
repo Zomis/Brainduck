@@ -83,7 +83,7 @@ public class MainController implements Initializable {
     }
 
     private void runWith(RunStrategy strategy) {
-        currentTab().run(exec, strategy);
+        currentTab().run(strategy);
     }
 
     @FXML private void newTab(ActionEvent event) {
@@ -243,7 +243,8 @@ public class MainController implements Initializable {
         taskPopup.centerOnScreen();
     }
 
-    public void taskStarted(BFTask task) {
+    public void startTask(Task<?> task) {
+        exec.submit(task);
         tasks.getTasks().add(task);
         statusBar.progressProperty().bind(task.progressProperty());
         statusBar.textProperty().bind(Bindings.concat(task.titleProperty(), ": ",

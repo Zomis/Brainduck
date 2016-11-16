@@ -21,11 +21,13 @@ import net.zomis.brainf.model.BrainfuckRunner
 import net.zomis.brainf.model.groovy.GroovyBFContext
 import net.zomis.brainf.model.groovy.GroovyListener
 import net.zomis.brainf.model.groovy.GroovySupportConverter
+import net.zomis.brainf.model.input.StringBuilderOutput
 import net.zomis.brainf.model.run.RunStrategy
 import org.fxmisc.richtext.CodeArea
 import org.fxmisc.richtext.LineNumberFactory
 
 import java.util.concurrent.BlockingQueue
+import java.util.concurrent.Future
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.ScheduledExecutorService
 
@@ -149,7 +151,7 @@ class TabController implements Initializable {
         return this.@tab;
     }
 
-    void run(ScheduledExecutorService exec, RunStrategy strategy) {
+    void run(RunStrategy strategy) {
         if (brain.code.getNextCommand() == null) {
             brain.reset();
             output.text = ''
@@ -170,8 +172,7 @@ class TabController implements Initializable {
             println "Failed"
             update()
         })
-        callback.taskStarted(task);
-        exec.submit(task);
+        callback.startTask(task);
     }
 
     void stopRun() {
@@ -189,12 +190,18 @@ class TabController implements Initializable {
     }
 
     void performAnalyze() {
-        saveCodeIfRequired()
-        brain.reset()
-        analyze = new AnalyzeFactory()
-            .addAnalyzers(BrainfuckAnalyzers.getAvailableAnalyzers())
-            .analyze(brain, new GroovyBFContext())
-        analyze.print()
+        GroovySupportConverter groovyConverter = ListCode.newGroovyConverter();
+
+        StringBuilder str = new StringBuilder()
+        BrainfuckRunner analyzeRunner = BrainF.createUsingQueueWithMemorySize(inputQueue,
+            0x1000, new StringBuilderOutput(str));
+        analyzeRunner.code.setSource(ListCode.create(groovyConverter, codeArea.text));
+        analyzeRunner.setListener(new GroovyListener(groovyConverter.groovyContext))
+
+        final BFTaskAnalyze analyzeTask =
+            new BFTaskAnalyze(tab.getText(), analyzeRunner, groovyConverter.groovyContext)
+        analyzeTask.setOnSucceeded({e -> analyze = analyzeTask.getValue()})
+        callback.startTask(analyzeTask)
     }
 
 }
