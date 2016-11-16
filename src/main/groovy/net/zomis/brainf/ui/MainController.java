@@ -13,6 +13,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -31,7 +32,8 @@ public class MainController implements Initializable {
 
     @FXML private TabPane tabs;
     @FXML private StatusBar statusBar;
-    TaskProgressView<BFTask> tasks = new TaskProgressView<>();
+    TaskProgressView<Task<?>> tasks = new TaskProgressView<>();
+    private final Stage taskPopup = new Stage();
 
     private Stage stage;
     private final Map<Tab, TabController> tabMap = new HashMap<>();
@@ -227,14 +229,12 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        statusBar.setOnMouseClicked(e -> {
-            Stage st = new Stage();
-            Scene sc = new Scene(tasks);
-            st.setScene(sc);
-            st.centerOnScreen();
-            st.show();
-        });
+        statusBar.setOnMouseClicked(e -> taskPopup.show());
         statusBar.setText("Hello World");
+
+        Scene sc = new Scene(tasks);
+        taskPopup.setScene(sc);
+        taskPopup.centerOnScreen();
     }
 
     public void taskStarted(BFTask task) {
