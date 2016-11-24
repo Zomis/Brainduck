@@ -1,5 +1,7 @@
 package net.zomis.brainf.model
 
+import net.zomis.brainf.model.run.UntilEndStrategy
+
 class SubCommand implements BrainfuckCommand {
 
     private final CodeRetriever commands
@@ -13,7 +15,7 @@ class SubCommand implements BrainfuckCommand {
         BrainfuckRunner subRunner = new BrainfuckRunner(runner.memory, new BrainfuckCode(),
             runner.input, runner.outputBuilder)
         subRunner.code.source = commands
-        subRunner.run()
+        subRunner.run(new UntilEndStrategy())
     }
 
 }

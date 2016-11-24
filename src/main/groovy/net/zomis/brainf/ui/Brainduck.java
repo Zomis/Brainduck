@@ -9,6 +9,7 @@ import net.zomis.brainf.model.*;
 import net.zomis.brainf.model.groovy.GroovyBFContext;
 import net.zomis.brainf.model.input.ConsoleInput;
 import net.zomis.brainf.model.input.ConsoleOutput;
+import net.zomis.brainf.model.run.UntilEndStrategy;
 
 import java.io.File;
 
@@ -39,7 +40,7 @@ public class Brainduck {
         BrainfuckRunner runner = new BrainfuckRunner(new BrainfuckMemory(30000), code,
                 new ConsoleInput(), new ConsoleOutput());
         if (!options.analyze) {
-            runner.run();
+            runner.run(new UntilEndStrategy());
         } else {
             Brainalyze analyze = new AnalyzeFactory()
                     .addAnalyzers(BrainfuckAnalyzers.getAvailableAnalyzers())

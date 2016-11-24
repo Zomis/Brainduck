@@ -6,6 +6,7 @@ import net.zomis.brainf.model.BrainfuckRunner
 import net.zomis.brainf.model.ListCode
 import net.zomis.brainf.model.input.NoInput
 import net.zomis.brainf.model.input.StringBuilderOutput
+import net.zomis.brainf.model.run.UntilEndStrategy
 import org.junit.Before
 import org.junit.Test
 
@@ -66,7 +67,7 @@ class BrainUnitTest {
 
     void expectFailure(String expectedContains) {
         try {
-            runner.run()
+            runner.run(new UntilEndStrategy())
             assert false : 'No assertion error was thrown'
         } catch (AssertionError error) {
             assert error.getMessage().contains(expectedContains)

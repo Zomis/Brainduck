@@ -4,6 +4,7 @@ import net.zomis.brainf.model.BrainfuckCommand
 import net.zomis.brainf.model.BrainfuckListener
 import net.zomis.brainf.model.BrainfuckRunner
 import net.zomis.brainf.model.groovy.GroovyBFContext
+import net.zomis.brainf.model.run.UntilEndStrategy
 
 class AnalyzeFactory {
 
@@ -30,7 +31,7 @@ class AnalyzeFactory {
             analyze.analysis.put(analyzer.class, analyzer)
         }
         runner.setListener(new AnalyzeProgress(analyzers, analyze))
-        runner.run()
+        runner.run(new UntilEndStrategy())
         analyzers*.after(analyze, runner)
         analyze.timeSpent = System.nanoTime() - time
         analyze

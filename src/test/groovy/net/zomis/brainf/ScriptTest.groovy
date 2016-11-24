@@ -6,6 +6,7 @@ import net.zomis.brainf.model.BrainfuckMemory
 import net.zomis.brainf.model.BrainfuckRunner
 import net.zomis.brainf.model.input.NoInput
 import net.zomis.brainf.model.input.StringBuilderOutput
+import net.zomis.brainf.model.run.UntilEndStrategy
 import org.junit.Test
 
 class ScriptTest {
@@ -15,7 +16,7 @@ class ScriptTest {
         println code
         def runner = new BrainfuckRunner(new BrainfuckMemory(), BrainF.code(code),
                 new NoInput(), new StringBuilderOutput(new StringBuilder()))
-        runner.run()
+        runner.run(new UntilEndStrategy())
         runner.getMemory()
     }
 

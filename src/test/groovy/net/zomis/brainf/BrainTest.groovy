@@ -15,6 +15,7 @@ import net.zomis.brainf.model.input.FixedInput
 import net.zomis.brainf.model.input.StringBuilderOutput
 import net.zomis.brainf.model.run.StepContinueStrategy
 import net.zomis.brainf.model.run.StepOutStrategy
+import net.zomis.brainf.model.run.UntilEndStrategy
 import org.junit.Test
 
 import java.util.concurrent.TimeUnit
@@ -100,7 +101,7 @@ public class BrainTest extends BrainfuckTest {
     @Test
     public void simpleLoopMultiplication() {
         source.addCommands("++[>+++<-]>>>");
-        brain.run();
+        brain.run(new UntilEndStrategy());
         assert [ 0, 6, 0, 0, 0, 0, 0, 0, 0, 0 ] == brain.getMemory().getMemoryArray(0, 10)
     }
 
@@ -128,7 +129,7 @@ public class BrainTest extends BrainfuckTest {
     @Test
     public void printAlphabet() {
         source.addCommands("++++++[>++++++++++>++++<<-]>+++++>++[-<.+>]");
-        brain.run();
+        brain.run(new UntilEndStrategy());
         assert output.toString() == "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     }
 
@@ -177,7 +178,7 @@ public class BrainTest extends BrainfuckTest {
     @Test
     public void includeTest() {
         source.addCommands(BrainfuckRunner.classLoader.getResource('include-base.bf').text);
-        brain.run()
+        brain.run(new UntilEndStrategy())
         assert brain.memory.getMemoryArray(0, 5) == [0, 0, 12, 0, 0] as int[]
     }
 
@@ -262,7 +263,7 @@ public class BrainTest extends BrainfuckTest {
 $ bf '+' * 3
 <---
 ''')
-        brain.run()
+        brain.run(new UntilEndStrategy())
         assert brain.memory.getMemory(0) == 0
         assert brain.memory.getMemory(1) == 3
         assert brain.memory.getMemory(2) == 0
@@ -273,14 +274,14 @@ $ bf '+' * 3
         def str = new StringBuilder()
         BrainfuckRunner brain = new BrainfuckRunner(new BrainfuckMemory(), BrainF.code("+++,."),
           new FixedInput("a"), new StringBuilderOutput(str));
-        brain.run();
+        brain.run(new UntilEndStrategy());
         assert "a" == str.toString()
     }
 
     @Test
     public void simpleCommands() {
         source.addCommands("+>++>+++<")
-        brain.run();
+        brain.run(new UntilEndStrategy());
         assert brain.code.commandCount == brain.code.commandIndex
         assert 1 == brain.memory.memoryIndex
         assert 2 == brain.memory.value
