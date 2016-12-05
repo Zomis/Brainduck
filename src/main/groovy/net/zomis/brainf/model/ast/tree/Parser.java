@@ -5,12 +5,19 @@ import net.zomis.brainf.model.ast.CommentToken;
 import net.zomis.brainf.model.ast.GroovyToken;
 import net.zomis.brainf.model.ast.Token;
 import net.zomis.brainf.model.classic.BrainFCommand;
+import net.zomis.brainf.model.groovy.GroovyBFContext;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
 public class Parser {
+
+    private final GroovyBFContext groovyContext;
+
+    public Parser(GroovyBFContext groovyBFContext) {
+        this.groovyContext = groovyBFContext;
+    }
 
     // Reads tokens creates AST
     public SyntaxTree parse(List<Token> tokens) {
@@ -71,7 +78,7 @@ public class Parser {
         }
         // Create new syntax from last token
         if (token instanceof GroovyToken) {
-            return new GroovySyntax((GroovyToken) token);
+            return new GroovySyntax(groovyContext, (GroovyToken) token);
         }
         if (token instanceof CommentToken) {
             return new CommentSyntax((CommentToken) token);

@@ -11,6 +11,7 @@ import net.zomis.brainf.model.ast.tree.Parser
 import net.zomis.brainf.model.ast.tree.Syntax
 import net.zomis.brainf.model.ast.tree.SyntaxTree
 import net.zomis.brainf.model.classic.BrainFCommand
+import net.zomis.brainf.model.groovy.GroovyBFContext
 import org.junit.Test
 
 @CompileStatic
@@ -18,7 +19,7 @@ class ParserTest {
 
     @Test
     public void simpleTest() {
-        Parser parser = new Parser();
+        Parser parser = new Parser(new GroovyBFContext());
         SyntaxTree tree = parser.parse(tokenize("+++>>"));
         assert tree.tokens.size() == 5
         assert (tree.tokens[0] as BFToken).command == BrainFCommand.ADD;
@@ -33,7 +34,7 @@ class ParserTest {
 
     @Test
     public void loop() {
-        Parser parser = new Parser();
+        Parser parser = new Parser(new GroovyBFContext());
         SyntaxTree tree = parser.parse(tokenize("++[>+[-]]+"));
         assert tree.tokens.size() == 10
         assert tree.syntax.size() == 3
