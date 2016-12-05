@@ -16,6 +16,8 @@ import net.zomis.brainf.model.BrainfuckCode
 import net.zomis.brainf.model.BrainfuckMemory
 import net.zomis.brainf.model.BrainfuckRunner
 import net.zomis.brainf.model.ListCode
+import net.zomis.brainf.model.ast.Lexer
+import net.zomis.brainf.model.ast.tree.Parser
 import net.zomis.brainf.model.classic.BrainfuckConverter
 import net.zomis.brainf.model.groovy.GroovyBFContext
 import net.zomis.brainf.model.groovy.GroovySupportConverter
@@ -45,9 +47,16 @@ class BrainfuckTest {
                 new BrainfuckConverter())
         source = ListCode.create(converter, "")
         brain.code.source = source
+        brain.code.rootTree = new Parser(context).parse(Lexer.tokenize(""))
     }
 
     void analyzeAll() {
         analyze(BrainfuckAnalyzers.availableAnalyzers)
     }
+
+    void useCode(String code) {
+        source.addCommands(code)
+        brain.code.rootTree = new Parser(context).parse(Lexer.tokenize(code))
+    }
+
 }

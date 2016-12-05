@@ -82,4 +82,9 @@ class BrainfuckMemory {
         Arrays.fill(memory, (byte) 0);
         memoryIndex = 0;
     }
+
+    long[] values(int from, int toExclusive) {
+        return Arrays.copyOfRange(memory, from, toExclusive)
+    }
+
 }

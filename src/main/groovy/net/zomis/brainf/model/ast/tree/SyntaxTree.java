@@ -4,6 +4,7 @@ import net.zomis.brainf.model.BrainfuckRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 public class SyntaxTree extends Syntax {
 
@@ -11,7 +12,11 @@ public class SyntaxTree extends Syntax {
 
     @Override
     public void perform(BrainfuckRunner runner) {
+        throw new IllegalStateException("Cannot perform a full syntax tree at once");
+    }
 
+    public ListIterator<Syntax> iterator() {
+        return syntax.listIterator();
     }
 
     @Override

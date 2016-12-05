@@ -1,5 +1,6 @@
 package net.zomis.brainf
 
+import groovy.transform.CompileStatic
 import net.zomis.brainf.analyze.IndexCounters
 import net.zomis.brainf.analyze.MemoryCell
 import net.zomis.brainf.analyze.analyzers.CommandCountAnalysis
@@ -8,6 +9,8 @@ import net.zomis.brainf.analyze.analyzers.MemoryValues
 import net.zomis.brainf.analyze.analyzers.ReadWriteAnalysis
 import net.zomis.brainf.analyze.analyzers.WhileLoopAnalysis
 import net.zomis.brainf.model.BrainF
+import net.zomis.brainf.model.ast.tree.ChangeValueSyntax
+import net.zomis.brainf.model.ast.tree.SyntaxTree
 import net.zomis.brainf.model.classic.BrainFCommand
 import net.zomis.brainf.model.BrainfuckMemory
 import net.zomis.brainf.model.BrainfuckRunner
@@ -20,15 +23,16 @@ import org.junit.Test
 
 import java.util.concurrent.TimeUnit
 
+@CompileStatic
 public class BrainTest extends BrainfuckTest {
 
     @Test
     public void gotoCorrectEndWhile() {
-        source.addCommands(">+>[-]+   ")
-            .addCommands("++[-->++]-->   Find next 254 and go one step beyond it")
-            .addCommands("            Loop through all 254s")
-            .addCommands("+++[---         Make sure that we are not at 253 (end)")
-            .addCommands("++[--<++]--	");
+        useCode(">+>[-]+   "
+        + "++[-->++]-->   Find next 254 and go one step beyond it"
+        + "            Loop through all 254s"
+        + "+++[---         Make sure that we are not at 253 (end)"
+        + "++[--<++]--");
 
         assert brain.step() == BrainFCommand.NEXT
         assert brain.step() == BrainFCommand.ADD
@@ -55,7 +59,7 @@ public class BrainTest extends BrainfuckTest {
             $ loop 'duplicate'
         ]
         '''
-        source.addCommands(commands)
+        useCode(commands)
         analyze(new WhileLoopAnalysis())
         analyze.print()
         println context.getLoopNames()
@@ -79,7 +83,7 @@ public class BrainTest extends BrainfuckTest {
         $ name 'test'
         ++[-]
         '''
-        source.addCommands(commands)
+        useCode(commands)
         analyze(new WhileLoopAnalysis())
         assert analyze.cell(1).resolveTags(context).get('test') == 1
     }
@@ -100,14 +104,15 @@ public class BrainTest extends BrainfuckTest {
 
     @Test
     public void simpleLoopMultiplication() {
-        source.addCommands("++[>+++<-]>>>");
+        useCode("++[>+++<-]>>>");
         brain.run(new UntilEndStrategy());
-        assert [ 0, 6, 0, 0, 0, 0, 0, 0, 0, 0 ] == brain.getMemory().getMemoryArray(0, 10)
+        assert [ 0, 6, 0, 0, 0, 0, 0, 0, 0, 0 ] as int[] ==
+            brain.getMemory().getMemoryArray(0, 10)
     }
 
     @Test
     public void analyzeLoops() {
-        source.addCommands("++[ > +++++[>+>+++<<-]>[>+<-]<[+-+-]> +++ << -]");
+        useCode("++[ > +++++[>+>+++<<-]>[>+<-]<[+-+-]> +++ << -]");
         analyze(new WhileLoopAnalysis())
         IndexCounters counts = analyze.get(WhileLoopAnalysis).getWhileLoopCounts()
         assert counts.size() == 4
@@ -119,7 +124,10 @@ public class BrainTest extends BrainfuckTest {
 
     @Test
     public void loopOnce() {
-        source.addCommands("+[-]");
+        useCode("+[-]");
+        assert brain.code.rootTree.syntax.size() == 2
+        assert (brain.code.rootTree.syntax[0] as ChangeValueSyntax).value == 1
+        assert (brain.code.rootTree.syntax[1] as SyntaxTree).syntax.size() == 1
         analyze(new WhileLoopAnalysis())
         IndexCounters counts = analyze.get(WhileLoopAnalysis).getWhileLoopCounts();
         assert counts.size() == 1
@@ -128,28 +136,28 @@ public class BrainTest extends BrainfuckTest {
 
     @Test
     public void printAlphabet() {
-        source.addCommands("++++++[>++++++++++>++++<<-]>+++++>++[-<.+>]");
+        useCode("++++++[>++++++++++>++++<<-]>+++++>++[-<.+>]");
         brain.run(new UntilEndStrategy());
         assert output.toString() == "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     }
 
     @Test
     public void unbalanced1() {
-        source.addCommands("++[->+<] ]")
+        useCode("++[->+<] ]")
         analyze(new WhileLoopAnalysis())
         assert !analyze.get(WhileLoopAnalysis).bracketsMatching
     }
 
     @Test
     public void unbalanced2() {
-        source.addCommands("++ [ [->+<]")
+        useCode("++ [ [->+<]")
         analyze(new WhileLoopAnalysis())
         assert !analyze.get(WhileLoopAnalysis).bracketsMatching
     }
 
     @Test
     public void fizzBuzz() {
-        source.addCommands(BrainfuckRunner.classLoader.getResource('fizzbuzz.bf').text);
+        useCode(BrainfuckRunner.classLoader.getResource('fizzbuzz.bf').text);
         long start = System.nanoTime()
         analyzeAll()
         long stop = System.nanoTime()
@@ -161,7 +169,7 @@ public class BrainTest extends BrainfuckTest {
 
     @Test
     public void fizzBuzzMin() {
-        source.addCommands(BrainfuckRunner.classLoader.getResource('fizzbuzz-min.bf').text);
+        useCode(BrainfuckRunner.classLoader.getResource('fizzbuzz-min.bf').text);
         analyzeAll()
         assert analyze.get(CommandCountAnalysis).getActionsForCommand(BrainFCommand.WRITE) == output.length()
         assert output.toString() == fizzBuzzString(100)
@@ -169,7 +177,7 @@ public class BrainTest extends BrainfuckTest {
 
     @Test
     public void printedMemory() {
-        source.addCommands('>.<+++.[-.]')
+        useCode('>.<+++.[-.]')
         analyze(new IOAnalysis())
         assert analyze.cell(0).data(IOAnalysis.CellIO).prints.toString() == '[6, 9 * 3]' // printed by code index 6 once, code index 9 thrice
         assert analyze.cell(1).data(IOAnalysis.CellIO).prints.toString() == '[1]'
@@ -177,14 +185,14 @@ public class BrainTest extends BrainfuckTest {
 
     @Test
     public void includeTest() {
-        source.addCommands(BrainfuckRunner.classLoader.getResource('include-base.bf').text);
+        useCode(BrainfuckRunner.classLoader.getResource('include-base.bf').text);
         brain.run(new UntilEndStrategy())
         assert brain.memory.getMemoryArray(0, 5) == [0, 0, 12, 0, 0] as int[]
     }
 
     @Test
     public void stepContinueStrategy() {
-        source.addCommands("+++[>+<-]-");
+        useCode("+++[>+<-]-");
         assert brain.step() == BrainFCommand.ADD
         brain.run(new StepContinueStrategy())
         assert brain.step() == BrainFCommand.NEXT
@@ -207,7 +215,7 @@ public class BrainTest extends BrainfuckTest {
 
     @Test
     public void stepOutStrategy() {
-        source.addCommands("+++[>+<-]-");
+        useCode("+++[>+<-]-");
         assert brain.step() == BrainFCommand.ADD
         assert brain.step() == BrainFCommand.ADD
         assert brain.step() == BrainFCommand.ADD
@@ -236,14 +244,14 @@ public class BrainTest extends BrainfuckTest {
 
     @Test
     public void allCharacters() {
-        source.addCommands(">>>>+++++++++++++++[<+++++++++++++++++>-]<[->[+>>]+[<<]>]")
+        useCode(">>>>+++++++++++++++[<+++++++++++++++++>-]<[->[+>>]+[<<]>]")
         analyzeAll()
         analyze.print()
     }
 
     @Test
     public void readsAndWrites() {
-        source.addCommands(">> +++++ [->[+>>]+[<<]>]")
+        useCode(">> +++++ [->[+>>]+[<<]>]")
         // distribute values from 5 downto 1 across the tape
         analyze(new MemoryValues(), new ReadWriteAnalysis())
         analyze.print()
@@ -259,7 +267,7 @@ public class BrainTest extends BrainfuckTest {
 
     @Test
     public void bfGroovy() {
-        source.addCommands('''+++>
+        useCode('''+++>
 $ bf '+' * 3
 <---
 ''')
@@ -280,7 +288,7 @@ $ bf '+' * 3
 
     @Test
     public void simpleCommands() {
-        source.addCommands("+>++>+++<")
+        useCode("+>++>+++<")
         brain.run(new UntilEndStrategy());
         assert brain.code.commandCount == brain.code.commandIndex
         assert 1 == brain.memory.memoryIndex

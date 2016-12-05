@@ -4,6 +4,9 @@ import net.zomis.brainf.model.BrainfuckCode
 import net.zomis.brainf.model.BrainfuckMemory
 import net.zomis.brainf.model.BrainfuckRunner
 import net.zomis.brainf.model.ListCode
+import net.zomis.brainf.model.ast.Lexer
+import net.zomis.brainf.model.ast.tree.Parser
+import net.zomis.brainf.model.groovy.GroovyBFContext
 import net.zomis.brainf.model.input.NoInput
 import net.zomis.brainf.model.input.StringBuilderOutput
 import net.zomis.brainf.model.run.UntilEndStrategy
@@ -63,6 +66,8 @@ class BrainUnitTest {
 
     void addCommands(String code) {
         runner.code.source = ListCode.create(code)
+        runner.code.rootTree = new Parser(new GroovyBFContext())
+            .parse(Lexer.tokenize(code))
     }
 
     void expectFailure(String expectedContains) {
