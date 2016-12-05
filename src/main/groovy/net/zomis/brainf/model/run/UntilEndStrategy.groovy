@@ -1,7 +1,9 @@
 package net.zomis.brainf.model.run
 
+import groovy.transform.CompileStatic
 import net.zomis.brainf.model.BrainfuckRunner
 
+@CompileStatic
 class UntilEndStrategy implements RunStrategy {
 
     @Override
@@ -11,7 +13,8 @@ class UntilEndStrategy implements RunStrategy {
 
     @Override
     boolean next(BrainfuckRunner runner) {
-        return runner.step() != null
+        runner.step()
+        return !runner.code.isFinished()
     }
 
 }

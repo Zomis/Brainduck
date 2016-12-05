@@ -2,6 +2,7 @@ package net.zomis.brainf.model.run
 
 import net.zomis.brainf.model.BrainfuckCommand
 import net.zomis.brainf.model.BrainfuckRunner
+import net.zomis.brainf.model.ast.tree.LoopInstructionSyntax
 import net.zomis.brainf.model.classic.BrainFCommand
 
 class RunUntilLoopStartStrategy implements RunStrategy {
@@ -21,19 +22,18 @@ class RunUntilLoopStartStrategy implements RunStrategy {
 
     @Override
     boolean next(BrainfuckRunner runner) {
-        BrainfuckCommand next = runner.code.nextCommand
-        if (next == null || found) {
-            return false
+        if (runner.code.isFinished() || found) {
+            return false;
         }
-        next = runner.step()
-        boolean memoryNotZero = runner.memory.value != 0
-        if (next == BrainFCommand.END_WHILE && memoryNotZero) {
+        // is able to run the optimized commands (+++++, <<<<<<)
+        if (!(runner.code.currentSyntax instanceof LoopInstructionSyntax)) {
+            runner.runSyntax()
+            return true
+        } else {
             return stopOnNext()
         }
-        if (next == BrainFCommand.WHILE && memoryNotZero) {
-            return stopOnNext()
-        }
-        return true
+//        if (next == BrainFCommand.END_WHILE && memoryNotZero) {
+//        if (next == BrainFCommand.WHILE && memoryNotZero) {
     }
 
 }
