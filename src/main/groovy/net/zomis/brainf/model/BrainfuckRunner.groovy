@@ -78,12 +78,7 @@ class BrainfuckRunner {
 
         gotoNextSyntax()
 
-        BrainfuckCommand command = code.getNextCommand();
-        int index = code.commandIndex
-        perform(command);
-        int commandLength = code.source.getCommandLength(index)
-        code.commandIndex += commandLength
-        return command;
+        return null;
     }
 
     Syntax runSyntax() {
