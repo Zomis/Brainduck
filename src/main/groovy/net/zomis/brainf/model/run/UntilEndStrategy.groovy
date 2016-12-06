@@ -13,7 +13,7 @@ class UntilEndStrategy implements RunStrategy {
 
     @Override
     boolean next(BrainfuckRunner runner) {
-        runner.step()
+        runner.runSyntax()
         return !runner.code.isFinished()
     }
 
