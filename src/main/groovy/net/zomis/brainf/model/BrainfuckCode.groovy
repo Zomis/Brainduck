@@ -99,13 +99,12 @@ class BrainfuckCode {
         return !isFinished()
     }
 
+    @Deprecated
     BrainfuckCommand getNextCommand() {
         if (!hasMoreCommands()) {
             return null;
         }
-
-
-
+        return null
         // source.getCommand(commandIndex)
     }
 

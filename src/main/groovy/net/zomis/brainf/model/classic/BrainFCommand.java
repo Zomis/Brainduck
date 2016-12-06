@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+@Deprecated
 public enum BrainFCommand implements BrainfuckCommand {
 
 	NONE((char) 0, r -> {}),

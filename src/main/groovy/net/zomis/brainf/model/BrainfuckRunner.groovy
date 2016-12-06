@@ -129,6 +129,7 @@ class BrainfuckRunner {
         code.resetIndex();
     }
 
+    @Deprecated
     void perform(BrainfuckCommand command) {
         listener.beforePerform(this, command)
         if (command) {

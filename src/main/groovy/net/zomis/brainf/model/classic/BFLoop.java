@@ -3,6 +3,7 @@ package net.zomis.brainf.model.classic;
 import net.zomis.brainf.model.BrainfuckCommand;
 import net.zomis.brainf.model.BrainfuckRunner;
 
+@Deprecated
 public class BFLoop implements BrainfuckCommand {
 
     private final int i;
