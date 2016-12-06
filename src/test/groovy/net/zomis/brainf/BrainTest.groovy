@@ -28,20 +28,25 @@ import java.util.concurrent.TimeUnit
 @CompileStatic
 public class BrainTest extends BrainfuckTest {
 
+    @Test(expected = BrainfuckCompilationException)
+    public void failUnmatchedOpeningBracet() {
+        useCode(">+>[-]+++[-->++]-->+++[ /* this is unmatched */ ---++[--<++]--");
+    }
+
     @Test
     public void gotoCorrectEndWhile() {
-        useCode(">+>[-]+   "
-        + "++[-->++]-->   Find next 254 and go one step beyond it"
-        + "            Loop through all 254s"
-        + "+++[---         Make sure that we are not at 253 (end)"
-        + "++[--<++]--");
+        useCode(">+>[-]+   " +
+            "++[-->++]-->   Find next 254 and go one step beyond it" +
+            "            Loop through all 254s" +
+            "+++[---         Make sure that we are not at 253 (end)" +
+            "++[--<++]--                ]");
 
         assert (brain.step() as ChangePointerSyntax).value == 1
         assert (brain.step() as ChangeValueSyntax).value == 1
         assert (brain.step() as ChangePointerSyntax).value == 1
         assert brain.step() instanceof LoopInstructionSyntax
 
-        assert brain.code.commandIndex == 6
+        // assert brain.code.currentSyntax.getTokens().get(0).info.position == 6
         assert (brain.step() as ChangeValueSyntax).value == 1
     }
 
