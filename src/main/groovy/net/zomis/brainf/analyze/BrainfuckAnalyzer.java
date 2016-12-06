@@ -1,8 +1,10 @@
 package net.zomis.brainf.analyze;
 
 import net.zomis.brainf.model.BrainfuckCommand;
+import groovy.transform.CompileStatic;
 import net.zomis.brainf.model.BrainfuckRunner;
 
+@CompileStatic
 public interface BrainfuckAnalyzer {
 
     default Object createMemoryData() { return null; }

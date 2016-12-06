@@ -1,11 +1,13 @@
 package net.zomis.brainf.analyze.analyzers
 
+import groovy.transform.CompileStatic
 import net.zomis.brainf.analyze.Brainalyze
 import net.zomis.brainf.analyze.BrainfuckAnalyzer
 import net.zomis.brainf.model.BrainfuckRunner
 import net.zomis.brainf.model.classic.BrainFCommand
 import net.zomis.brainf.model.groovy.GroovyBFContext
 
+@CompileStatic
 class GroovyCommandAnalysis implements BrainfuckAnalyzer {
 
     private final List<Map> problematicCommands = []

@@ -1,5 +1,6 @@
 package net.zomis.brainf;
 
+import groovy.transform.CompileStatic;
 import net.zomis.brainf.analyze.InspectionResult;
 import net.zomis.brainf.analyze.analyzers.PlusMinusOptimizer;
 import org.junit.Assert;
@@ -12,6 +13,7 @@ import java.util.Collection;
 import java.util.List;
 
 @RunWith(Parameterized.class)
+@CompileStatic
 public class OptimizeTest extends BrainfuckTest {
 
     @Parameterized.Parameters

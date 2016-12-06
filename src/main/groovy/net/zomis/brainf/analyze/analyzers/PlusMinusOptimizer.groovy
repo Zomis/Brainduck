@@ -1,5 +1,6 @@
 package net.zomis.brainf.analyze.analyzers
 
+import groovy.transform.CompileStatic
 import net.zomis.brainf.analyze.Brainalyze
 import net.zomis.brainf.analyze.BrainfuckAnalyzer
 import net.zomis.brainf.analyze.InspectionResult
@@ -8,6 +9,7 @@ import net.zomis.brainf.model.BrainfuckCommand
 import net.zomis.brainf.model.BrainfuckRunner
 import net.zomis.brainf.model.classic.BrainFCommand
 
+@CompileStatic
 class PlusMinusOptimizer implements BrainfuckAnalyzer {
 
     private static final Set<BrainfuckCommand> handlableCommands = [BrainFCommand.ADD, BrainFCommand.SUBTRACT,
