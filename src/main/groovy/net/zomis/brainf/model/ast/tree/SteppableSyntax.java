@@ -4,7 +4,10 @@ import net.zomis.brainf.model.BrainfuckRunner;
 
 public interface SteppableSyntax {
 
+    int getValue();
     void performTimes(BrainfuckRunner runner, int steps);
-    int getTimes();
+    default int getTimes() {
+        return Math.abs(getValue());
+    }
 
 }

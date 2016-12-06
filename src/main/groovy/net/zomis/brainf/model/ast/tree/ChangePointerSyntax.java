@@ -10,6 +10,7 @@ public class ChangePointerSyntax extends Syntax implements SteppableSyntax {
         this.value = value;
     }
 
+    @Override
     public int getValue() {
         return value;
     }
@@ -32,8 +33,4 @@ public class ChangePointerSyntax extends Syntax implements SteppableSyntax {
         runner.getMemory().setMemoryIndex(runner.getMemory().getMemoryIndex() + steps);
     }
 
-    @Override
-    public int getTimes() {
-        return Math.abs(value);
-    }
 }

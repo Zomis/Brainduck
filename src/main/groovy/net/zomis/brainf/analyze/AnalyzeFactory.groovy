@@ -1,12 +1,13 @@
 package net.zomis.brainf.analyze
 
-import net.zomis.brainf.model.BrainfuckCommand
+import groovy.transform.CompileStatic
 import net.zomis.brainf.model.BrainfuckListener
 import net.zomis.brainf.model.BrainfuckRunner
 import net.zomis.brainf.model.ast.tree.Syntax
 import net.zomis.brainf.model.groovy.GroovyBFContext
 import net.zomis.brainf.model.run.UntilEndStrategy
 
+@CompileStatic
 class AnalyzeFactory {
 
     private final List<BrainfuckAnalyzer> analyzers = []
