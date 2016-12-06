@@ -3,6 +3,9 @@ package net.zomis.brainf.model.groovy;
 import net.zomis.brainf.model.BrainfuckCommand;
 import net.zomis.brainf.model.BrainfuckListener;
 import net.zomis.brainf.model.BrainfuckRunner;
+import net.zomis.brainf.model.ast.tree.ChangePointerSyntax;
+import net.zomis.brainf.model.ast.tree.ChangeValueSyntax;
+import net.zomis.brainf.model.ast.tree.Syntax;
 import net.zomis.brainf.model.classic.BrainFCommand;
 
 public class GroovyListener implements BrainfuckListener {
@@ -14,61 +17,60 @@ public class GroovyListener implements BrainfuckListener {
     }
 
     @Override
-    public void beforePerform(BrainfuckRunner runner, BrainfuckCommand command) {
-        if (command == BrainFCommand.ADD) {
-            if (runner.getMemory().getValue() == runner.getMemory().getMaxValue()) {
-                switch (context.getValueWrap()) {
-                    case BLOCK:
-                        runner.getMemory().setMemory(runner.getMemory().getMaxValue() - 1);
-                        break;
-                    case CRASH:
+    public void beforePerform(BrainfuckRunner runner, Syntax command) {
+        if (command instanceof ChangeValueSyntax) {
+            ChangeValueSyntax valueSyntax = (ChangeValueSyntax) command;
+            long currentValue = runner.getMemory().getValue();
+            int change = valueSyntax.getValue();
+            long resultingValue = currentValue + change;
+            boolean overflow = resultingValue > runner.getMemory().getMaxValue();
+            boolean underflow = resultingValue < runner.getMemory().getMinValue();
+            switch (context.getValueWrap()) {
+                case BLOCK:
+                    if (overflow) {
+                        runner.getMemory().setMemory(runner.getMemory().getMaxValue() - change);
+                    } else if (underflow) {
+                        runner.getMemory().setMemory(runner.getMemory().getMinValue() + change);
+                    }
+                    break;
+                case CRASH:
+                    if (overflow || underflow) {
                         throw new AssertionError("Memory value wrapping is not allowed");
-                    default:
-                }
+                    }
+                default:
             }
             return;
         }
-        if (command == BrainFCommand.SUBTRACT) {
-            if (runner.getMemory().getValue() == runner.getMemory().getMinValue()) {
-                switch (context.getValueWrap()) {
-                    case BLOCK:
-                        runner.getMemory().setMemory(runner.getMemory().getMinValue() + 1);
-                        break;
-                    case CRASH:
-                        throw new AssertionError("Memory value wrapping is not allowed");
-                    default:
-                }
-            }
-        }
-        if (command == BrainFCommand.NEXT) {
+
+        if (command instanceof ChangePointerSyntax) {
             int maxMemory = runner.getMemory().getMemorySize() - 1;
-            if (runner.getMemory().getMemoryIndex() == maxMemory) {
-                switch (context.getValueWrap()) {
-                    case BLOCK:
-                        runner.getMemory().setMemoryIndex(maxMemory - 1);
-                        break;
-                    case CRASH:
+
+            ChangePointerSyntax pointerSyntax = (ChangePointerSyntax) command;
+            long currentValue = runner.getMemory().getMemoryIndex();
+            int change = pointerSyntax.getValue();
+            long resultingValue = currentValue + change;
+            boolean overflow = resultingValue > maxMemory;
+            boolean underflow = resultingValue < 0;
+
+            switch (context.getValueWrap()) {
+                case BLOCK:
+                    if (overflow) {
+                        runner.getMemory().setMemoryIndex(maxMemory - change);
+                    } else if (underflow) {
+                        runner.getMemory().setMemoryIndex(Math.abs(change));
+                    }
+                    break;
+                case CRASH:
+                    if (overflow || underflow) {
                         throw new AssertionError("Memory index wrapping is not allowed");
-                    default:
-                }
-            }
-        }
-        if (command == BrainFCommand.PREVIOUS) {
-            if (runner.getMemory().getMemoryIndex() == 0) {
-                switch (context.getValueWrap()) {
-                    case BLOCK:
-                        runner.getMemory().setMemoryIndex(1);
-                        break;
-                    case CRASH:
-                        throw new AssertionError("Memory index wrapping is not allowed");
-                    default:
-                }
+                    }
+                default:
             }
         }
     }
 
     @Override
-    public void afterPerform(BrainfuckRunner runner, BrainfuckCommand command) {
+    public void afterPerform(BrainfuckRunner runner, Syntax command) {
 
     }
 

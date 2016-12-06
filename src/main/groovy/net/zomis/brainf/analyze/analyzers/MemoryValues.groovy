@@ -5,6 +5,7 @@ import net.zomis.brainf.analyze.BrainfuckAnalyzer
 import net.zomis.brainf.analyze.MemoryCell
 import net.zomis.brainf.model.BrainfuckCommand
 import net.zomis.brainf.model.BrainfuckRunner
+import net.zomis.brainf.model.ast.tree.Syntax
 
 class MemoryValues implements BrainfuckAnalyzer {
 
@@ -25,7 +26,7 @@ class MemoryValues implements BrainfuckAnalyzer {
     private int maxValue
 
     @Override
-    void afterPerform(MemoryCell cell, BrainfuckRunner runner, BrainfuckCommand command) {
+    void afterPerform(MemoryCell cell, BrainfuckRunner runner, Syntax command) {
         if (runner.memory.value > this.maxValue) {
             this.maxValue = runner.memory.value
         }

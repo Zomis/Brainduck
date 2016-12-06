@@ -5,6 +5,7 @@ import net.zomis.brainf.analyze.BrainfuckAnalyzer
 import net.zomis.brainf.analyze.MemoryCell
 import net.zomis.brainf.model.BrainfuckCommand
 import net.zomis.brainf.model.BrainfuckRunner
+import net.zomis.brainf.model.ast.tree.Syntax
 import net.zomis.brainf.model.classic.BrainFCommand
 
 import java.util.function.BiFunction
@@ -33,7 +34,7 @@ class CommandCountAnalysis implements BrainfuckAnalyzer {
     }
 
     @Override
-    void beforePerform(MemoryCell cell, BrainfuckRunner runner, BrainfuckCommand command) {
+    void beforePerform(MemoryCell cell, BrainfuckRunner runner, Syntax command) {
         int codeIndex = runner.code.commandIndex
         this.times[codeIndex]++
         actionsPerCommand.merge(command, 1, MERGE_FUNCTION)

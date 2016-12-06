@@ -5,6 +5,8 @@ import net.zomis.brainf.analyze.BrainfuckAnalyzer
 import net.zomis.brainf.analyze.MemoryCell
 import net.zomis.brainf.model.BrainfuckCommand
 import net.zomis.brainf.model.BrainfuckRunner
+import net.zomis.brainf.model.ast.tree.CommentSyntax
+import net.zomis.brainf.model.ast.tree.Syntax
 import net.zomis.brainf.model.classic.BrainFCommand
 
 class CodeCellRelationAnalysis implements BrainfuckAnalyzer {
@@ -45,8 +47,8 @@ class CodeCellRelationAnalysis implements BrainfuckAnalyzer {
     }
 
     @Override
-    void beforePerform(MemoryCell cell, BrainfuckRunner runner, BrainfuckCommand command) {
-        if (command == BrainFCommand.NONE) {
+    void beforePerform(MemoryCell cell, BrainfuckRunner runner, Syntax command) {
+        if (command instanceof CommentSyntax) {
             return
         }
         int codeIndex = runner.code.commandIndex
@@ -56,7 +58,7 @@ class CodeCellRelationAnalysis implements BrainfuckAnalyzer {
     }
 
     @Override
-    void afterPerform(MemoryCell cell, BrainfuckRunner runner, BrainfuckCommand command) {
+    void afterPerform(MemoryCell cell, BrainfuckRunner runner, Syntax command) {
     }
 
     Set<Integer> codeAccessedBy(Iterable<? extends Integer> indexes) {

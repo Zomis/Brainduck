@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-public class SyntaxTree extends Syntax {
+public class SyntaxTree extends Syntax implements Iterable<Syntax> {
 
     public List<Syntax> syntax = new ArrayList<>();
 
@@ -15,6 +15,7 @@ public class SyntaxTree extends Syntax {
         throw new IllegalStateException("Cannot perform a full syntax tree at once");
     }
 
+    @Override
     public ListIterator<Syntax> iterator() {
         return syntax.listIterator();
     }

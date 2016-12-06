@@ -9,6 +9,7 @@ import net.zomis.brainf.analyze.analyzers.MemoryValues
 import net.zomis.brainf.analyze.analyzers.ReadWriteAnalysis
 import net.zomis.brainf.analyze.analyzers.WhileLoopAnalysis
 import net.zomis.brainf.model.BrainF
+import net.zomis.brainf.model.ast.tree.ChangePointerSyntax
 import net.zomis.brainf.model.ast.tree.ChangeValueSyntax
 import net.zomis.brainf.model.ast.tree.SyntaxTree
 import net.zomis.brainf.model.classic.BrainFCommand
@@ -169,7 +170,7 @@ public class BrainTest extends BrainfuckTest {
 
     @Test
     public void fizzBuzzMin() {
-        useCode(BrainfuckRunner.classLoader.getResource('fizzbuzz-min.bf').text);
+        // useCode(BrainfuckRunner.classLoader.getResource('fizzbuzz-min.bf').text);
         analyzeAll()
         assert analyze.get(CommandCountAnalysis).getActionsForCommand(BrainFCommand.WRITE) == output.length()
         assert output.toString() == fizzBuzzString(100)
@@ -293,10 +294,10 @@ $ bf '+' * 3
         assert brain.code.commandCount == brain.code.commandIndex
         assert 1 == brain.memory.memoryIndex
         assert 2 == brain.memory.value
-        brain.perform(BrainFCommand.PREVIOUS)
+        brain.perform(new ChangePointerSyntax(-1))
         assert 1 == brain.memory.value
-        brain.perform(BrainFCommand.NEXT)
-        brain.perform(BrainFCommand.NEXT)
+        brain.perform(new ChangePointerSyntax(1))
+        brain.perform(new ChangePointerSyntax(1))
         assert 3 == brain.memory.value
     }
 

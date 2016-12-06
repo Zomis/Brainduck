@@ -4,6 +4,8 @@ import net.zomis.brainf.analyze.BrainfuckAnalyzer
 import net.zomis.brainf.analyze.MemoryCell
 import net.zomis.brainf.model.BrainfuckCommand
 import net.zomis.brainf.model.BrainfuckRunner
+import net.zomis.brainf.model.ast.tree.ChangePointerSyntax
+import net.zomis.brainf.model.ast.tree.Syntax
 import net.zomis.brainf.model.classic.BrainFCommand
 
 class MemoryIndexAnalysis implements BrainfuckAnalyzer {
@@ -30,17 +32,25 @@ class MemoryIndexAnalysis implements BrainfuckAnalyzer {
     }
 
     @Override
-    void beforePerform(MemoryCell cell, BrainfuckRunner runner, BrainfuckCommand command) {
-        if (command == BrainFCommand.PREVIOUS && runner.memory.memoryIndex == 0) {
+    void beforePerform(MemoryCell cell, BrainfuckRunner runner, Syntax command) {
+        if (!(command instanceof ChangePointerSyntax)) {
+            return
+        }
+        def pointerSyntax = command as ChangePointerSyntax;
+        long current = runner.memory.memoryIndex
+        long change = pointerSyntax.getValue();
+        long newValue = current + change;
+
+        if (newValue < 0) {
             this.memoryIndexBelowZero = true
         }
-        if (command == BrainFCommand.NEXT && runner.memory.memoryIndex == runner.memory.size - 1) {
+        if (newValue >= runner.memory.size) {
             this.memoryIndexAboveMax = true
         }
     }
 
     @Override
-    void afterPerform(MemoryCell cell, BrainfuckRunner runner, BrainfuckCommand command) {
+    void afterPerform(MemoryCell cell, BrainfuckRunner runner, Syntax command) {
         this.@rightmostMemory = Math.max(this.@rightmostMemory, runner.memory.memoryIndex)
     }
 

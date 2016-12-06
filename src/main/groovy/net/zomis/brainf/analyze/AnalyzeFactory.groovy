@@ -3,6 +3,7 @@ package net.zomis.brainf.analyze
 import net.zomis.brainf.model.BrainfuckCommand
 import net.zomis.brainf.model.BrainfuckListener
 import net.zomis.brainf.model.BrainfuckRunner
+import net.zomis.brainf.model.ast.tree.Syntax
 import net.zomis.brainf.model.groovy.GroovyBFContext
 import net.zomis.brainf.model.run.UntilEndStrategy
 
@@ -47,13 +48,13 @@ class AnalyzeFactory {
         }
 
         @Override
-        void beforePerform(BrainfuckRunner runner, BrainfuckCommand command) {
+        void beforePerform(BrainfuckRunner runner, Syntax command) {
             MemoryCell cell = analyze.cell(runner.memory.memoryIndex)
             analyzers*.beforePerform(cell, runner, command)
         }
 
         @Override
-        void afterPerform(BrainfuckRunner runner, BrainfuckCommand command) {
+        void afterPerform(BrainfuckRunner runner, Syntax command) {
             MemoryCell cell = analyze.cell(runner.memory.memoryIndex)
             analyzers*.afterPerform(cell, runner, command)
         }

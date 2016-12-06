@@ -5,6 +5,12 @@ import net.zomis.brainf.analyze.BrainfuckAnalyzer
 import net.zomis.brainf.analyze.MemoryCell
 import net.zomis.brainf.model.BrainfuckCommand
 import net.zomis.brainf.model.BrainfuckRunner
+import net.zomis.brainf.model.ast.tree.ChangeValueSyntax
+import net.zomis.brainf.model.ast.tree.PrintSyntax
+import net.zomis.brainf.model.ast.tree.ReadSyntax
+import net.zomis.brainf.model.ast.tree.SteppableSyntax
+import net.zomis.brainf.model.ast.tree.Syntax
+import net.zomis.brainf.model.ast.tree.SyntaxTree
 import net.zomis.brainf.model.classic.BrainFCommand
 
 class ReadWriteAnalysis implements BrainfuckAnalyzer {
@@ -38,24 +44,16 @@ class ReadWriteAnalysis implements BrainfuckAnalyzer {
     }
 
     @Override
-    void beforePerform(MemoryCell cell, BrainfuckRunner runner, BrainfuckCommand cmd) {
-        if (!(cmd instanceof BrainFCommand)) {
-            return
+    void beforePerform(MemoryCell cell, BrainfuckRunner runner, Syntax cmd) {
+        int times = cmd instanceof SteppableSyntax ? (cmd as SteppableSyntax).times : 1;
+        if (cmd instanceof ChangeValueSyntax || cmd instanceof ReadSyntax) {
+            cell.data(this, ReadWriteData).writeCount += times;
+            maxMemory = Math.max(maxMemory, runner.memory.memoryIndex)
         }
-        BrainFCommand command = (BrainFCommand) cmd
-        switch (command) {
-            case BrainFCommand.ADD:
-            case BrainFCommand.SUBTRACT:
-            case BrainFCommand.READ:
-                cell.data(this, ReadWriteData).writeCount++
-                maxMemory = Math.max(maxMemory, runner.memory.memoryIndex)
-                break
-            case BrainFCommand.WHILE:
-            case BrainFCommand.END_WHILE:
-            case BrainFCommand.WRITE:
-                cell.data(this, ReadWriteData).readCount++
-                maxMemory = Math.max(maxMemory, runner.memory.memoryIndex)
-                break
+        if (cmd instanceof SyntaxTree || cmd instanceof PrintSyntax) {
+            // TODO: I don't think this handles END_WHILE at the moment
+            cell.data(this, ReadWriteData).readCount++
+            maxMemory = Math.max(maxMemory, runner.memory.memoryIndex)
         }
     }
 

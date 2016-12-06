@@ -27,6 +27,10 @@ class SyntaxTreePosition {
         return current;
     }
 
+    public SyntaxTree getTree() {
+        return tree;
+    }
+
     public int size() {
         return tree.syntax.size()
     }

@@ -16,10 +16,10 @@ class BrainfuckRunner {
     private final BrainfuckOutput output
     private BrainfuckListener listener = new BrainfuckListener() {
         @Override
-        void beforePerform(BrainfuckRunner runner, BrainfuckCommand command) {}
+        void beforePerform(BrainfuckRunner runner, Syntax command) {}
 
         @Override
-        void afterPerform(BrainfuckRunner runner, BrainfuckCommand command) {}
+        void afterPerform(BrainfuckRunner runner, Syntax command) {}
     }
 
     BrainfuckRunner(BrainfuckMemory memory, BrainfuckCode code, BrainfuckInput input, BrainfuckOutput output) {
@@ -38,6 +38,7 @@ class BrainfuckRunner {
         return output
     }
 
+    @Deprecated
     void run() {
         while (code.hasMoreCommands()) {
             step();
@@ -63,17 +64,22 @@ class BrainfuckRunner {
         if (code.currentSyntax instanceof SteppableSyntax) {
             println "Step: " + code.currentSyntax
             SteppableSyntax steppableSyntax = code.currentSyntax as SteppableSyntax
+            if (code.positionInSyntax == 0) {
+                listener.beforePerform(this, code.currentSyntax)
+            }
             steppableSyntax.performTimes(this, 1)
             code.positionInSyntax++
             if (code.positionInSyntax == steppableSyntax.getTimes()) {
                 println "Syntax done: " + code.currentSyntax
+                listener.afterPerform(this, code.currentSyntax)
                 code.positionInSyntax = 0;
                 gotoNextSyntax()
             }
-            return ;
+            return null;
         } else {
-            println "Perform: " + code.currentSyntax
-            code.currentSyntax.perform(this)
+            def syntax = code.currentSyntax
+            println "Perform: " + syntax
+            perform(syntax)
         }
 
         gotoNextSyntax()
@@ -88,21 +94,24 @@ class BrainfuckRunner {
             SteppableSyntax steppableSyntax = syntax as SteppableSyntax
             steppableSyntax.performTimes(this, steppableSyntax.getTimes() - code.positionInSyntax)
             code.positionInSyntax = 0
+            listener.afterPerform(this, syntax)
             gotoNextSyntax()
         } else {
-            syntax.perform(this)
+            perform(syntax)
             gotoNextSyntax()
         }
         syntax
     }
 
     private void gotoNextSyntax() {
-        println "Goto next after " + code.currentSyntax
-        if (code.currentSyntax instanceof SyntaxTree) {
+        def currentSyntax = code.currentSyntax
+        println "Goto next after " + currentSyntax
+        if (currentSyntax instanceof SyntaxTree) {
+            listener.beforePerform(this, currentSyntax)
             // enter syntax tree if condition is ok, otherwise skip to next syntax
             if (memory.value != 0) {
-                println "Entering syntax tree " + code.currentSyntax
-                code.enteredTrees.push(new SyntaxTreePosition(code.currentSyntax as SyntaxTree))
+                println "Entering syntax tree " + currentSyntax
+                code.enteredTrees.push(new SyntaxTreePosition(currentSyntax as SyntaxTree))
             } else {
                 println "Loop zero at pos $memory.memoryIndex, skipping entering."
                 code.getCurrentTree().stepForward()
@@ -110,7 +119,8 @@ class BrainfuckRunner {
         } else if (code.syntaxIndex == code.currentTree.size() - 1) {
             println "Last step in syntax. Pop."
             // go to parent syntax tree
-            code.enteredTrees.pop()
+            def previousTree = code.enteredTrees.pop()
+            listener.afterPerform(this, previousTree.tree)
         } else {
             println "${code.syntaxIndex} != ${code.currentTree.size() - 1}"
             // go to next
@@ -124,13 +134,12 @@ class BrainfuckRunner {
         code.resetIndex();
     }
 
-    @Deprecated
-    void perform(BrainfuckCommand command) {
-        listener.beforePerform(this, command)
-        if (command) {
-            command.perform(this)
+    void perform(Syntax syntax) {
+        listener.beforePerform(this, syntax)
+        if (syntax) {
+            syntax.perform(this)
         }
-        listener.afterPerform(this, command)
+        listener.afterPerform(this, syntax)
     }
 
     void setListener(BrainfuckListener listener) {

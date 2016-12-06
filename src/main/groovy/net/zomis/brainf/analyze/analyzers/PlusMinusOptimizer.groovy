@@ -7,13 +7,15 @@ import net.zomis.brainf.analyze.InspectionResult
 import net.zomis.brainf.analyze.MemoryCell
 import net.zomis.brainf.model.BrainfuckCommand
 import net.zomis.brainf.model.BrainfuckRunner
+import net.zomis.brainf.model.ast.tree.ChangePointerSyntax
+import net.zomis.brainf.model.ast.tree.ChangeValueSyntax
+import net.zomis.brainf.model.ast.tree.CommentSyntax
+import net.zomis.brainf.model.ast.tree.GroovySyntax
+import net.zomis.brainf.model.ast.tree.Syntax
 import net.zomis.brainf.model.classic.BrainFCommand
 
 @CompileStatic
 class PlusMinusOptimizer implements BrainfuckAnalyzer {
-
-    private static final Set<BrainfuckCommand> handlableCommands = [BrainFCommand.ADD, BrainFCommand.SUBTRACT,
-        BrainFCommand.NEXT, BrainFCommand.PREVIOUS] as Set
 
     private final List<InspectionResult> results = []
 
@@ -37,34 +39,22 @@ class PlusMinusOptimizer implements BrainfuckAnalyzer {
     }
 
     @Override
-    void beforePerform(MemoryCell cell, BrainfuckRunner runner, BrainfuckCommand command) {
-        if (!(command instanceof BrainFCommand)) {
+    void beforePerform(MemoryCell cell, BrainfuckRunner runner, Syntax command) {
+        if (command instanceof GroovySyntax) {
             return
         }
-        if (command == BrainFCommand.NONE) {
+        if (command instanceof CommentSyntax) {
             return
         }
-        if (!handlableCommands.contains(command)) {
-            finishAndReset(runner)
+        if (command instanceof ChangePointerSyntax) {
+            pointerMove((command as ChangePointerSyntax).getValue());
             return
         }
-        BrainFCommand cmd = (BrainFCommand) command
-        switch (cmd) {
-            case BrainFCommand.PREVIOUS:
-                pointerMove(-1)
-                break
-            case BrainFCommand.NEXT:
-                pointerMove(1)
-                break
-            case BrainFCommand.SUBTRACT:
-                valueChange(-1)
-                break
-            case BrainFCommand.ADD:
-                valueChange(1)
-                break
-            default:
-                throw new IllegalStateException('Unexpected command: ' + command)
+        if (command instanceof ChangeValueSyntax) {
+            valueChange((command as ChangeValueSyntax).getValue());
+            return
         }
+        finishAndReset(runner)
         commandsUsed++
     }
 

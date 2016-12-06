@@ -99,8 +99,10 @@ class SpecialDelegate {
 
     void bf(String code) {
         def commands = ListCode.create(new BrainfuckConverter(), code)
-        def subCommand = new SubCommand(commands)
-        runner.perform(subCommand)
+        // TODO: Parse commands and create syntax tree and perform that.
+//        def subCommand = new SubCommand(commands)
+//        runner.perform(subCommand)
+        throw new UnsupportedOperationException("bf code method needs to be rewritten")
     }
 
     void nextLoops(String tagName) {

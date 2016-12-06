@@ -24,7 +24,7 @@ public class GroovySyntax extends Syntax {
         script.run();
     }
 
-    String getCode() {
+    public String getCode() {
         return this.token.code;
     }
 

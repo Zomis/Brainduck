@@ -1,8 +1,8 @@
 package net.zomis.brainf.analyze;
 
-import net.zomis.brainf.model.BrainfuckCommand;
 import groovy.transform.CompileStatic;
 import net.zomis.brainf.model.BrainfuckRunner;
+import net.zomis.brainf.model.ast.tree.Syntax;
 
 @CompileStatic
 public interface BrainfuckAnalyzer {
@@ -13,8 +13,8 @@ public interface BrainfuckAnalyzer {
 
     default void print() { }
 
-    default void beforePerform(MemoryCell cell, BrainfuckRunner runner, BrainfuckCommand command) { }
+    default void beforePerform(MemoryCell cell, BrainfuckRunner runner, Syntax command) { }
 
-    default void afterPerform(MemoryCell cell, BrainfuckRunner runner, BrainfuckCommand command) { }
+    default void afterPerform(MemoryCell cell, BrainfuckRunner runner, Syntax command) { }
 
 }
