@@ -42,7 +42,7 @@ public class OptimizeTest extends BrainfuckTest {
 
     @Test
     public void test() {
-        getSource().addCommands(original);
+        useCode(original);
         analyze(new PlusMinusOptimizer());
         System.out.println(getAnalyze().getInspectionResults());
         List<InspectionResult> results = getAnalyze().getInspectionResults();

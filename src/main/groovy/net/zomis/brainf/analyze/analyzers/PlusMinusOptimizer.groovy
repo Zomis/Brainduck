@@ -11,6 +11,7 @@ import net.zomis.brainf.model.ast.tree.ChangePointerSyntax
 import net.zomis.brainf.model.ast.tree.ChangeValueSyntax
 import net.zomis.brainf.model.ast.tree.CommentSyntax
 import net.zomis.brainf.model.ast.tree.GroovySyntax
+import net.zomis.brainf.model.ast.tree.SteppableSyntax
 import net.zomis.brainf.model.ast.tree.Syntax
 import net.zomis.brainf.model.classic.BrainFCommand
 
@@ -46,16 +47,18 @@ class PlusMinusOptimizer implements BrainfuckAnalyzer {
         if (command instanceof CommentSyntax) {
             return
         }
+        def commandCount = command instanceof SteppableSyntax ? (command as SteppableSyntax).getTimes() : 0;
         if (command instanceof ChangePointerSyntax) {
             pointerMove((command as ChangePointerSyntax).getValue());
+            commandsUsed += commandCount;
             return
         }
         if (command instanceof ChangeValueSyntax) {
             valueChange((command as ChangeValueSyntax).getValue());
+            commandsUsed += commandCount;
             return
         }
         finishAndReset(runner)
-        commandsUsed++
     }
 
     void valueChange(int i) {
