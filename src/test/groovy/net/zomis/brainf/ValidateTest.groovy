@@ -8,7 +8,7 @@ class ValidateTest extends BrainfuckTest {
 
     @Test
     void moveNegativeIndex() {
-        source.addCommands('+<<++')
+        useCode('+<<++')
         analyze(new MemoryIndexAnalysis())
         assert analyze.get(MemoryIndexAnalysis).isMemoryIndexBelowZero()
         assert !analyze.get(MemoryIndexAnalysis).isMemoryIndexAboveMax()
@@ -16,7 +16,7 @@ class ValidateTest extends BrainfuckTest {
 
     @Test
     void stayPositiveIndex() {
-        source.addCommands('+>+<++')
+        useCode('+>+<++')
         analyze(new MemoryIndexAnalysis())
         assert !analyze.get(MemoryIndexAnalysis).isMemoryIndexBelowZero()
         assert !analyze.get(MemoryIndexAnalysis).isMemoryIndexAboveMax()
@@ -25,7 +25,7 @@ class ValidateTest extends BrainfuckTest {
     @Test
     void valueRange() {
         brain.memory.minValue = -10
-        source.addCommands('-[+]++')
+        useCode('-[+]++')
         analyze(new MemoryValues())
         assert analyze.get(MemoryValues).minValue == -1
         assert analyze.get(MemoryValues).maxValue == 2
