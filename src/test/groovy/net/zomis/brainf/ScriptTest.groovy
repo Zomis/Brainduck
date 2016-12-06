@@ -32,7 +32,7 @@ class ScriptTest {
     @Test
     void runAlgorithm() {
         assert runBrainfuck('set 42; right 1; algo "x_equals_y" values(x: 0, y: -1, temp0: -2)')
-            .getMemoryArray(0, 3) == [ 42, 42, 0 ]
+            .getMemoryArray(0, 3) == [ 42, 42, 0 ] as int[]
     }
 
     @Test
