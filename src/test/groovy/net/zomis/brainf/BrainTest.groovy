@@ -11,6 +11,7 @@ import net.zomis.brainf.analyze.analyzers.WhileLoopAnalysis
 import net.zomis.brainf.model.BrainF
 import net.zomis.brainf.model.ast.tree.ChangePointerSyntax
 import net.zomis.brainf.model.ast.tree.ChangeValueSyntax
+import net.zomis.brainf.model.ast.tree.LoopInstructionSyntax
 import net.zomis.brainf.model.ast.tree.SyntaxTree
 import net.zomis.brainf.model.classic.BrainFCommand
 import net.zomis.brainf.model.BrainfuckMemory
@@ -35,13 +36,13 @@ public class BrainTest extends BrainfuckTest {
         + "+++[---         Make sure that we are not at 253 (end)"
         + "++[--<++]--");
 
-        assert brain.step() == BrainFCommand.NEXT
-        assert brain.step() == BrainFCommand.ADD
-        assert brain.step() == BrainFCommand.NEXT
-        assert brain.step() == BrainFCommand.WHILE
+        assert (brain.step() as ChangePointerSyntax).value == 1
+        assert (brain.step() as ChangeValueSyntax).value == 1
+        assert (brain.step() as ChangePointerSyntax).value == 1
+        assert brain.step() instanceof LoopInstructionSyntax
 
         assert brain.code.commandIndex == 6
-        assert brain.step() == BrainFCommand.ADD
+        assert (brain.step() as ChangeValueSyntax).value == 1
     }
 
     @Test(timeout = 10000L)
@@ -194,9 +195,9 @@ public class BrainTest extends BrainfuckTest {
     @Test
     public void stepContinueStrategy() {
         useCode("+++[>+<-]-");
-        assert brain.step() == BrainFCommand.ADD
+        assert brain.step()
         brain.run(new StepContinueStrategy())
-        assert brain.step() == BrainFCommand.NEXT
+        assert brain.step()
         assert brain.memory.getMemory(0) == 3
 
         brain.run(new StepContinueStrategy())
@@ -217,14 +218,14 @@ public class BrainTest extends BrainfuckTest {
     @Test
     public void stepOutStrategy() {
         useCode("+++[>+<-]-");
-        assert brain.step() == BrainFCommand.ADD
-        assert brain.step() == BrainFCommand.ADD
-        assert brain.step() == BrainFCommand.ADD
+        assert brain.step() instanceof ChangeValueSyntax
+        assert brain.step() instanceof ChangeValueSyntax
+        assert brain.step() instanceof ChangeValueSyntax
         assert brain.run(new StepOutStrategy()) == 0
-        assert brain.step() == BrainFCommand.WHILE
+        assert brain.step() instanceof SyntaxTree
         assert brain.run(new StepOutStrategy()) == 15
         assert brain.memory.getMemory(1) == 3
-        assert brain.code.nextCommand == BrainFCommand.SUBTRACT
+        assert (brain.code.currentSyntax as ChangeValueSyntax).value == -1
     }
 
     static String fizzBuzzString(int max) {

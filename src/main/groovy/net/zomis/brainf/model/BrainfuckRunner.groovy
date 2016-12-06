@@ -45,22 +45,20 @@ class BrainfuckRunner {
         }
     }
 
-    BrainfuckCommand step() {
-        // change this...
+    Syntax step() {
         /*
         * check current node
         * run current node
         * if current node is syntaxtree, enter syntaxtree (if condition is ok)
         * if current node is last one in syntax tree, then go to parent syntaxtree again,
         * and on next run determine whether to enter it or not (to simulate end loop ']' )
-        *
-        *
         */
         println "Perform step with memory " + Arrays.toString(memory.values(0, 5)) + " and index $memory.memoryIndex"
         if (code.isFinished()) {
             return null;
         }
 
+        def currentSyntax = code.currentSyntax;
         if (code.currentSyntax instanceof SteppableSyntax) {
             println "Step: " + code.currentSyntax
             SteppableSyntax steppableSyntax = code.currentSyntax as SteppableSyntax
@@ -75,7 +73,7 @@ class BrainfuckRunner {
                 code.positionInSyntax = 0;
                 gotoNextSyntax()
             }
-            return null;
+            return currentSyntax;
         } else {
             def syntax = code.currentSyntax
             println "Perform: " + syntax
@@ -83,8 +81,7 @@ class BrainfuckRunner {
         }
 
         gotoNextSyntax()
-
-        return null;
+        return currentSyntax;
     }
 
     Syntax runSyntax() {
