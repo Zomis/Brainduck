@@ -6,6 +6,9 @@ import net.zomis.brainf.analyze.MemoryCell
 import net.zomis.brainf.model.BrainfuckRunner
 import net.zomis.brainf.model.ast.tree.ChangePointerSyntax
 import net.zomis.brainf.model.ast.tree.ChangeValueSyntax
+import net.zomis.brainf.model.ast.tree.GroovySyntax
+import net.zomis.brainf.model.ast.tree.PrintSyntax
+import net.zomis.brainf.model.ast.tree.ReadSyntax
 import net.zomis.brainf.model.ast.tree.SteppableSyntax
 import net.zomis.brainf.model.ast.tree.Syntax
 import net.zomis.brainf.model.ast.tree.SyntaxTree
@@ -16,8 +19,8 @@ import java.util.function.BiFunction
 class CommandCountAnalysis implements BrainfuckAnalyzer {
 
     private int[] times
-    private final Map<String, Integer> actionsPerCommand = [:]
-    private final Map<String, Integer> codeCommands = [:]
+    private final Map<String, Integer> actionsPerCommand = new HashMap<>()
+    private final Map<String, Integer> codeCommands = new HashMap<>()
 
     private static final BiFunction<Integer, Integer, Integer> MERGE_FUNCTION = {a, b -> a + b}
 
@@ -37,7 +40,37 @@ class CommandCountAnalysis implements BrainfuckAnalyzer {
     }
 
     static String syntaxKey(Syntax syntax) {
-        return syntax.toString()
+        boolean negative = syntax instanceof SteppableSyntax && (syntax as SteppableSyntax).value < 0;
+        if (syntax instanceof ChangeValueSyntax) {
+            return negative ? BrainFCommand.SUBTRACT : BrainFCommand.ADD;
+        }
+        if (syntax instanceof ChangeValueSyntax) {
+            return negative ? BrainFCommand.PREVIOUS : BrainFCommand.NEXT;
+        }
+        if (syntax instanceof ReadSyntax) {
+            return BrainFCommand.READ;
+        }
+        if (syntax instanceof PrintSyntax) {
+            return BrainFCommand.WRITE;
+        }
+        if (syntax instanceof GroovySyntax) {
+            return syntax.toString()
+        }
+        return null
+    }
+
+    private static void add(Map<String, Integer> map, String key) {
+        map.merge(key, 1, MERGE_FUNCTION)
+    }
+
+    @Override
+    void beforeWhile(MemoryCell cell, BrainfuckRunner runner) {
+        add(actionsPerCommand, BrainFCommand.WHILE.name())
+    }
+
+    @Override
+    void beforeEndWhile(MemoryCell cell, BrainfuckRunner runner) {
+        add(actionsPerCommand, BrainFCommand.END_WHILE.name())
     }
 
     @Override
@@ -46,7 +79,9 @@ class CommandCountAnalysis implements BrainfuckAnalyzer {
         this.times[codeIndex]++
         String key = syntaxKey(command);
         int times = command instanceof SteppableSyntax ? (command as SteppableSyntax).getTimes() : 1;
-        actionsPerCommand.merge(key, times, MERGE_FUNCTION)
+        if (key != null) {
+            actionsPerCommand.merge(key, times, MERGE_FUNCTION)
+        }
     }
 
     @Override
