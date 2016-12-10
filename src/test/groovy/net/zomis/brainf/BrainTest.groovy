@@ -220,9 +220,10 @@ public class BrainTest extends BrainfuckTest {
         assert brain.step() instanceof ChangeValueSyntax
         assert brain.run(new StepOutStrategy()) == 0
         assert brain.step() instanceof SyntaxTree
-        assert brain.run(new StepOutStrategy()) == 15
+        assert brain.run(new StepOutStrategy())
         assert brain.memory.getMemory(1) == 3
         assert (brain.code.currentSyntax as ChangeValueSyntax).value == -1
+        assert brain.isOnRootTree()
     }
 
     static String fizzBuzzString(int max) {
