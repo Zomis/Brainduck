@@ -98,40 +98,55 @@ class BrainfuckRunner {
         def currentSyntax = code.currentSyntax
         println "Goto next after " + currentSyntax
         if (currentSyntax instanceof SyntaxTree) {
-            listener.beforeWhile(this)
-            listener.beforePerform(this, currentSyntax)
-            // enter syntax tree if condition is ok, otherwise skip to next syntax
-            if (memory.value != 0) {
-                println "Entering syntax tree " + currentSyntax
-                code.enteredTrees.push(new SyntaxTreePosition(currentSyntax as SyntaxTree))
-            } else {
-                println "Loop zero at pos $memory.memoryIndex, skipping entering."
-                code.getCurrentTree().stepForward()
-            }
-            listener.afterWhile(this)
-        } else if (code.syntaxIndex == code.currentTree.size() - 1) {
-            println "Last step in syntax."
-            // go to parent syntax tree or reset syntax tree
-            if (!isOnRootTree()) {
-                listener.beforeEndWhile(this)
-            }
-            if (memory.value != 0 && !isOnRootTree()) {
-                code.enteredTrees.peek().restart()
-            } else {
-                def previousTree = code.enteredTrees.pop()
-                listener.afterPerform(this, previousTree.tree)
-                if (!code.enteredTrees.isEmpty()) {
-                    code.getCurrentTree().stepForward() // Go past the loop.
-                }
-            }
-            if (!isOnRootTree()) {
-                listener.afterEndWhile(this)
-            }
+            enterWhile(currentSyntax)
+        } else if (currentSyntax == null || code.syntaxIndex == code.currentTree.size() - 1) {
+            endWhile()
         } else {
             println "${code.syntaxIndex} != ${code.currentTree.size() - 1}"
             // go to next
             code.getCurrentTree().stepForward()
             println "Step forward."
+        }
+    }
+
+    private void enterWhile(SyntaxTree currentSyntax) {
+        listener.beforeWhile(this)
+        listener.beforePerform(this, currentSyntax)
+        // enter syntax tree if condition is ok, otherwise skip to next syntax
+        if (memory.value != 0) {
+            println "Entering syntax tree " + currentSyntax
+            code.enteredTrees.push(new SyntaxTreePosition(currentSyntax as SyntaxTree))
+        } else {
+            println "Loop zero at pos $memory.memoryIndex, skipping entering."
+            code.getCurrentTree().stepForward()
+        }
+        listener.afterWhile(this)
+    }
+
+    private void endWhile() {
+        boolean anotherEndWhile = false;
+        println "Last step in syntax. Depth ${code.enteredTrees.size()}"
+        // go to parent syntax tree or reset syntax tree
+        if (!isOnRootTree()) {
+            listener.beforeEndWhile(this)
+        }
+        if (memory.value != 0 && !isOnRootTree()) {
+            code.enteredTrees.peek().restart()
+        } else {
+            def previousTree = code.enteredTrees.pop()
+            listener.afterPerform(this, previousTree.tree)
+            if (!code.enteredTrees.isEmpty()) {
+                code.currentTree.stepForward() // Go past the loop.
+                if (code.currentSyntax == null) {
+                    anotherEndWhile = true;
+                }
+            }
+        }
+        if (!isOnRootTree()) {
+            listener.afterEndWhile(this)
+        }
+        if (anotherEndWhile) {
+            endWhile()
         }
     }
 
