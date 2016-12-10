@@ -50,11 +50,24 @@ class ReadWriteAnalysis implements BrainfuckAnalyzer {
             cell.data(this, ReadWriteData).writeCount += times;
             maxMemory = Math.max(maxMemory, runner.memory.memoryIndex)
         }
-        if (cmd instanceof SyntaxTree || cmd instanceof PrintSyntax) {
-            // TODO: I don't think this handles END_WHILE at the moment
-            cell.data(this, ReadWriteData).readCount++
-            maxMemory = Math.max(maxMemory, runner.memory.memoryIndex)
+        if (cmd instanceof PrintSyntax) {
+            markCellRead(cell, runner);
         }
+    }
+
+    @Override
+    void beforeEndWhile(MemoryCell cell, BrainfuckRunner runner) {
+        markCellRead(cell, runner);
+    }
+
+    @Override
+    void beforeWhile(MemoryCell cell, BrainfuckRunner runner) {
+        markCellRead(cell, runner);
+    }
+
+    private void markCellRead(MemoryCell cell, BrainfuckRunner runner) {
+        cell.data(this, ReadWriteData).readCount++
+        maxMemory = Math.max(maxMemory, runner.memory.memoryIndex)
     }
 
     @Override
