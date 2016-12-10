@@ -55,6 +55,9 @@ public class Parser {
                     }
                     if (bft.command == BrainFCommand.END_WHILE) {
                         SyntaxTree loopSyntax = depth.pop();
+                        if (depth.isEmpty()) {
+                            throw new BrainfuckCompilationException("No more loops to finish.");
+                        }
                         SyntaxTree current = depth.peek();
                         current.getTokens().addAll(inner.getTokens());
                         current.syntax.add(loopSyntax);

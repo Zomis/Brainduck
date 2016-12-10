@@ -149,11 +149,9 @@ public class BrainTest extends BrainfuckTest {
         assert output.toString() == "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     }
 
-    @Test
+    @Test(expected = BrainfuckCompilationException)
     public void unbalanced1() {
         useCode("++[->+<] ]")
-        analyze(new WhileLoopAnalysis())
-        assert !analyze.get(WhileLoopAnalysis).bracketsMatching
     }
 
     @Test
