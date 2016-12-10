@@ -24,12 +24,15 @@ class StepContinueStrategy implements RunStrategy {
         startingEnteredTreesCount = runner.code.enteredTrees.size()
         if (!runner.isOnRootTree()) {
             currentLoop = runner.code.getCurrentTree().tree
+        } else if (runner.code.currentSyntax instanceof SyntaxTree) {
+            currentLoop = runner.code.currentSyntax as SyntaxTree
         }
         def pos = runner.code.getCurrentTree().iteratorCopy();
         while (pos.hasNext()) {
             Syntax syntax = pos.next();
             if (syntax instanceof SyntaxTree) {
                 nextLoop = syntax;
+                break;
             }
         }
         performedOnce = false
@@ -47,11 +50,12 @@ class StepContinueStrategy implements RunStrategy {
         if (currentLoop) {
             // if inside loop, either end the loop or go to beginning of loop
             boolean loopHasEnded = runner.code.enteredTrees.size() < startingEnteredTreesCount
-            boolean startOfLoop = runner.code.currentTree.currentIndex == 0
+            boolean startOfLoop = runner.code.currentTree.tree == this.currentLoop &&
+                    runner.code.currentTree.currentIndex == 0
             boolean perform = !loopHasEnded && !startOfLoop
             if (!performedOnce) {
                 perform = true
-                performedOnce = true
+                performedOnce = !(runner.code.currentSyntax instanceof SyntaxTree) // Perform again if started on WHILE
             }
             if (perform) {
                 runner.runSyntax()
