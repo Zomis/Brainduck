@@ -168,7 +168,7 @@ public class BrainTest extends BrainfuckTest {
 
     @Test
     public void fizzBuzzMin() {
-        // useCode(BrainfuckRunner.classLoader.getResource('fizzbuzz-min.bf').text);
+        useCode(BrainfuckRunner.classLoader.getResource('fizzbuzz-min.bf').text);
         analyzeAll()
         assert analyze.get(CommandCountAnalysis).getActionsForCommand(BrainFCommand.WRITE.name()) == output.length()
         assert output.toString() == fizzBuzzString(100)
