@@ -10,6 +10,7 @@ import net.zomis.brainf.model.BrainfuckRunner
 import net.zomis.brainf.model.CodeRetriever
 import net.zomis.brainf.model.ListCode
 import net.zomis.brainf.model.SubCommand
+import net.zomis.brainf.model.ast.tree.SyntaxTree
 import net.zomis.brainf.model.classic.BrainFCommand
 import net.zomis.brainf.model.classic.BrainfuckConverter
 import net.zomis.brainf.model.input.QueueInput
@@ -119,16 +120,28 @@ class SpecialDelegate {
     }
 
     void loop(String tagName) {
-        int index = findCode(IS_WHILE_START, -1)
+        if (runner.isOnRootTree()) {
+            throw new IllegalStateException("Not inside a loop.");
+        }
+        def tree = runner.code.currentTree.tree;
+        int index = tree.tokens.get(0).info.position
         groovyContext.addLoopName(index, tagName)
     }
 
     void lastLoop(String tagName) {
-        int endIndex = findCode(IS_WHILE_END, -1)
-        int startIndex = runner.code.findMatching(endIndex, BrainFCommand.WHILE, BrainFCommand.END_WHILE, -1)
-        groovyContext.addLoopName(startIndex, tagName)
+        def iterator = runner.code.currentTree.iteratorCopy();
+        while (iterator.hasPrevious()) {
+            def syntax = iterator.previous();
+            if (syntax instanceof SyntaxTree) {
+                int startIndex = syntax.tokens.get(0).info.position
+                groovyContext.addLoopName(startIndex, tagName)
+                return
+            }
+        }
+        throw new IllegalStateException("There is no lastLoop.");
     }
 
+    @Deprecated
     int findCode(Predicate<BrainfuckCommand> predicate, int delta) {
         int index = runner.code.commandIndex
         while (true) {
