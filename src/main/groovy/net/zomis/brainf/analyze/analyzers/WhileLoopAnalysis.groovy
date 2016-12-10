@@ -6,9 +6,7 @@ import net.zomis.brainf.analyze.CellTagger
 import net.zomis.brainf.analyze.IndexCounter
 import net.zomis.brainf.analyze.IndexCounters
 import net.zomis.brainf.analyze.MemoryCell
-import net.zomis.brainf.model.BrainfuckCommand
 import net.zomis.brainf.model.BrainfuckRunner
-import net.zomis.brainf.model.classic.BrainFCommand
 
 import java.util.function.Function
 import java.util.stream.Stream
@@ -31,8 +29,6 @@ class WhileLoopAnalysis implements BrainfuckAnalyzer {
     }
 
     private final IndexCounters whileLoopCounts = new IndexCounters()
-    private int bracketsOpened
-    private int bracketsClosed
 
     IndexCounters getWhileLoopCounts() {
         return this.whileLoopCounts
@@ -44,24 +40,8 @@ class WhileLoopAnalysis implements BrainfuckAnalyzer {
     }
 
     @Override
-    void beforeStart(BrainfuckRunner runner) {
-        for (int i = 0; i < runner.code.commandCount; i++) {
-            BrainfuckCommand command = runner.code.getCommandAt(i)
-            if (command == BrainFCommand.WHILE) {
-                bracketsOpened++
-            }
-            if (command == BrainFCommand.END_WHILE) {
-                bracketsClosed++
-            }
-        }
-    }
-
-    @Override
     void print() {
         println 'While loops analysis'
-        if (bracketsOpened != bracketsClosed) {
-            println "ERROR: Number of starting brackets ($bracketsOpened) mismatch number of ending brackets ($bracketsClosed)"
-        }
         whileLoopCounts.sorted().forEach({
             Map.Entry entry = it
             println "$entry.key $entry.value"
@@ -97,18 +77,6 @@ class WhileLoopAnalysis implements BrainfuckAnalyzer {
         } else {
             cell.data(this, CellLoops).whileLoopContinue.add(startIndex)
         }
-    }
-
-    int getBracketsOpened() {
-        this.@bracketsOpened
-    }
-
-    int getBracketsClosed() {
-        this.@bracketsClosed
-    }
-
-    boolean isBracketsMatching() {
-        this.bracketsClosed == this.bracketsOpened
     }
 
 }

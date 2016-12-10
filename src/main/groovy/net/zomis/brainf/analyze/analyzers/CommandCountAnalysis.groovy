@@ -87,11 +87,6 @@ class CommandCountAnalysis implements BrainfuckAnalyzer {
     @Override
     void after(Brainalyze analyze, BrainfuckRunner runner) {
         addCodeCommands(runner.code.rootTree)
-        int commandCount = runner.code.commandCount
-        for (int i = 0; i < commandCount; i++) {
-            String command = runner.code.getCommandAt(i)
-            codeCommands.merge(command, 1, MERGE_FUNCTION)
-        }
     }
 
     void addCodeCommands(SyntaxTree tree) {

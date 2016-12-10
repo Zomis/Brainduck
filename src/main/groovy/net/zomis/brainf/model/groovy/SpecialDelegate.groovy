@@ -163,22 +163,6 @@ class SpecialDelegate {
         throw new IllegalStateException("There is no lastLoop.");
     }
 
-    @Deprecated
-    int findCode(Predicate<BrainfuckCommand> predicate, int delta) {
-        int index = runner.code.commandIndex
-        while (true) {
-            BrainfuckCommand command = runner.code.getCommandAt(index)
-            if (command == null) {
-                throw new IllegalStateException('command out of range: ' + index)
-            }
-            if (predicate.test(command)) {
-                break
-            }
-            index += delta
-        }
-        index
-    }
-
     def memory(int count) {
         int index = runner.memory.memoryIndex
         [offset: {int forward ->

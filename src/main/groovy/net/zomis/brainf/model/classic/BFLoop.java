@@ -17,11 +17,11 @@ public class BFLoop implements BrainfuckCommand {
     public void perform(BrainfuckRunner runner) {
         if (i == 1) {
             if (runner.getMemory().getValue() == 0) {
-                runner.getCode().gotoMatching(BrainFCommand.END_WHILE, BrainFCommand.WHILE, 1);
+                throw new UnsupportedOperationException();
             }
         } else if (i == -1) {
             if (runner.getMemory().getValue() != 0) {
-                runner.getCode().gotoMatching(BrainFCommand.WHILE, BrainFCommand.END_WHILE, -1);
+                throw new UnsupportedOperationException();
             }
         } else {
             throw new IllegalStateException("Invalid i: " + i);

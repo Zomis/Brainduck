@@ -46,7 +46,6 @@ public class BFTask extends Task<Void> {
                         updateMessage("Cancelled!");
                         return false;
                     }
-                    int oldCommandIndex = runner.getCode().getCommandIndex();
                     try {
                         boolean result = strategy.next(runner);
                         runTimes++;
@@ -58,7 +57,6 @@ public class BFTask extends Task<Void> {
                         return result;
                     } catch (AssertionError ex) {
                         ex.printStackTrace();
-                        // TODO: Fix runner.getCode().setCommandIndex(oldCommandIndex);
                         return false;
                     }
                 }
