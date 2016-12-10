@@ -10,6 +10,8 @@ import net.zomis.brainf.model.BrainfuckRunner
 import net.zomis.brainf.model.CodeRetriever
 import net.zomis.brainf.model.ListCode
 import net.zomis.brainf.model.SubCommand
+import net.zomis.brainf.model.ast.Lexer
+import net.zomis.brainf.model.ast.tree.Parser
 import net.zomis.brainf.model.ast.tree.Syntax
 import net.zomis.brainf.model.ast.tree.SyntaxTree
 import net.zomis.brainf.model.classic.BrainFCommand
@@ -238,10 +240,11 @@ class SpecialDelegate {
     void include(String name) {
         URL url = findFile(name)
 
-        CodeRetriever commands = ListCode.create(url.text)
-        println 'Subcommand: ' + commands
+        String code = url.text
+        SyntaxTree tree = new Parser(groovyContext).parse(Lexer.tokenize(code))
+        println 'Subcommand: ' + tree
 
-        def command = new SubCommand(commands)
+        def command = new SubCommand(tree)
         command.perform(runner)
     }
 
