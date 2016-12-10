@@ -9,6 +9,7 @@ import net.zomis.brainf.analyze.analyzers.MemoryValues
 import net.zomis.brainf.analyze.analyzers.ReadWriteAnalysis
 import net.zomis.brainf.analyze.analyzers.WhileLoopAnalysis
 import net.zomis.brainf.model.BrainF
+import net.zomis.brainf.model.ast.BFToken
 import net.zomis.brainf.model.ast.tree.ChangePointerSyntax
 import net.zomis.brainf.model.ast.tree.ChangeValueSyntax
 import net.zomis.brainf.model.ast.tree.LoopInstructionSyntax
@@ -172,6 +173,20 @@ public class BrainTest extends BrainfuckTest {
         analyzeAll()
         assert analyze.get(CommandCountAnalysis).getActionsForCommand(BrainFCommand.WRITE.name()) == output.length()
         assert output.toString() == fizzBuzzString(100)
+    }
+
+    @Test
+    public void correctTokens() {
+        useCode('>.<+++.[-.]')
+        def add = brain.code.rootTree.syntax[3]
+        assert (add as ChangeValueSyntax).value == 3
+        assert add.tokens.stream().allMatch({ (it as BFToken).command == BrainFCommand.ADD })
+        assert add.tokens.size() == 3
+        assert add.tokens[0].info.position == 3
+        assert add.tokens[1].info.position == 4
+        assert add.tokens[2].info.position == 5
+        assert brain.code.rootTree.syntax[4].tokens.size() == 1
+        assert brain.code.rootTree.syntax[4].tokens[0].info.position == 6
     }
 
     @Test

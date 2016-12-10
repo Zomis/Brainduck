@@ -38,12 +38,13 @@ public class Parser {
             }
             if (tokensEqual(token, lastToken)) {
                 repeatedTokens++;
-                awaitingTokens.add(token);
+                awaitingTokens.add(lastToken);
             } else {
                 Syntax syntax = createSyntax(lastToken, repeatedTokens, awaitingTokens);
                 repeatedTokens = 1;
                 if (syntax != null) {
                     inner.syntax.add(syntax);
+                    awaitingTokens.clear();
                 }
 
                 if (token instanceof BFToken) {
