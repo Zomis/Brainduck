@@ -59,6 +59,30 @@ class AnalyzeFactory {
             MemoryCell cell = analyze.cell(runner.memory.memoryIndex)
             analyzers*.afterPerform(cell, runner, command)
         }
+
+        @Override
+        void beforeEndWhile(BrainfuckRunner runner) {
+            MemoryCell cell = analyze.cell(runner.memory.memoryIndex)
+            analyzers*.beforeEndWhile(cell, runner)
+        }
+
+        @Override
+        void beforeWhile(BrainfuckRunner runner) {
+            MemoryCell cell = analyze.cell(runner.memory.memoryIndex)
+            analyzers*.beforeWhile(cell, runner)
+        }
+
+        @Override
+        void afterEndWhile(BrainfuckRunner runner) {
+            MemoryCell cell = analyze.cell(runner.memory.memoryIndex)
+            analyzers*.afterEndWhile(cell, runner)
+        }
+
+        @Override
+        void afterWhile(BrainfuckRunner runner) {
+            MemoryCell cell = analyze.cell(runner.memory.memoryIndex)
+            analyzers*.afterWhile(cell, runner)
+        }
     }
 
 }

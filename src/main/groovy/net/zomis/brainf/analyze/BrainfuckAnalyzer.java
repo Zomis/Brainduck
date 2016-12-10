@@ -14,7 +14,11 @@ public interface BrainfuckAnalyzer {
     default void print() { }
 
     default void beforePerform(MemoryCell cell, BrainfuckRunner runner, Syntax command) { }
-
     default void afterPerform(MemoryCell cell, BrainfuckRunner runner, Syntax command) { }
+
+    default void beforeWhile(MemoryCell cell, BrainfuckRunner runner) {}
+    default void afterWhile(MemoryCell cell, BrainfuckRunner runner) {}
+    default void beforeEndWhile(MemoryCell cell, BrainfuckRunner runner) {}
+    default void afterEndWhile(MemoryCell cell, BrainfuckRunner runner) {}
 
 }

@@ -39,5 +39,9 @@ class SyntaxTreePosition {
         return currentIndex
     }
 
+    public void restart() {
+        this.iterator = tree.iterator()
+        stepForward()
+    }
 
 }

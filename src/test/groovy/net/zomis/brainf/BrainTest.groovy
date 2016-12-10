@@ -138,6 +138,7 @@ public class BrainTest extends BrainfuckTest {
         analyze(new WhileLoopAnalysis())
         IndexCounters counts = analyze.get(WhileLoopAnalysis).getWhileLoopCounts();
         assert counts.size() == 1
+        // While loop at index 1 is performed once
         assert counts[1] == [1]
     }
 
