@@ -109,11 +109,11 @@ class SpecialDelegate {
     }
 
     void bf(String code) {
-        def commands = ListCode.create(new BrainfuckConverter(), code)
-        // TODO: Parse commands and create syntax tree and perform that.
-//        def subCommand = new SubCommand(commands)
-//        runner.perform(subCommand)
-        throw new UnsupportedOperationException("bf code method needs to be rewritten")
+        SyntaxTree tree = new Parser(groovyContext).parse(Lexer.tokenize(code))
+        println 'Subcommand: ' + tree
+
+        def command = new SubCommand(tree)
+        command.perform(runner)
     }
 
     private void syntaxLoopTag(Syntax syntax, String name) {
@@ -239,13 +239,8 @@ class SpecialDelegate {
 
     void include(String name) {
         URL url = findFile(name)
-
         String code = url.text
-        SyntaxTree tree = new Parser(groovyContext).parse(Lexer.tokenize(code))
-        println 'Subcommand: ' + tree
-
-        def command = new SubCommand(tree)
-        command.perform(runner)
+        bf(code)
     }
 
 }
