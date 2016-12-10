@@ -10,6 +10,7 @@ import net.zomis.brainf.model.BrainfuckRunner
 import net.zomis.brainf.model.CodeRetriever
 import net.zomis.brainf.model.ListCode
 import net.zomis.brainf.model.SubCommand
+import net.zomis.brainf.model.ast.tree.Syntax
 import net.zomis.brainf.model.ast.tree.SyntaxTree
 import net.zomis.brainf.model.classic.BrainFCommand
 import net.zomis.brainf.model.classic.BrainfuckConverter
@@ -94,8 +95,15 @@ class SpecialDelegate {
     }
 
     void nextLoop(String tagName) {
-        int index = findCode(IS_WHILE_START, 1)
-        groovyContext.addLoopName(index, tagName)
+        def iterator = runner.code.currentTree.iteratorCopy();
+        while (iterator.hasNext()) {
+            def syntax = iterator.next();
+            if (syntax instanceof SyntaxTree) {
+                syntaxLoopTag(syntax, tagName)
+                return
+            }
+        }
+        throw new IllegalStateException("There is no lastLoop.");
     }
 
     void bf(String code) {
@@ -106,17 +114,30 @@ class SpecialDelegate {
         throw new UnsupportedOperationException("bf code method needs to be rewritten")
     }
 
-    void nextLoops(String tagName) {
-        int firstIndex = findCode(IS_WHILE_START, 1)
-        int lastIndex = runner.code.findMatching(firstIndex, BrainFCommand.END_WHILE, BrainFCommand.WHILE, 1)
+    private void syntaxLoopTag(Syntax syntax, String name) {
+        int startIndex = syntax.tokens.get(0).info.position
+        groovyContext.addLoopName(startIndex, name)
+    }
 
-        while (firstIndex < lastIndex) {
-            if (IS_WHILE_START.test(runner.code.getCommandAt(firstIndex))) {
-                groovyContext.addLoopName(firstIndex, tagName)
+    private void recursiveLoopTag(SyntaxTree tree, String tagName) {
+        syntaxLoopTag(tree, tagName)
+        for (Syntax syntax : tree) {
+            if (syntax instanceof SyntaxTree) {
+                recursiveLoopTag(syntax, tagName)
             }
-            firstIndex++
         }
+    }
 
+    void nextLoops(String tagName) {
+        def iterator = runner.code.currentTree.iteratorCopy();
+        while (iterator.hasNext()) {
+            def syntax = iterator.next();
+            if (syntax instanceof SyntaxTree) {
+                recursiveLoopTag(syntax, tagName)
+                return
+            }
+        }
+        throw new IllegalStateException("There is no lastLoop.");
     }
 
     void loop(String tagName) {
@@ -133,8 +154,7 @@ class SpecialDelegate {
         while (iterator.hasPrevious()) {
             def syntax = iterator.previous();
             if (syntax instanceof SyntaxTree) {
-                int startIndex = syntax.tokens.get(0).info.position
-                groovyContext.addLoopName(startIndex, tagName)
+                syntaxLoopTag(syntax, tagName)
                 return
             }
         }
