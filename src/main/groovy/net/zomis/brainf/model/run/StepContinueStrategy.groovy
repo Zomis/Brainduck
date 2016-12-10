@@ -1,54 +1,66 @@
 package net.zomis.brainf.model.run
 
-import net.zomis.brainf.model.classic.BrainFCommand
+import net.zomis.brainf.model.ast.tree.Syntax
+import net.zomis.brainf.model.ast.tree.SyntaxTree
 import net.zomis.brainf.model.BrainfuckCommand
 import net.zomis.brainf.model.BrainfuckRunner
 
+/**
+ * Strategy for going to the first code after the next EndWhile.
+ * If no EndWhile exists, go to the next While.
+ * If also no While exists, run a single step.
+ */
 class StepContinueStrategy implements RunStrategy {
 
-    private int loopStart
-    private int loopEnd
-    private int nextLoop
+    private int startingEnteredTreesCount;
+    private SyntaxTree currentLoop;
+    private SyntaxTree nextLoop;
+
     private boolean performedOnce
     private final RunStrategy singleStep = new LimitedStepsStrategy()
 
     @Override
     boolean start(BrainfuckRunner runner) {
-        loopStart = runner.code.findMatching(BrainFCommand.WHILE,
-            BrainFCommand.END_WHILE, -1)
-        loopEnd = runner.code.findMatching(loopStart, BrainFCommand.END_WHILE,
-                BrainFCommand.WHILE, 1)
-        nextLoop = runner.code.findMatching(BrainFCommand.WHILE,
-                BrainFCommand.END_WHILE, 1)
+        startingEnteredTreesCount = runner.code.enteredTrees.size()
+        if (!runner.isOnRootTree()) {
+            currentLoop = runner.code.getCurrentTree().tree
+        }
+        def pos = runner.code.getCurrentTree().iteratorCopy();
+        while (pos.hasNext()) {
+            Syntax syntax = pos.next();
+            if (syntax instanceof SyntaxTree) {
+                nextLoop = syntax;
+            }
+        }
         performedOnce = false
-        println 'loopStart at ' + loopStart + ' and end at ' + loopEnd + ' next loop at ' + nextLoop
+        println 'loopStart with ' + currentLoop + ' and ' + nextLoop
 
         return singleStep.start(runner)
     }
 
     @Override
     boolean next(BrainfuckRunner runner) {
-        BrainfuckCommand comm = runner.getCode().getNextCommand()
-        if (comm == null) {
+        if (runner.code.isFinished()) {
             return false
         }
 
-        int codeIndex = runner.code.commandIndex
-        if (loopStart != -1 && loopEnd != -1) {
-            // if inside loop, find the correct `END_WHILE` inside this loop and go to it and one step beyond
-            boolean perform = codeIndex != loopStart + 1 && codeIndex != loopEnd + 1
+        if (currentLoop) {
+            // if inside loop, either end the loop or go to beginning of loop
+            boolean loopHasEnded = runner.code.enteredTrees.size() < startingEnteredTreesCount
+            boolean startOfLoop = runner.code.currentTree.currentIndex == 0
+            boolean perform = !loopHasEnded && !startOfLoop
             if (!performedOnce) {
                 perform = true
                 performedOnce = true
             }
             if (perform) {
-                runner.step()
+                runner.runSyntax()
             }
             return perform
-        } else if (nextLoop != -1) {
+        } else if (nextLoop) {
             // Not inside loop, go to next starting loop if there is one
-            if (codeIndex != nextLoop + 1) {
-                runner.step()
+            if (runner.code.currentSyntax != nextLoop) {
+                runner.runSyntax()
                 return true
             }
             return false

@@ -18,6 +18,10 @@ class SyntaxTreePosition {
         stepForward()
     }
 
+    public ListIterator<Syntax> iteratorCopy() {
+        return tree.iteratorAt(currentIndex);
+    }
+
     public void stepForward() {
         currentIndex = iterator.nextIndex()
         current = iterator.hasNext() ? iterator.next() : null

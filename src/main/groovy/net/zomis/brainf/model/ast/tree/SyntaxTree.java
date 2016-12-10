@@ -20,6 +20,10 @@ public class SyntaxTree extends Syntax implements Iterable<Syntax> {
         return syntax.listIterator();
     }
 
+    public ListIterator<Syntax> iteratorAt(int index) {
+        return syntax.listIterator(index);
+    }
+
     @Override
     public String toString() {
         return "SyntaxTree{" +

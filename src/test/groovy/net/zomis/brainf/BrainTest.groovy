@@ -200,17 +200,17 @@ public class BrainTest extends BrainfuckTest {
         assert brain.memory.getMemory(0) == 3
 
         brain.run(new StepContinueStrategy())
-        assert brain.code.nextCommand == BrainFCommand.NEXT
+        assert (brain.code.currentSyntax as ChangePointerSyntax).value == 1
         assert brain.memory.getMemory(0) == 2
         assert brain.memory.getMemory(1) == 1
 
         brain.run(new StepContinueStrategy())
         assert brain.memory.getMemory(0) == 1
-        assert brain.code.nextCommand == BrainFCommand.NEXT
+        assert (brain.code.currentSyntax as ChangePointerSyntax).value == 1
 
         brain.run(new StepContinueStrategy())
         assert brain.memory.getMemory(0) == 0
-        assert brain.code.nextCommand == BrainFCommand.SUBTRACT
+        assert (brain.code.currentSyntax as ChangeValueSyntax).value == -1
 
     }
 
