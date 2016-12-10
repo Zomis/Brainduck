@@ -1,5 +1,6 @@
 package net.zomis.brainf.model.ast.tree;
 
+import net.zomis.brainf.BrainfuckCompilationException;
 import net.zomis.brainf.model.ast.BFToken;
 import net.zomis.brainf.model.ast.CommentToken;
 import net.zomis.brainf.model.ast.GroovyToken;
@@ -67,6 +68,11 @@ public class Parser {
         Syntax syntax = createSyntax(lastToken, repeatedTokens, awaitingTokens);
         if (syntax != null) {
             inner.syntax.add(syntax);
+        }
+
+        if (depth.size() > 1) {
+            int tooManyStartedLoops = depth.size() - 1;
+            throw new BrainfuckCompilationException("There are " + tooManyStartedLoops + " too many started loops.");
         }
 
         return depth.pop();
