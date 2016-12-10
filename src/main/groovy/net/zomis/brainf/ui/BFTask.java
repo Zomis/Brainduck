@@ -58,7 +58,7 @@ public class BFTask extends Task<Void> {
                         return result;
                     } catch (AssertionError ex) {
                         ex.printStackTrace();
-                        runner.getCode().setCommandIndex(oldCommandIndex);
+                        // TODO: Fix runner.getCode().setCommandIndex(oldCommandIndex);
                         return false;
                     }
                 }

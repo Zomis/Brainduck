@@ -25,6 +25,7 @@ class PlusMinusOptimizer implements BrainfuckAnalyzer {
     private int pointerChange
     private int commandStart
     private int commandsUsed
+    private int lastCommandIndex
 
     @Override
     void after(Brainalyze analyze, BrainfuckRunner runner) {
@@ -41,6 +42,7 @@ class PlusMinusOptimizer implements BrainfuckAnalyzer {
 
     @Override
     void beforePerform(MemoryCell cell, BrainfuckRunner runner, Syntax command) {
+        lastCommandIndex = runner.code.commandIndex
         if (command instanceof GroovySyntax) {
             return
         }
@@ -124,7 +126,7 @@ class PlusMinusOptimizer implements BrainfuckAnalyzer {
         String shortestCode = str.toString()
         if (shortestCode.length() < this.commandsUsed) {
             this.results.add(new InspectionResult(InspectionResult.InspectionSeverity.HINT,
-                commandStart, runner.code.commandIndex,
+                commandStart, lastCommandIndex,
                 "Code is unnecessarily complicated. Can be written as '$shortestCode'"))
         }
 

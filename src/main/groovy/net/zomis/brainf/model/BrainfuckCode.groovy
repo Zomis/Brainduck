@@ -1,14 +1,15 @@
 package net.zomis.brainf.model
 
+import groovy.transform.CompileStatic
+import net.zomis.brainf.model.ast.Token
 import net.zomis.brainf.model.ast.tree.Syntax
 import net.zomis.brainf.model.ast.tree.SyntaxTree
 
+@CompileStatic
 class BrainfuckCode {
 
     @Deprecated
     CodeRetriever source
-    @Deprecated
-    int commandIndex
 
     SyntaxTree rootTree;
     private final Stack<SyntaxTreePosition> enteredTrees = new Stack<>();
@@ -48,7 +49,7 @@ class BrainfuckCode {
 
     @Deprecated
     void gotoMatching(BrainfuckCommand decrease, BrainfuckCommand increase, int direction) {
-        commandIndex = findMatching(decrease, increase, direction);
+        throw new RuntimeException();
     }
 
     @Deprecated
@@ -90,7 +91,6 @@ class BrainfuckCode {
 
     @Deprecated
     void resetIndex() {
-        commandIndex = 0
         enteredTrees.clear()
         enteredTrees.push(new SyntaxTreePosition(rootTree))
     }
@@ -116,6 +116,12 @@ class BrainfuckCode {
     @Deprecated
     BrainfuckCommand getCommandAt(int index) {
         source?.getCommand(index)
+    }
+
+    public int getCommandIndex() {
+        Syntax syntax = getCurrentSyntax();
+        Token token = syntax.tokens.get(positionInSyntax);
+        return token.info.position;
     }
 
 }

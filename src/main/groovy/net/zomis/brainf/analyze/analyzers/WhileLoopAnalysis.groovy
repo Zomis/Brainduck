@@ -1,5 +1,6 @@
 package net.zomis.brainf.analyze.analyzers
 
+import groovy.transform.CompileStatic
 import net.zomis.brainf.analyze.BrainfuckAnalyzer
 import net.zomis.brainf.analyze.CellTagger
 import net.zomis.brainf.analyze.IndexCounter
@@ -7,12 +8,12 @@ import net.zomis.brainf.analyze.IndexCounters
 import net.zomis.brainf.analyze.MemoryCell
 import net.zomis.brainf.model.BrainfuckCommand
 import net.zomis.brainf.model.BrainfuckRunner
-import net.zomis.brainf.model.ast.tree.Syntax
 import net.zomis.brainf.model.classic.BrainFCommand
 
 import java.util.function.Function
 import java.util.stream.Stream
 
+@CompileStatic
 class WhileLoopAnalysis implements BrainfuckAnalyzer {
 
     public static class CellLoops implements CellTagger {
@@ -61,40 +62,40 @@ class WhileLoopAnalysis implements BrainfuckAnalyzer {
         if (bracketsOpened != bracketsClosed) {
             println "ERROR: Number of starting brackets ($bracketsOpened) mismatch number of ending brackets ($bracketsClosed)"
         }
-        whileLoopCounts.sorted().forEach({entry ->
+        whileLoopCounts.sorted().forEach({
+            Map.Entry entry = it
             println "$entry.key $entry.value"
         })
         println()
     }
 
     @Override
-    void beforePerform(MemoryCell cell, BrainfuckRunner runner, Syntax command) {
-        int codeIndex = runner.code.commandIndex
-        if (command == BrainFCommand.WHILE) {
-            IndexCounter counter = whileLoopCounts.getOrCreate(runner.code.commandIndex)
-            int current = runner.memory.value
-            if (current == 0) {
-                counter.add(0)
-            } else {
-                whileLoopCounts.begin(counter)
-                cell.data(this, CellLoops).whileLoopStart.add(codeIndex)
-            }
+    void beforeWhile(MemoryCell cell, BrainfuckRunner runner) {
+        int commandIndex = runner.code.commandIndex;
+        IndexCounter counter = whileLoopCounts.getOrCreate(commandIndex)
+        int current = runner.memory.value
+        if (current == 0) {
+            counter.add(0)
+        } else {
+            whileLoopCounts.begin(counter)
+            cell.data(this, CellLoops).whileLoopStart.add(commandIndex)
         }
+    }
 
-        if (command == BrainFCommand.END_WHILE) {
-            IndexCounter recent = whileLoopCounts.recent()
-            if (recent == null) {
-                return
-            }
-            recent.increase()
-            int startIndex = whileLoopCounts.recent().forIndex
-            int current = runner.memory.value
-            if (current == 0) {
-                whileLoopCounts.finishLast()
-                cell.data(this, CellLoops).whileLoopEnd.add(startIndex)
-            } else {
-                cell.data(this, CellLoops).whileLoopContinue.add(startIndex)
-            }
+    @Override
+    void beforeEndWhile(MemoryCell cell, BrainfuckRunner runner) {
+        IndexCounter recent = whileLoopCounts.recent()
+        if (recent == null) {
+            return
+        }
+        recent.increase()
+        int startIndex = whileLoopCounts.recent().forIndex
+        int current = runner.memory.value
+        if (current == 0) {
+            whileLoopCounts.finishLast()
+            cell.data(this, CellLoops).whileLoopEnd.add(startIndex)
+        } else {
+            cell.data(this, CellLoops).whileLoopContinue.add(startIndex)
         }
     }
 

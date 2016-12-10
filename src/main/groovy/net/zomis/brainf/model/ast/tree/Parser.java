@@ -27,6 +27,7 @@ public class Parser {
         depth.add(inner);
 
         Token lastToken = null;
+        List<Token> awaitingTokens = new ArrayList<>();
 
         int repeatedTokens = 1;
         for (Token token : tokens) {
@@ -36,10 +37,9 @@ public class Parser {
             }
             if (tokensEqual(token, lastToken)) {
                 repeatedTokens++;
-//            } else if (tokensOpposite(token, lastToken)) {
-//                repeatedTokens--;
+                awaitingTokens.add(token);
             } else {
-                Syntax syntax = createSyntax(lastToken, repeatedTokens);
+                Syntax syntax = createSyntax(lastToken, repeatedTokens, awaitingTokens);
                 repeatedTokens = 1;
                 if (syntax != null) {
                     inner.syntax.add(syntax);
@@ -64,12 +64,21 @@ public class Parser {
             lastToken = token;
         }
 
-        Syntax syntax = createSyntax(lastToken, repeatedTokens);
+        Syntax syntax = createSyntax(lastToken, repeatedTokens, awaitingTokens);
         if (syntax != null) {
             inner.syntax.add(syntax);
         }
 
         return depth.pop();
+    }
+
+    private Syntax createSyntax(Token token, int repeatedTokens, List<Token> awaitingTokens) {
+        Syntax syntax = createSyntax(token, repeatedTokens);
+        if (syntax != null) {
+            syntax.getTokens().addAll(awaitingTokens);
+            syntax.getTokens().add(token);
+        }
+        return syntax;
     }
 
     private Syntax createSyntax(Token token, int repeatedTokens) {
