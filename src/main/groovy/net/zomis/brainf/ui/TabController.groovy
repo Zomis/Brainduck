@@ -18,6 +18,8 @@ import net.zomis.brainf.analyze.analyzers.CodeCellRelationAnalysis
 import net.zomis.brainf.model.BrainF
 import net.zomis.brainf.model.ListCode
 import net.zomis.brainf.model.BrainfuckRunner
+import net.zomis.brainf.model.ast.Lexer
+import net.zomis.brainf.model.ast.tree.Parser
 import net.zomis.brainf.model.groovy.GroovyBFContext
 import net.zomis.brainf.model.groovy.GroovyListener
 import net.zomis.brainf.model.groovy.GroovySupportConverter
@@ -133,6 +135,7 @@ class TabController implements Initializable {
             codeModified = false
             converter = ListCode.newGroovyConverter();
             brain.code.setSource(ListCode.create(converter, codeArea.text));
+            brain.code.rootTree = new Parser(converter.groovyContext).parse(Lexer.tokenize(codeArea.text))
             brain.setListener(new GroovyListener(converter.groovyContext))
             output.text = ''
             brain.reset();
@@ -152,7 +155,7 @@ class TabController implements Initializable {
     }
 
     void run(RunStrategy strategy) {
-        if (brain.code.getNextCommand() == null) {
+        if (brain.code.isFinished()) {
             brain.reset();
             output.text = ''
             inputQueue.clear()

@@ -89,10 +89,11 @@ class BrainfuckCode {
         index
     }
 
-    @Deprecated
     void resetIndex() {
         enteredTrees.clear()
-        enteredTrees.push(new SyntaxTreePosition(rootTree))
+        if (rootTree != null) {
+            enteredTrees.push(new SyntaxTreePosition(rootTree))
+        }
     }
 
     boolean hasMoreCommands() {
