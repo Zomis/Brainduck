@@ -108,9 +108,9 @@ class BrainfuckCode {
         // source.getCommand(commandIndex)
     }
 
-    @Deprecated
     int getCommandCount() {
-        source.capacity()
+        def lastToken = rootTree.tokens.last();
+        return lastToken.info.position + lastToken.info.length
     }
 
     @Deprecated
@@ -119,6 +119,10 @@ class BrainfuckCode {
     }
 
     public int getCommandIndex() {
+        if (enteredTrees.isEmpty()) {
+            // No more commands to run so we are finished
+            return commandCount;
+        }
         Syntax syntax = getCurrentSyntax();
         Token token = syntax.tokens.get(positionInSyntax);
         return token.info.position;

@@ -303,8 +303,11 @@ $ bf '+' * 3
 
     @Test
     public void simpleCommands() {
-        useCode("+>++>+++<")
+        String code = "+>++>+++<";
+        useCode(code)
+        assert brain.code.commandIndex == 0
         brain.run(new UntilEndStrategy());
+        assert brain.code.commandCount == code.length()
         assert brain.code.commandCount == brain.code.commandIndex
         assert 1 == brain.memory.memoryIndex
         assert 2 == brain.memory.value
