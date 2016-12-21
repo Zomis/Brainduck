@@ -1,12 +1,10 @@
 package net.zomis.brainf.model.groovy;
 
-import net.zomis.brainf.model.BrainfuckCommand;
 import net.zomis.brainf.model.BrainfuckListener;
 import net.zomis.brainf.model.BrainfuckRunner;
 import net.zomis.brainf.model.ast.tree.ChangePointerSyntax;
 import net.zomis.brainf.model.ast.tree.ChangeValueSyntax;
 import net.zomis.brainf.model.ast.tree.Syntax;
-import net.zomis.brainf.model.classic.BrainFCommand;
 
 public class GroovyListener implements BrainfuckListener {
 

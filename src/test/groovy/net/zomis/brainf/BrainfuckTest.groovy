@@ -54,6 +54,10 @@ class BrainfuckTest {
         analyze(BrainfuckAnalyzers.availableAnalyzers)
     }
 
+    void useFile(String fileName) {
+        useCode(getClass().getResource(fileName).text)
+    }
+
     void useCode(String code) {
         source.addCommands(code)
         brain.code.rootTree = new Parser(context).parse(Lexer.tokenize(code))
