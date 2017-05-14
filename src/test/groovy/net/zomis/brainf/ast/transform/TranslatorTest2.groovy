@@ -5,6 +5,7 @@ import net.zomis.brainf.BrainfuckTest
 import net.zomis.brainf.model.ast.transform.OutSyntax
 import net.zomis.brainf.model.ast.transform.Translator
 import net.zomis.brainf.model.ast.tree.SyntaxTree
+import org.junit.Ignore
 import org.junit.Test
 
 @CompileStatic
@@ -13,6 +14,7 @@ class TranslatorTest2 extends BrainfuckTest {
     SyntaxTree result;
 
     @Test
+    @Ignore
     public void printHelloWorldNoLoop() {
         useFile('helloWorldNoLoop.bf');
         translate()
@@ -25,11 +27,13 @@ class TranslatorTest2 extends BrainfuckTest {
     }
 
     @Test
+    @Ignore
     public void printHelloWorldOneLoop() {
         assert false
     }
 
     @Test
+    @Ignore
     public void printHelloWorldShortest() {
         assert false
     }
