@@ -71,6 +71,9 @@ class BrainfuckCode {
             return commandCount;
         }
         Syntax syntax = getCurrentSyntax();
+        if (syntax == null) {
+            return commandCount;
+        }
         Token token = syntax.tokens.get(positionInSyntax);
         return token.info.position;
     }

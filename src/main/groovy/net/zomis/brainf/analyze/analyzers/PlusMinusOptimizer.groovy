@@ -13,6 +13,7 @@ import net.zomis.brainf.model.ast.tree.CommentSyntax
 import net.zomis.brainf.model.ast.tree.GroovySyntax
 import net.zomis.brainf.model.ast.tree.SteppableSyntax
 import net.zomis.brainf.model.ast.tree.Syntax
+import net.zomis.brainf.model.ast.tree.SyntaxTree
 import net.zomis.brainf.model.classic.BrainFCommand
 
 @CompileStatic
@@ -53,13 +54,28 @@ class PlusMinusOptimizer implements BrainfuckAnalyzer {
         if (command instanceof ChangePointerSyntax) {
             pointerMove((command as ChangePointerSyntax).getValue());
             commandsUsed += commandCount;
-            return
-        }
-        if (command instanceof ChangeValueSyntax) {
+        } else if (command instanceof ChangeValueSyntax) {
             valueChange((command as ChangeValueSyntax).getValue());
             commandsUsed += commandCount;
-            return
+        } else {
+            finishAndReset(runner)
         }
+    }
+
+    @Override
+    void afterPerform(MemoryCell cell, BrainfuckRunner runner, Syntax command) {
+        if (command instanceof SyntaxTree) {
+            finishAndReset(runner)
+        }
+    }
+
+    @Override
+    void afterEndWhile(MemoryCell cell, BrainfuckRunner runner) {
+        finishAndReset(runner)
+    }
+
+    @Override
+    void afterWhile(MemoryCell cell, BrainfuckRunner runner) {
         finishAndReset(runner)
     }
 
@@ -133,7 +149,7 @@ class PlusMinusOptimizer implements BrainfuckAnalyzer {
         changesLeft.clear()
         changesRight.clear()
         pointerChange = 0
-        commandStart = 0
+        commandStart = runner.code.getCommandIndex()
         commandsUsed = 0
     }
 
