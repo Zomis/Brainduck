@@ -6,6 +6,7 @@ import net.zomis.brainf.analyze.MemoryCell
 import net.zomis.brainf.model.BrainfuckRunner
 import net.zomis.brainf.model.ast.tree.ChangePointerSyntax
 import net.zomis.brainf.model.ast.tree.ChangeValueSyntax
+import net.zomis.brainf.model.ast.tree.CommentSyntax
 import net.zomis.brainf.model.ast.tree.GroovySyntax
 import net.zomis.brainf.model.ast.tree.PrintSyntax
 import net.zomis.brainf.model.ast.tree.ReadSyntax
@@ -103,7 +104,7 @@ class CommandCountAnalysis implements BrainfuckAnalyzer {
             } else if (syntax instanceof ChangeValueSyntax) {
                 String key = value < 0 ? BrainFCommand.SUBTRACT.name() : BrainFCommand.ADD.name();
                 codeCommands.merge(key, times, MERGE_FUNCTION)
-            } else {
+            } else if (!(syntax instanceof CommentSyntax)) {
                 codeCommands.merge(syntax.toString(), times, MERGE_FUNCTION)
             }
         }
