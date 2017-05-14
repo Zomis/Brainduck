@@ -5,7 +5,12 @@ import net.zomis.brainf.analyze.BrainfuckAnalyzer
 import net.zomis.brainf.analyze.MemoryCell
 import net.zomis.brainf.model.BrainfuckCommand
 import net.zomis.brainf.model.BrainfuckRunner
+import net.zomis.brainf.model.ast.BFToken
+import net.zomis.brainf.model.ast.Token
+import net.zomis.brainf.model.ast.tree.ChangePointerSyntax
+import net.zomis.brainf.model.ast.tree.ChangeValueSyntax
 import net.zomis.brainf.model.ast.tree.CommentSyntax
+import net.zomis.brainf.model.ast.tree.SteppableSyntax
 import net.zomis.brainf.model.ast.tree.Syntax
 import net.zomis.brainf.model.classic.BrainFCommand
 
@@ -53,8 +58,31 @@ class CodeCellRelationAnalysis implements BrainfuckAnalyzer {
         }
         int codeIndex = runner.code.commandIndex
         int cellIndex = runner.memory.memoryIndex
-        add(cellsToCode, cellIndex, codeIndex)
-        add(codeToCells, codeIndex, cellIndex)
+
+        if (command instanceof ChangeValueSyntax) {
+            for (Token token : command.getTokens()) {
+                if (token instanceof BFToken) {
+                    codeIndex = token.info.position
+                    add(cellsToCode, cellIndex, codeIndex)
+                    add(codeToCells, codeIndex, cellIndex)
+                }
+            }
+        } else if (command instanceof ChangePointerSyntax) {
+            // '<< << << <<' should be one command
+            int offset = 0;
+            for (Token token : command.getTokens()) {
+                if (token instanceof BFToken) {
+                    codeIndex = token.info.position
+                    int diff = (token as BFToken).command == BrainFCommand.NEXT ? 1 : -1;
+                    add(cellsToCode, cellIndex + offset, codeIndex)
+                    add(codeToCells, codeIndex, cellIndex + offset)
+                    offset += diff
+                }
+            }
+        } else {
+            add(cellsToCode, cellIndex, codeIndex)
+            add(codeToCells, codeIndex, cellIndex)
+        }
     }
 
     @Override

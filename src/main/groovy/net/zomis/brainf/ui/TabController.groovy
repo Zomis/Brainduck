@@ -74,12 +74,12 @@ class TabController implements Initializable {
         memoryList.selectionModel.selectionMode = SelectionMode.MULTIPLE
         memoryList.selectionModel.selectedIndices.addListener(new ListChangeListener<Integer>() {
             @Override
-            void onChanged(ListChangeListener.Change<? extends Integer> c) {
+            void onChanged(ListChangeListener.Change<? extends Integer> change) {
                 if (analyze == null || !memoryListUpdate) {
                     return
                 }
-                println "Memory List Selection Change: $c changed to $c.list class ${c.getClass()}"
-                styleController.highlightCodeIndexes = analyze?.get(CodeCellRelationAnalysis)?.codeAccessedBy(c.list)
+                println "Memory List Selection Change: $change changed to $change.list class ${change.getClass()}"
+                styleController.highlightCodeIndexes = analyze?.get(CodeCellRelationAnalysis)?.codeAccessedBy(change.list)
                 styleController.applyAll()
             }
         })
