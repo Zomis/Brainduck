@@ -5,12 +5,10 @@ import net.zomis.brainf.analyze.BrainfuckAnalyzer
 import net.zomis.brainf.analyze.CellTagger
 import net.zomis.brainf.analyze.IndexCounter
 import net.zomis.brainf.analyze.MemoryCell
-import net.zomis.brainf.model.BrainfuckCommand
 import net.zomis.brainf.model.BrainfuckRunner
 import net.zomis.brainf.model.ast.tree.PrintSyntax
 import net.zomis.brainf.model.ast.tree.ReadSyntax
 import net.zomis.brainf.model.ast.tree.Syntax
-import net.zomis.brainf.model.classic.BrainFCommand
 
 import java.util.function.Function
 import java.util.stream.Stream

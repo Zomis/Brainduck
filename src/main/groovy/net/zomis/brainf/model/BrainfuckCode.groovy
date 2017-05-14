@@ -58,6 +58,9 @@ class BrainfuckCode {
     }
 
     int getCommandCount() {
+        if (rootTree == null) {
+            throw new IllegalStateException("Root tree not set")
+        }
         def lastToken = rootTree.tokens.last();
         return lastToken.info.position + lastToken.info.length
     }

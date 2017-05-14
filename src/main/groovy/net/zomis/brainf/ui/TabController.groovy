@@ -198,7 +198,8 @@ class TabController implements Initializable {
         StringBuilder str = new StringBuilder()
         BrainfuckRunner analyzeRunner = BrainF.createUsingQueueWithMemorySize(inputQueue,
             0x1000, new StringBuilderOutput(str));
-        analyzeRunner.code.setSource(ListCode.create(groovyConverter, codeArea.text));
+        analyzeRunner.code.setRootTree(new Parser(groovyConverter.groovyContext)
+            .parse(Lexer.tokenize(codeArea.text)));
         analyzeRunner.setListener(new GroovyListener(groovyConverter.groovyContext))
 
         final BFTaskAnalyze analyzeTask =
