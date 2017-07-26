@@ -14,5 +14,8 @@ node {
         junit 'build/test-results/*.xml'
         new Duga().dugaResult('SUCCESS')
     }
+    stage('Archive') {
+        archiveArtifacts artifacts: 'build/libs/*-all.jar'
+    }
 }
 
