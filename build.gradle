@@ -73,6 +73,7 @@ task fixVersion << {
 }
 processResources.dependsOn 'fixVersion'
 
+/*
 github {
     owner = 'Zomis'
     repo = 'Brainduck'
@@ -91,3 +92,4 @@ github {
     prerelease = false
 }
 // githubRelease.dependsOn release
+*/
