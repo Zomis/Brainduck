@@ -1,5 +1,5 @@
 plugins {
-    kotlin("multiplatform") version "1.5.10"
+    kotlin("multiplatform") version "1.6.0"
 }
 
 group = "org.example"
@@ -21,7 +21,7 @@ kotlin {
     jvm {
         compilations.all {
             kotlinOptions {
-                jvmTarget = "17"
+                jvmTarget = "16"
             }
         }
         withJava()
@@ -69,5 +69,11 @@ kotlin {
                 implementation("com.github.lewik.klog:klog-js:2.0.2")
             }
         }
+    }
+}
+
+tasks {
+    withType<Test> {
+        useJUnitPlatform()
     }
 }
