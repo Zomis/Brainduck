@@ -53,6 +53,7 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(projects.shared)
+            implementation(libs.richeditor.compose)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
