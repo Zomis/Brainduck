@@ -1,0 +1,12 @@
+package net.zomis.brainduck.compose
+
+interface MemoryCellViewModel {
+    val address: Int
+//    val value: State<Int>
+//    val labels: State<Map<String, Int>>
+}
+//
+class MemoryCellImpl(override val address: Int) : MemoryCellViewModel {
+//    override val value: State<Int> = mutableStateOf(0)
+//    override val labels: State<Map<String, Int>> = mutableStateOf(emptyMap())
+}

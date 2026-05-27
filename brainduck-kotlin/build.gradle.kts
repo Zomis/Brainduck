@@ -17,16 +17,20 @@ kotlin {
         }
         binaries.executable()
     }
+    jvm { }
     sourceSets {
-        val jsMain by getting {
+        val commonMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
             }
         }
-        val jsTest by getting {
+        val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
             }
+        }
+        val jsMain by getting {}
+        val jsTest by getting {
         }
     }
 }

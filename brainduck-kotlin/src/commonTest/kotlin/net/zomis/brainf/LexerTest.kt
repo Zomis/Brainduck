@@ -1,17 +1,7 @@
 package net.zomis.brainf
 
-import net.zomis.brainf.model.ast.BFToken
-import net.zomis.brainf.model.ast.CommentToken
-import net.zomis.brainf.model.ast.GroovyToken
-import net.zomis.brainf.model.ast.Lexer
-import net.zomis.brainf.model.ast.Token
-import net.zomis.brainf.model.classic.BrainFCommand
-import org.junit.After
-import org.junit.Before
-import org.junit.Test
-
 class LexerTest {
-
+/*
     private List<Token> tokens;
     private String bfCode;
 
@@ -118,5 +108,5 @@ some code here
         assert (tokens[4] as CommentToken).text == ' '
         assert (tokens[5] as GroovyToken).code == '\nsome code here\n'
     }
-
+*/
 }

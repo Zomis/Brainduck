@@ -1,16 +1,7 @@
 package net.zomis.brainf
 
-import net.zomis.brainf.dsl.BrainDSL
-import net.zomis.brainf.model.BrainF
-import net.zomis.brainf.model.BrainfuckMemory
-import net.zomis.brainf.model.BrainfuckRunner
-import net.zomis.brainf.model.input.NoInput
-import net.zomis.brainf.model.input.StringBuilderOutput
-import net.zomis.brainf.model.run.UntilEndStrategy
-import org.junit.Test
-
 class ScriptTest {
-
+/*
     static BrainfuckMemory runBrainfuck(String dslCode) {
         String code = run(dslCode)
         println code
@@ -39,5 +30,5 @@ class ScriptTest {
     void set() {
         assert run('set(3, -4, "0")') == '[-]+++>[-]---->[-]++++++++++++++++++++++++++++++++++++++++++++++++'
     }
-
+*/
 }

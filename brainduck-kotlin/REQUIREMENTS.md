@@ -42,3 +42,9 @@
 
 - Text generator
 - Memory refactoring, mark which memory is used for what and then drag/reposition to change the memory positions
+
+### Advanced
+
+- Groovy-like code. "$ assert value == 5", "$ loop 'test'" etc.
+  - Use Parsing library. Actually making Groovy or anything is unrealistic.
+    - Although JS eval could *possibly* work but uses a lot of '.' which would be incompatible
