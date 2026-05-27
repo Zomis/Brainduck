@@ -9,6 +9,15 @@
 - Syntax highlighting: Code purple, comments gray, loops blue
 - Mark matching [  ] with yellow background when cursor is adjacent to them
 - Mark hints, warnings and errors with blue, yellow and red squiggly underlines
+- Input
+- Output
+
+### Desktop Application + Node
+
+- Simple console run
+- Code input
+- stdin (bytes)
+- stdout (bytes)
 
 ### Running
 
@@ -37,10 +46,13 @@
   - When mode is active, mark a cell to see which code positions are accessing that cell
   - When mode is active, navigate code to see which memory positions are being accessed by that cell
 - Count commands and runtime operations
+- Detect infinite loops
 
 ### Tools
 
-- Text generator
+- Cell data generator (write values to memory)
+- Text printer generator (print some values, don't care what remains in memory)
+  - Start from 0 or start from some other memory cell state
 - Memory refactoring, mark which memory is used for what and then drag/reposition to change the memory positions
 
 ### Advanced
@@ -48,3 +60,6 @@
 - Groovy-like code. "$ assert value == 5", "$ loop 'test'" etc.
   - Use Parsing library. Actually making Groovy or anything is unrealistic.
     - Although JS eval could *possibly* work but uses a lot of '.' which would be incompatible
+  - Name cells
+  - Assert values, cell names
+

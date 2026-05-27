@@ -14,7 +14,8 @@ class BrainfuckProgram(
     override val memory: BrainfuckMemory,
 ) : BrainfuckRuntime {
     private class SyntaxPosition(val syntax: List<Syntax>) {
-        private var position = 0
+        var position = 0
+            private set
         fun isFinished() = syntax.size == position
         fun current() = syntax[position]
         fun next() {
@@ -75,6 +76,8 @@ class BrainfuckProgram(
     private fun nextSyntax() {
         syntaxStack.last().next()
     }
+    fun syntaxPositions() = syntaxStack.map { it.position }
+    fun currentSyntax() = syntaxStack.last().current()
 
     fun analyze(input: BrainfuckInput, output: BrainfuckOutput, analyzers: List<BrainfuckAnalyzer<*, *>>): List<AnalyzeResult<*, *>> {
         analyzers.forEach { it.beforeStart(this) }

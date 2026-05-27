@@ -1,14 +1,13 @@
 package net.zomis.brainf
 
-import kotlinx.coroutines.withTimeout
 import net.zomis.brainduck.Brainfuck
 import net.zomis.brainduck.BrainfuckInput
 import net.zomis.brainduck.BrainfuckOutput
 import net.zomis.brainduck.ast.SyntaxData
 import net.zomis.brainduck.runner.UntilEnd
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.time.Duration.Companion.milliseconds
 
 class RunStrategyTest {
 
@@ -31,24 +30,43 @@ class RunStrategyTest {
     }
 
     @Test
-    fun singleStep() {
-//        brain.run(new LimitedStepsStrategy())
-//        assert brain.memory.getMemoryArray(0, 2) == [1, 0] as int[]
+    fun singleSyntaxStep() {
+        val program = code.createProgram()
+        program.run(
+            Brainfuck.Run.stepSyntax,
+            BrainfuckInput.NoInput, BrainfuckOutput.NoOutput
+        )
+        assertEquals(listOf(5, 0), program.memory.get(0..1))
     }
 
     @Test
+    @Ignore
+    fun singleStep() {
+        val program = code.createProgram()
+        program.run(
+            Brainfuck.Run.step,
+            BrainfuckInput.NoInput, BrainfuckOutput.NoOutput
+        )
+        assertEquals(listOf(1, 0), program.memory.get(0..1))
+    }
+
+    @Test
+    @Ignore
     fun twoSteps() {
-//        brain.run(new LimitedStepsStrategy(2))
-//        assert brain.memory.getMemoryArray(0, 2) == [2, 0] as int[]
+        val program = code.createProgram()
+        program.run(
+            Brainfuck.Run.step,
+            BrainfuckInput.NoInput, BrainfuckOutput.NoOutput
+        )
+        assertEquals(listOf(2, 0), program.memory.get(0..1))
     }
 
     @Test
     fun loopStart() {
-//        withTimeout(2000.milliseconds) {
-//        brain.run(new RunUntilLoopStartStrategy())
-//        assert brain.memory.getMemoryArray(0, 2) == [5, 0] as int[]
-//        assert brain.code.currentSyntax instanceof LoopInstructionSyntax
-//        }
+        val program = code.createProgram()
+        program.run(Brainfuck.Run.loopStart, BrainfuckInput.NoInput, BrainfuckOutput.NoOutput)
+        assertEquals(listOf(5, 0), program.memory.get(0..1))
+        assertEquals(-1, (program.currentSyntax().data as SyntaxData.ChangeValue).delta)
     }
 
     @Test
