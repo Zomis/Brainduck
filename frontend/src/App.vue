@@ -22,10 +22,22 @@
     <!-- Main Content Area - Split View -->
     <div class="main-content">
       <!-- Left Panel - Data/State View -->
-      <MemoryCells
-        :memory-cells="memoryCells"
-        :output-lines="outputLines"
-      />
+      <div class="left-panel">
+        <MemoryCells
+          :memory-cells="memoryCells"
+        />
+        <div class="output-section">
+          <div class="output-title">Output:</div>
+          <div class="output-content">
+            <textarea
+              ref="textareaRef"
+              v-model="outputText"
+              class="editor-textarea"
+            >
+            </textarea>
+          </div>
+        </div>
+      </div>
 
       <!-- Right Panel - Code Editor -->
       <div class="right-panel">
@@ -40,10 +52,10 @@
     <!-- Status Bar -->
     <div class="status-bar">
       <div class="status-left">
-        <span>fibonnaci.bf: LimitedSteps: Completed with 3 steps.</span>
+        <span>(status-bar)</span>
       </div>
       <div class="status-right">
-        <span>pos {{ cursorPos }}, col {{ cursorCol }}</span>
+        <span>line {{ 'x' }}, pos {{ cursorPos }}, col {{ cursorCol }}</span>
         <div class="progress-bar">
           <div class="progress-fill" :style="{ width: progressPercent + '%' }"></div>
         </div>
@@ -53,9 +65,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, type Ref } from 'vue'
 import CodeEditor from './components/CodeEditor.vue'
 import MemoryCells from './components/MemoryCells.vue'
+import type { MemoryCell } from './components/MemoryCell.ts'
 
 const code = ref(`++[>++<-]
 >+++++++++[<++++++++>-]<.
@@ -80,42 +93,23 @@ const code = ref(`++[>++<-]
 >>++++[<++++>-]<+.
 `)
 
+const outputText = ref('')
 const cursorPos = ref(1028)
 const cursorCol = ref(5)
 const progressPercent = ref(60)
 
-// Memory cells data
-const memoryCells = ref([
-  { index: '0', value: '248', name: '' },
-  { index: '1', value: '10', name: '[countdown:1]' },
-  { index: '2', value: '0', name: '[lineBreak:1]' },
-  { index: '3', value: '0', name: '[zero:1]' },
-  { index: '4', value: '0', name: '[digitStart:1]' },
-  { index: '5', value: '1', name: '[A:6]' },
-  { index: '6', value: '8', name: '[A_2:6]' },
-  { index: '7', value: '0', name: '[B:7]' },
-  { index: '8', value: '5', name: 'x' },
-  { index: '9', value: '0', name: '[overflow:6]' },
-  { index: 'a', value: '3', name: '[C:6]' },
-  { index: 'b', value: '10', name: '[10minusC:7]' },
-  { index: 'c', value: '0', name: '[digit:1]' },
-  { index: 'd', value: '0', name: '[activatedTemp2:1, activatedT]' },
-  { index: 'e', value: '1', name: '[digitStart:1]' },
-  { index: 'f', value: '1', name: '[A:1]' },
-  { index: '10', value: '1', name: '[A_2:1]' },
-  { index: '11', value: '1', name: '[B:1]' },
-  { index: '12', value: '0', name: '[overflow:1]' },
-  { index: '13', value: '1', name: '[C:1]' },
-  { index: '14', value: '1', name: '[10minusC:1]' },
-  { index: '15', value: '0', name: '[digit:1]' },
-  { index: '16', value: '1', name: '' },
-  { index: '17', value: '0', name: '' },
-  { index: '18', value: '1', name: '' },
-  { index: '19', value: '0', name: '' },
-  { index: '1a', value: '49', name: '' },
-])
+const memoryArray = new Array(30000);
+for (let i = 0; i < memoryArray.length; i++) {
+  memoryArray[i] = { index: i, value: 0, name: '' }
+}
 
-const outputLines = ref(['3', '5', '8', '13'])
+// Memory cells data
+const memoryCells: Ref<Array<MemoryCell>> = ref(memoryArray)
+//  { index: 1, value: 10, name: '[countdown:1]' },
+//  { index: 2, value: 0, name: '[B:7]' },
+//  { index: 3, value: 5, name: 'x' },
+//  { index: 4, value: 0, name: '[activatedTemp2:1, activatedT]' },
+
 
 // Brainfuck syntax highlighting
 function highlightCode(text: string, cursorPosition: number): Map<number, string> {
@@ -204,7 +198,15 @@ function findMatchingBracket(text: string, position: number): number {
   font-family: system-ui, -apple-system, sans-serif;
 }
 
-/* Menu Bar */
+.left-panel {
+  width: 400px;
+  border-right: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #fff;
+}
+
 .menu-bar {
   display: flex;
   background: #f5f5f5;
@@ -343,6 +345,26 @@ function findMatchingBracket(text: string, position: number): number {
   height: 100%;
   background: #0066cc;
   transition: width 0.2s;
+}
+
+.output-section {
+  border-top: 1px solid #ddd;
+  padding: 8px;
+  background: #fafafa;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.output-title {
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #666;
+}
+
+.output-content {
+  font-size: 12px;
+  font-family: monospace;
 }
 </style>
 
