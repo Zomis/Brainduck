@@ -9,13 +9,12 @@ kotlin {
                 useMocha()
             }
         }
-        browser {
-            compilerOptions {
-                moduleKind.set(org.jetbrains.kotlin.gradle.dsl.JsModuleKind.MODULE_ES)
-                generateTypeScriptDefinitions()
-            }
+        compilerOptions {
+            moduleKind.set(org.jetbrains.kotlin.gradle.dsl.JsModuleKind.MODULE_ES)
+            generateTypeScriptDefinitions()
         }
-        binaries.executable()
+        browser()
+        binaries.library()
     }
     jvm { }
     sourceSets {

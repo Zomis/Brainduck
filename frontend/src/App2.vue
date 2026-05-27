@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { onMounted, reactive } from 'vue'
 // Import your compiled Kotlin library (adjust path as needed)
-import { Game } from '../../brainduck-kotlin/build/dist/js/productionLibrary/Brainduck.mjs'
 
+import { Brainfuck } from '../../brainduck-kotlin/build/dist/js/productionLibrary/Brainduck.mjs'
+/*
 const game = reactive(new Game())
 
 onMounted(async () => {
@@ -16,11 +17,7 @@ onMounted(async () => {
 function add() {
   game.addPoint()
 }
-</script>
-
-<template>
-  <div class="p-4">
-    <h1>Score: {{ game.points }}</h1>
+      <h1>Score: {{ game.points }}</h1>
     <h2>{{ game.elements }}</h2>
     <div>
       <span v-for="i of game.elements" :key="i">{{ i }}</span>
@@ -28,5 +25,12 @@ function add() {
 
     
     <button @click="add">Add Point</button>
+
+*/
+</script>
+
+<template>
+  <div class="p-4">
+    {{ Brainfuck }}
   </div>
 </template>

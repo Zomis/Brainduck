@@ -7,10 +7,13 @@
 ### Editor
 
 - Syntax highlighting: Code purple, comments gray, loops blue
+- Line numbers
 - Mark matching [  ] with yellow background when cursor is adjacent to them
 - Mark hints, warnings and errors with blue, yellow and red squiggly underlines
 - Input
 - Output
+- Show memory cells and values, and current pointer
+- Show memory cell marks (See Advanced section)
 
 ### Desktop Application + Node
 
@@ -21,6 +24,9 @@
 
 ### Running
 
+- Run, Pause, Stop
+- Step-by-step running (single command)
+- Step syntax running (e.g. all connected '+')
 - Run to cursor
 - Run rest of program
 - Step in (run past the next matching '[')
@@ -37,16 +43,18 @@
 
 ### Analysis
 
-- Mark loop names
-- Mark cell names, e.g. "fibonnaci_digit", "digit1", "countdown", "count_up"
-  - give dynamic names (e.g. "digit1") by using an incremental counter and assigning if it doesn't have, reusing if it does have
-- Memory analysis: Times read and written for each cell
-- Memory analysis: Check which cells are being used by IO operations . and ,
+- Memory Value Range: Minimum and maximum values used (including if wraparound is done)
+- Memory Range: Which cells are used
+- Memory Read and Write: Times read and written for each cell ('[ ]' and '.' reads, ',' and '+ -' writes)
+- Memory IO: Check which cells are being used by IO operations . and ,
 - Which code is using which cells, and which cells are being used by which code
   - When mode is active, mark a cell to see which code positions are accessing that cell
   - When mode is active, navigate code to see which memory positions are being accessed by that cell
 - Count commands and runtime operations
 - Detect infinite loops
+- Example inputs for ',' reads
+- Output to JSON or show in editor
+- Loop counts (see https://codereview.stackexchange.com/a/107859)
 
 ### Tools
 
@@ -62,4 +70,7 @@
     - Although JS eval could *possibly* work but uses a lot of '.' which would be incompatible
   - Name cells
   - Assert values, cell names
+  - Mark loop names
+  - Mark cell names, e.g. "fibonnaci_digit", "digit1", "countdown", "count_up"
+    - Give dynamic names (e.g. "digit1") by using an incremental counter and assigning if it doesn't have, reusing if it does have
 

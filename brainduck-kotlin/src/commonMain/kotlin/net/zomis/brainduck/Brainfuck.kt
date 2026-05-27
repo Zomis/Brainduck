@@ -5,7 +5,11 @@ import net.zomis.brainduck.runner.LoopStartRunner
 import net.zomis.brainduck.runner.Runner
 import net.zomis.brainduck.runner.StepRunner
 import net.zomis.brainduck.runner.UntilEnd
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 object Brainfuck {
 
     fun tokenize(text: String): TokenizedProgram {

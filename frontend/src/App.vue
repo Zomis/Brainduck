@@ -14,8 +14,8 @@
         <button class="toolbar-btn">Analyze</button>
       </div>
       <div class="tabs">
+        <div class="tab active">untitled</div>
         <div class="tab">untitled</div>
-        <div class="tab active">fibonnaci.bf</div>
       </div>
     </div>
 
@@ -172,7 +172,7 @@ function highlightCode(text: string, cursorPosition: number): Map<number, string
 function findMatchingBracket(text: string, position: number): number {
   const char = text[position]
   const direction = char === '[' ? 1 : -1
-  let depth = 0
+  let depth = 1
   
   for (let i = position + direction; i >= 0 && i < text.length; i += direction) {
     if (text[i] === '[') {
