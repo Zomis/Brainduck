@@ -1,15 +1,14 @@
 ﻿{
   "compilerOptions": {
-    "target": "ES2022",
+    "target": "ESNext",
     "useDefineForClassFields": true,
     "module": "ESNext",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "types": ["vite/client"],
     "skipLibCheck": true,
-    "moduleResolution": "bundler",
+    "moduleResolution": "Bundler",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
-    "moduleDetection": "force",
     "noEmit": true,
     "strict": true,
     "noUnusedLocals": true,

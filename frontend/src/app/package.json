@@ -1,0 +1,13 @@
+{
+  "name": "Brainduck-app",
+  "version": "0.0.0-unspecified",
+  "main": "Brainduck-app.mjs",
+  "types": "Brainduck-app.d.ts",
+  "devDependencies": {
+    "typescript": "5.5.4"
+  },
+  "dependencies": {},
+  "peerDependencies": {},
+  "optionalDependencies": {},
+  "bundledDependencies": []
+}

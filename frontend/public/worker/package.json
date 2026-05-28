@@ -1,0 +1,13 @@
+{
+  "name": "Brainduck-worker",
+  "version": "0.0.0-unspecified",
+  "main": "Brainduck-worker.mjs",
+  "types": "Brainduck-worker.d.ts",
+  "devDependencies": {
+    "typescript": "5.5.4"
+  },
+  "dependencies": {},
+  "peerDependencies": {},
+  "optionalDependencies": {},
+  "bundledDependencies": []
+}

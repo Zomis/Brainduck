@@ -1,21 +1,19 @@
 package net.zomis.brainduck.worker
 
-import org.w3c.dom.MessageEvent
-
-object BrainduckWorker {
-
-    fun doSomething(): Int {
-        return 42
-    }
-
-}
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import org.w3c.dom.Worker
 
 fun main() {
-    val self = js("self")
-    println("Worker init!")
-    self.onmessage = { e: MessageEvent ->
-        println("Worker got message: " + e.data)
-        if (e.data != null) println("Worker message is of type: " + e.data!!::class.simpleName)
-        self.postMessage(e.data)
+    val scope = MainScope()
+    val self: Worker = js("self")
+    self.onmessage = { e ->
+        scope.launch {
+            repeat(3) {
+                self.postMessage("${e.data}$it")
+                delay(1000)
+            }
+        }
     }
 }

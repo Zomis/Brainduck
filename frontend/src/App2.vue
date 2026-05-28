@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { onMounted, reactive } from 'vue'
 // Import your compiled Kotlin library (adjust path as needed)
 
-import { Brainfuck } from '../../brainduck-kotlin/app/build/dist/js/productionLibrary/Brainduck-app.mjs'
+//import { Brainfuck } from '../../brainduck-kotlin/app/build/dist/js/productionLibrary/Brainduck-app.mjs'
 /*
 const game = reactive(new Game())
 
@@ -31,6 +30,6 @@ function add() {
 
 <template>
   <div class="p-4">
-    {{ Brainfuck }}
+    
   </div>
 </template>

@@ -25,13 +25,16 @@ import {
   lines3g90sq0zeq43v as lines,
   charCodeAt1yspne1d8erbm as charCodeAt,
   THROW_CCE2g6jy02ryeudk as THROW_CCE,
+  hashCodeq5arwsb9dgti as hashCode,
   initMetadataForInterface1egvbzx539z91 as initMetadataForInterface,
+  getStringHashCode26igk1bx568vk as getStringHashCode,
   VOID3gxj6tk5isa35 as VOID,
   _Char___init__impl__6a9atx2js6krycynjoo as _Char___init__impl__6a9atx,
   initMetadataForCompanion1wyw17z38v6ac as initMetadataForCompanion,
   IllegalArgumentException_init_$Create$3ewkh27kzt8z8 as IllegalArgumentException_init_$Create$,
 } from './kotlin-kotlin-stdlib.mjs';
 //region block: imports
+var imul = Math.imul;
 //endregion
 //region block: pre-declaration
 initMetadataForObject(Run, 'Run');
@@ -77,16 +80,16 @@ function Run() {
   this.stepSyntax = new StepRunner(1);
   this.loopStart = LoopStartRunner_instance;
 }
-protoOf(Run).c4 = function () {
+protoOf(Run).bj = function () {
   return this.all;
 };
-protoOf(Run).d4 = function () {
+protoOf(Run).cj = function () {
   throw new NotImplementedError();
 };
-protoOf(Run).e4 = function () {
+protoOf(Run).dj = function () {
   return this.stepSyntax;
 };
-protoOf(Run).f4 = function () {
+protoOf(Run).ej = function () {
   return this.loopStart;
 };
 protoOf(Run).steps = function (steps) {
@@ -101,23 +104,23 @@ function Run_getInstance() {
 function Brainfuck_0() {
 }
 protoOf(Brainfuck_0).tokenize = function (text) {
-  return (new Lexer()).l4(text);
+  return (new Lexer()).kj(text);
 };
 protoOf(Brainfuck_0).code = function (text) {
-  return this.tokenize(text).n4();
+  return this.tokenize(text).mj();
 };
 var Brainfuck_instance;
 function Brainfuck_getInstance() {
   return Brainfuck_instance;
 }
 function BrainfuckCode(syntax) {
-  this.o4_1 = syntax;
+  this.nj_1 = syntax;
 }
 function LoopSyntax(startToken) {
-  this.p4_1 = startToken;
+  this.oj_1 = startToken;
   var tmp = this;
   // Inline function 'kotlin.collections.mutableListOf' call
-  tmp.q4_1 = ArrayList_init_$Create$();
+  tmp.pj_1 = ArrayList_init_$Create$();
 }
 function withData($this, _this__u8e3s4, data) {
   return new Syntax(_this__u8e3s4, data);
@@ -125,7 +128,7 @@ function withData($this, _this__u8e3s4, data) {
 function createRepeatSyntax($this, awaitingTokens, diff) {
   var token = first(awaitingTokens);
   var syntaxInfo = new SyntaxInfo(awaitingTokens);
-  var tmp0_subject = token.s4_1;
+  var tmp0_subject = token.rj_1;
   var tmp;
   if (equals(tmp0_subject, Plus_getInstance()) || equals(tmp0_subject, Minus_getInstance())) {
     tmp = new Syntax(syntaxInfo, new ChangeValue(diff));
@@ -138,9 +141,9 @@ function createRepeatSyntax($this, awaitingTokens, diff) {
   return tmp;
 }
 function TokenizedProgram(tokens) {
-  this.m4_1 = tokens;
+  this.lj_1 = tokens;
 }
-protoOf(TokenizedProgram).n4 = function () {
+protoOf(TokenizedProgram).mj = function () {
   // Inline function 'kotlin.collections.mutableListOf' call
   var awaitingTokens = ArrayList_init_$Create$();
   var lastToken = null;
@@ -148,13 +151,13 @@ protoOf(TokenizedProgram).n4 = function () {
   // Inline function 'kotlin.collections.mutableListOf' call
   var depthStack = ArrayList_init_$Create$();
   depthStack.m(new LoopSyntax(null));
-  var syntaxes = single(depthStack).q4_1;
-  var _iterator__ex2g4s = this.m4_1.e();
+  var syntaxes = single(depthStack).pj_1;
+  var _iterator__ex2g4s = this.lj_1.e();
   while (_iterator__ex2g4s.f()) {
     var token = _iterator__ex2g4s.g();
     var last_0 = lastToken;
     var tmp;
-    if (!equals(last_0 == null ? null : last_0.s4_1, token.s4_1)) {
+    if (!equals(last_0 == null ? null : last_0.rj_1, token.rj_1)) {
       // Inline function 'kotlin.collections.isNotEmpty' call
       tmp = !awaitingTokens.n();
     } else {
@@ -162,11 +165,11 @@ protoOf(TokenizedProgram).n4 = function () {
     }
     if (tmp) {
       syntaxes.m(createRepeatSyntax(this, toList(awaitingTokens), diff));
-      awaitingTokens.s1();
+      awaitingTokens.d2();
       diff = 0;
     }
     var syntaxInfo = new SyntaxInfo(listOf(token));
-    var tmp1_subject = token.s4_1;
+    var tmp1_subject = token.rj_1;
     if (tmp1_subject instanceof Advanced) {
       // Inline function 'kotlin.TODO' call
       throw new NotImplementedError();
@@ -176,25 +179,25 @@ protoOf(TokenizedProgram).n4 = function () {
       else {
         if (equals(tmp1_subject, StartWhile_instance)) {
           depthStack.m(new LoopSyntax(token));
-          syntaxes = last(depthStack).q4_1;
+          syntaxes = last(depthStack).pj_1;
         } else {
           if (equals(tmp1_subject, EndWhile_instance_0)) {
             var popped = removeLast(depthStack);
-            syntaxes = last(depthStack).q4_1;
-            var tmp_0 = listOf(popped.p4_1);
+            syntaxes = last(depthStack).pj_1;
+            var tmp_0 = listOf(popped.oj_1);
             // Inline function 'kotlin.collections.flatMap' call
-            var tmp0 = popped.q4_1;
+            var tmp0 = popped.pj_1;
             // Inline function 'kotlin.collections.flatMapTo' call
             var destination = ArrayList_init_$Create$();
             var _iterator__ex2g4s_0 = tmp0.e();
             while (_iterator__ex2g4s_0.f()) {
               var element = _iterator__ex2g4s_0.g();
-              var list = element.v4_1.u4_1;
+              var list = element.uj_1.tj_1;
               addAll(destination, list);
             }
             var tokens = plus_0(plus(tmp_0, destination), token);
             var endWhile = new Syntax(syntaxInfo, EndWhile_instance);
-            syntaxes.m(new Syntax(new SyntaxInfo(filterNotNull(tokens)), new WhileNotZero(plus_0(popped.q4_1, endWhile))));
+            syntaxes.m(new Syntax(new SyntaxInfo(filterNotNull(tokens)), new WhileNotZero(plus_0(popped.pj_1, endWhile))));
           } else {
             if (equals(tmp1_subject, Read_instance_0))
               syntaxes.m(new Syntax(syntaxInfo, Read_instance));
@@ -204,7 +207,7 @@ protoOf(TokenizedProgram).n4 = function () {
               else {
                 if (tmp1_subject instanceof Repeatable) {
                   awaitingTokens.m(token);
-                  diff = diff + token.s4_1.t4_1 | 0;
+                  diff = diff + token.rj_1.sj_1 | 0;
                 } else {
                   noWhenBranchMatchedException();
                 }
@@ -223,56 +226,56 @@ protoOf(TokenizedProgram).n4 = function () {
   return new BrainfuckCode(new Root(syntaxes));
 };
 function CommentStrategy($outer) {
-  this.y4_1 = $outer;
-  this.x4_1 = StringBuilder_init_$Create$();
+  this.xj_1 = $outer;
+  this.wj_1 = StringBuilder_init_$Create$();
 }
-protoOf(CommentStrategy).z4 = function (ch) {
-  var token = Companion_instance.a5(ch);
+protoOf(CommentStrategy).yj = function (ch) {
+  var token = Companion_instance.zj(ch);
   var tmp;
   if (!(token == null) ? isInterface(token, Instruction) : false) {
-    this.y4_1.g4_1.m(nextTokenInfo(this.y4_1, new Comment_0(this.x4_1.toString())));
-    tmp = (new DefaultStrategy(this.y4_1)).z4(ch);
+    this.xj_1.fj_1.m(nextTokenInfo(this.xj_1, new Comment_0(this.wj_1.toString())));
+    tmp = (new DefaultStrategy(this.xj_1)).yj(ch);
   } else {
-    this.x4_1.o3(this.x4_1.toString());
+    this.wj_1.e4(this.wj_1.toString());
     tmp = this;
   }
   return tmp;
 };
-protoOf(CommentStrategy).c5 = function () {
+protoOf(CommentStrategy).bk = function () {
 };
 function DefaultStrategy($outer) {
-  this.b5_1 = $outer;
+  this.ak_1 = $outer;
 }
-protoOf(DefaultStrategy).z4 = function (ch) {
-  var bfCommand = Companion_instance.a5(ch);
+protoOf(DefaultStrategy).yj = function (ch) {
+  var bfCommand = Companion_instance.zj(ch);
   var tmp;
   if (!(bfCommand == null)) {
-    this.b5_1.g4_1.m(nextTokenInfo(this.b5_1, bfCommand));
+    this.ak_1.fj_1.m(nextTokenInfo(this.ak_1, bfCommand));
     tmp = this;
   } else {
-    tmp = (new CommentStrategy(this.b5_1)).z4(ch);
+    tmp = (new CommentStrategy(this.ak_1)).yj(ch);
   }
   return tmp;
 };
-protoOf(DefaultStrategy).c5 = function () {
+protoOf(DefaultStrategy).bk = function () {
 };
 function nextTokenInfo($this, data) {
   var tokenLength = 1;
-  var info = new TokenInfo($this.h4_1, tokenLength, $this.i4_1, $this.j4_1, $this.k4_1);
-  $this.h4_1 = $this.h4_1 + tokenLength | 0;
-  $this.j4_1 = $this.j4_1 + 1 | 0;
+  var info = new TokenInfo($this.gj_1, tokenLength, $this.hj_1, $this.ij_1, $this.jj_1);
+  $this.gj_1 = $this.gj_1 + tokenLength | 0;
+  $this.ij_1 = $this.ij_1 + 1 | 0;
   return new Token(info, data);
 }
 function Lexer() {
   var tmp = this;
   // Inline function 'kotlin.collections.mutableListOf' call
-  tmp.g4_1 = ArrayList_init_$Create$();
-  this.h4_1 = 1;
-  this.i4_1 = 1;
-  this.j4_1 = 1;
-  this.k4_1 = '.';
+  tmp.fj_1 = ArrayList_init_$Create$();
+  this.gj_1 = 1;
+  this.hj_1 = 1;
+  this.ij_1 = 1;
+  this.jj_1 = '.';
 }
-protoOf(Lexer).l4 = function (text) {
+protoOf(Lexer).kj = function (text) {
   var strategy = new DefaultStrategy(this);
   var iterator = lines(text).e();
   var index = 0;
@@ -280,23 +283,26 @@ protoOf(Lexer).l4 = function (text) {
     var lineIndex = index;
     index = index + 1 | 0;
     var lineText = iterator.g();
-    this.i4_1 = lineIndex + 1 | 0;
-    this.j4_1 = 1;
+    this.hj_1 = lineIndex + 1 | 0;
+    this.ij_1 = 1;
     var inductionVariable = 0;
     var last = lineText.length;
     while (inductionVariable < last) {
       var c = charCodeAt(lineText, inductionVariable);
       inductionVariable = inductionVariable + 1 | 0;
-      strategy = strategy.z4(c);
+      strategy = strategy.yj(c);
     }
   }
-  strategy.c5();
-  return new TokenizedProgram(toList(this.g4_1));
+  strategy.bk();
+  return new TokenizedProgram(toList(this.fj_1));
 };
 function Read() {
 }
 protoOf(Read).toString = function () {
   return 'Read';
+};
+protoOf(Read).hashCode = function () {
+  return 388409295;
 };
 protoOf(Read).equals = function (other) {
   if (this === other)
@@ -315,6 +321,9 @@ function Write() {
 protoOf(Write).toString = function () {
   return 'Write';
 };
+protoOf(Write).hashCode = function () {
+  return -839200570;
+};
 protoOf(Write).equals = function (other) {
   if (this === other)
     return true;
@@ -328,10 +337,13 @@ function Write_getInstance() {
   return Write_instance;
 }
 function Move(delta) {
-  this.d5_1 = delta;
+  this.ck_1 = delta;
 }
 protoOf(Move).toString = function () {
-  return 'Move(delta=' + this.d5_1 + ')';
+  return 'Move(delta=' + this.ck_1 + ')';
+};
+protoOf(Move).hashCode = function () {
+  return this.ck_1;
 };
 protoOf(Move).equals = function (other) {
   if (this === other)
@@ -339,15 +351,18 @@ protoOf(Move).equals = function (other) {
   if (!(other instanceof Move))
     return false;
   var tmp0_other_with_cast = other instanceof Move ? other : THROW_CCE();
-  if (!(this.d5_1 === tmp0_other_with_cast.d5_1))
+  if (!(this.ck_1 === tmp0_other_with_cast.ck_1))
     return false;
   return true;
 };
 function ChangeValue(delta) {
-  this.e5_1 = delta;
+  this.dk_1 = delta;
 }
 protoOf(ChangeValue).toString = function () {
-  return 'ChangeValue(delta=' + this.e5_1 + ')';
+  return 'ChangeValue(delta=' + this.dk_1 + ')';
+};
+protoOf(ChangeValue).hashCode = function () {
+  return this.dk_1;
 };
 protoOf(ChangeValue).equals = function (other) {
   if (this === other)
@@ -355,15 +370,18 @@ protoOf(ChangeValue).equals = function (other) {
   if (!(other instanceof ChangeValue))
     return false;
   var tmp0_other_with_cast = other instanceof ChangeValue ? other : THROW_CCE();
-  if (!(this.e5_1 === tmp0_other_with_cast.e5_1))
+  if (!(this.dk_1 === tmp0_other_with_cast.dk_1))
     return false;
   return true;
 };
 function WhileNotZero(children) {
-  this.f5_1 = children;
+  this.ek_1 = children;
 }
 protoOf(WhileNotZero).toString = function () {
-  return 'WhileNotZero(children=' + toString(this.f5_1) + ')';
+  return 'WhileNotZero(children=' + toString(this.ek_1) + ')';
+};
+protoOf(WhileNotZero).hashCode = function () {
+  return hashCode(this.ek_1);
 };
 protoOf(WhileNotZero).equals = function (other) {
   if (this === other)
@@ -371,7 +389,7 @@ protoOf(WhileNotZero).equals = function (other) {
   if (!(other instanceof WhileNotZero))
     return false;
   var tmp0_other_with_cast = other instanceof WhileNotZero ? other : THROW_CCE();
-  if (!equals(this.f5_1, tmp0_other_with_cast.f5_1))
+  if (!equals(this.ek_1, tmp0_other_with_cast.ek_1))
     return false;
   return true;
 };
@@ -379,6 +397,9 @@ function EndWhile() {
 }
 protoOf(EndWhile).toString = function () {
   return 'EndWhile';
+};
+protoOf(EndWhile).hashCode = function () {
+  return -350147377;
 };
 protoOf(EndWhile).equals = function (other) {
   if (this === other)
@@ -397,6 +418,9 @@ function Comment() {
 protoOf(Comment).toString = function () {
   return 'Comment';
 };
+protoOf(Comment).hashCode = function () {
+  return 329501062;
+};
 protoOf(Comment).equals = function (other) {
   if (this === other)
     return true;
@@ -410,10 +434,13 @@ function Comment_getInstance() {
   return Comment_instance;
 }
 function Root(children) {
-  this.g5_1 = children;
+  this.fk_1 = children;
 }
 protoOf(Root).toString = function () {
-  return 'Root(children=' + toString(this.g5_1) + ')';
+  return 'Root(children=' + toString(this.fk_1) + ')';
+};
+protoOf(Root).hashCode = function () {
+  return hashCode(this.fk_1);
 };
 protoOf(Root).equals = function (other) {
   if (this === other)
@@ -421,16 +448,21 @@ protoOf(Root).equals = function (other) {
   if (!(other instanceof Root))
     return false;
   var tmp0_other_with_cast = other instanceof Root ? other : THROW_CCE();
-  if (!equals(this.g5_1, tmp0_other_with_cast.g5_1))
+  if (!equals(this.fk_1, tmp0_other_with_cast.fk_1))
     return false;
   return true;
 };
 function Syntax(info, data) {
-  this.v4_1 = info;
-  this.w4_1 = data;
+  this.uj_1 = info;
+  this.vj_1 = data;
 }
 protoOf(Syntax).toString = function () {
-  return 'Syntax(info=' + this.v4_1.toString() + ', data=' + toString(this.w4_1) + ')';
+  return 'Syntax(info=' + this.uj_1.toString() + ', data=' + toString(this.vj_1) + ')';
+};
+protoOf(Syntax).hashCode = function () {
+  var result = this.uj_1.hashCode();
+  result = imul(result, 31) + hashCode(this.vj_1) | 0;
+  return result;
 };
 protoOf(Syntax).equals = function (other) {
   if (this === other)
@@ -438,17 +470,20 @@ protoOf(Syntax).equals = function (other) {
   if (!(other instanceof Syntax))
     return false;
   var tmp0_other_with_cast = other instanceof Syntax ? other : THROW_CCE();
-  if (!this.v4_1.equals(tmp0_other_with_cast.v4_1))
+  if (!this.uj_1.equals(tmp0_other_with_cast.uj_1))
     return false;
-  if (!equals(this.w4_1, tmp0_other_with_cast.w4_1))
+  if (!equals(this.vj_1, tmp0_other_with_cast.vj_1))
     return false;
   return true;
 };
 function SyntaxInfo(tokens) {
-  this.u4_1 = tokens;
+  this.tj_1 = tokens;
 }
 protoOf(SyntaxInfo).toString = function () {
-  return 'SyntaxInfo(tokens=' + toString(this.u4_1) + ')';
+  return 'SyntaxInfo(tokens=' + toString(this.tj_1) + ')';
+};
+protoOf(SyntaxInfo).hashCode = function () {
+  return hashCode(this.tj_1);
 };
 protoOf(SyntaxInfo).equals = function (other) {
   if (this === other)
@@ -456,16 +491,21 @@ protoOf(SyntaxInfo).equals = function (other) {
   if (!(other instanceof SyntaxInfo))
     return false;
   var tmp0_other_with_cast = other instanceof SyntaxInfo ? other : THROW_CCE();
-  if (!equals(this.u4_1, tmp0_other_with_cast.u4_1))
+  if (!equals(this.tj_1, tmp0_other_with_cast.tj_1))
     return false;
   return true;
 };
 function Token(info, data) {
-  this.r4_1 = info;
-  this.s4_1 = data;
+  this.qj_1 = info;
+  this.rj_1 = data;
 }
 protoOf(Token).toString = function () {
-  return 'Token(info=' + this.r4_1.toString() + ', data=' + toString(this.s4_1) + ')';
+  return 'Token(info=' + this.qj_1.toString() + ', data=' + toString(this.rj_1) + ')';
+};
+protoOf(Token).hashCode = function () {
+  var result = this.qj_1.hashCode();
+  result = imul(result, 31) + hashCode(this.rj_1) | 0;
+  return result;
 };
 protoOf(Token).equals = function (other) {
   if (this === other)
@@ -473,24 +513,27 @@ protoOf(Token).equals = function (other) {
   if (!(other instanceof Token))
     return false;
   var tmp0_other_with_cast = other instanceof Token ? other : THROW_CCE();
-  if (!this.r4_1.equals(tmp0_other_with_cast.r4_1))
+  if (!this.qj_1.equals(tmp0_other_with_cast.qj_1))
     return false;
-  if (!equals(this.s4_1, tmp0_other_with_cast.s4_1))
+  if (!equals(this.rj_1, tmp0_other_with_cast.rj_1))
     return false;
   return true;
 };
 function Instruction() {
 }
 function Repeatable(count) {
-  this.t4_1 = count;
+  this.sj_1 = count;
 }
 function Advanced() {
 }
 function Comment_0(text) {
-  this.h5_1 = text;
+  this.gk_1 = text;
 }
 protoOf(Comment_0).toString = function () {
-  return 'Comment(text=' + this.h5_1 + ')';
+  return 'Comment(text=' + this.gk_1 + ')';
+};
+protoOf(Comment_0).hashCode = function () {
+  return getStringHashCode(this.gk_1);
 };
 protoOf(Comment_0).equals = function (other) {
   if (this === other)
@@ -498,7 +541,7 @@ protoOf(Comment_0).equals = function (other) {
   if (!(other instanceof Comment_0))
     return false;
   var tmp0_other_with_cast = other instanceof Comment_0 ? other : THROW_CCE();
-  if (!(this.h5_1 === tmp0_other_with_cast.h5_1))
+  if (!(this.gk_1 === tmp0_other_with_cast.gk_1))
     return false;
   return true;
 };
@@ -506,6 +549,9 @@ function Write_0() {
 }
 protoOf(Write_0).toString = function () {
   return 'Write';
+};
+protoOf(Write_0).hashCode = function () {
+  return -1883094452;
 };
 protoOf(Write_0).equals = function (other) {
   if (this === other)
@@ -523,6 +569,9 @@ function Read_0() {
 }
 protoOf(Read_0).toString = function () {
   return 'Read';
+};
+protoOf(Read_0).hashCode = function () {
+  return -1584927351;
 };
 protoOf(Read_0).equals = function (other) {
   if (this === other)
@@ -542,6 +591,9 @@ function Plus() {
 }
 protoOf(Plus).toString = function () {
   return 'Plus';
+};
+protoOf(Plus).hashCode = function () {
+  return -1584979571;
 };
 protoOf(Plus).equals = function (other) {
   if (this === other)
@@ -564,6 +616,9 @@ function Minus() {
 protoOf(Minus).toString = function () {
   return 'Minus';
 };
+protoOf(Minus).hashCode = function () {
+  return -1892592931;
+};
 protoOf(Minus).equals = function (other) {
   if (this === other)
     return true;
@@ -584,6 +639,9 @@ function MoveLeft() {
 }
 protoOf(MoveLeft).toString = function () {
   return 'MoveLeft';
+};
+protoOf(MoveLeft).hashCode = function () {
+  return -957062677;
 };
 protoOf(MoveLeft).equals = function (other) {
   if (this === other)
@@ -606,6 +664,9 @@ function MoveRight() {
 protoOf(MoveRight).toString = function () {
   return 'MoveRight';
 };
+protoOf(MoveRight).hashCode = function () {
+  return 401489080;
+};
 protoOf(MoveRight).equals = function (other) {
   if (this === other)
     return true;
@@ -625,6 +686,9 @@ function StartWhile() {
 protoOf(StartWhile).toString = function () {
   return 'StartWhile';
 };
+protoOf(StartWhile).hashCode = function () {
+  return -400026206;
+};
 protoOf(StartWhile).equals = function (other) {
   if (this === other)
     return true;
@@ -642,6 +706,9 @@ function EndWhile_0() {
 protoOf(EndWhile_0).toString = function () {
   return 'EndWhile';
 };
+protoOf(EndWhile_0).hashCode = function () {
+  return 865404297;
+};
 protoOf(EndWhile_0).equals = function (other) {
   if (this === other)
     return true;
@@ -656,7 +723,7 @@ function EndWhile_getInstance_0() {
 }
 function Companion() {
 }
-protoOf(Companion).a5 = function (ch) {
+protoOf(Companion).zj = function (ch) {
   return ch === _Char___init__impl__6a9atx(43) ? Plus_getInstance() : ch === _Char___init__impl__6a9atx(45) ? Minus_getInstance() : ch === _Char___init__impl__6a9atx(60) ? MoveLeft_getInstance() : ch === _Char___init__impl__6a9atx(62) ? MoveRight_getInstance() : ch === _Char___init__impl__6a9atx(91) ? StartWhile_instance : ch === _Char___init__impl__6a9atx(93) ? EndWhile_instance_0 : ch === _Char___init__impl__6a9atx(46) ? Write_instance_0 : ch === _Char___init__impl__6a9atx(44) ? Read_instance_0 : null;
 };
 var Companion_instance;
@@ -664,14 +731,22 @@ function Companion_getInstance() {
   return Companion_instance;
 }
 function TokenInfo(position, length, line, column, file) {
-  this.i5_1 = position;
-  this.j5_1 = length;
-  this.k5_1 = line;
-  this.l5_1 = column;
-  this.m5_1 = file;
+  this.hk_1 = position;
+  this.ik_1 = length;
+  this.jk_1 = line;
+  this.kk_1 = column;
+  this.lk_1 = file;
 }
 protoOf(TokenInfo).toString = function () {
-  return 'TokenInfo(position=' + this.i5_1 + ', length=' + this.j5_1 + ', line=' + this.k5_1 + ', column=' + this.l5_1 + ', file=' + this.m5_1 + ')';
+  return 'TokenInfo(position=' + this.hk_1 + ', length=' + this.ik_1 + ', line=' + this.jk_1 + ', column=' + this.kk_1 + ', file=' + this.lk_1 + ')';
+};
+protoOf(TokenInfo).hashCode = function () {
+  var result = this.hk_1;
+  result = imul(result, 31) + this.ik_1 | 0;
+  result = imul(result, 31) + this.jk_1 | 0;
+  result = imul(result, 31) + this.kk_1 | 0;
+  result = imul(result, 31) + getStringHashCode(this.lk_1) | 0;
+  return result;
 };
 protoOf(TokenInfo).equals = function (other) {
   if (this === other)
@@ -679,15 +754,15 @@ protoOf(TokenInfo).equals = function (other) {
   if (!(other instanceof TokenInfo))
     return false;
   var tmp0_other_with_cast = other instanceof TokenInfo ? other : THROW_CCE();
-  if (!(this.i5_1 === tmp0_other_with_cast.i5_1))
+  if (!(this.hk_1 === tmp0_other_with_cast.hk_1))
     return false;
-  if (!(this.j5_1 === tmp0_other_with_cast.j5_1))
+  if (!(this.ik_1 === tmp0_other_with_cast.ik_1))
     return false;
-  if (!(this.k5_1 === tmp0_other_with_cast.k5_1))
+  if (!(this.jk_1 === tmp0_other_with_cast.jk_1))
     return false;
-  if (!(this.l5_1 === tmp0_other_with_cast.l5_1))
+  if (!(this.kk_1 === tmp0_other_with_cast.kk_1))
     return false;
-  if (!(this.m5_1 === tmp0_other_with_cast.m5_1))
+  if (!(this.lk_1 === tmp0_other_with_cast.lk_1))
     return false;
   return true;
 };
@@ -699,10 +774,10 @@ function LoopStartRunner_getInstance() {
 }
 function StepRunner(steps) {
   steps = steps === VOID ? 1 : steps;
-  this.n5_1 = steps;
+  this.mk_1 = steps;
   // Inline function 'kotlin.require' call
   // Inline function 'kotlin.require' call
-  if (!(this.n5_1 > 0)) {
+  if (!(this.mk_1 > 0)) {
     var message = 'Failed requirement.';
     throw IllegalArgumentException_init_$Create$(toString(message));
   }
@@ -714,7 +789,7 @@ function UntilEnd_getInstance() {
   return UntilEnd_instance;
 }
 //region block: post-declaration
-defineProp(protoOf(Run), 'step', protoOf(Run).d4);
+defineProp(protoOf(Run), 'step', protoOf(Run).cj);
 //endregion
 //region block: init
 Brainfuck_instance = new Brainfuck_0();

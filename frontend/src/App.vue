@@ -10,7 +10,7 @@
     <!-- Toolbar and Tabs -->
     <div class="toolbar-container">
       <div class="toolbar">
-        <button class="toolbar-btn">Fix bug with editing code</button>
+        <button class="toolbar-btn" @click="runCode">Run</button>
         <button class="toolbar-btn">Analyze</button>
       </div>
       <div class="tabs">
@@ -70,22 +70,23 @@ import CodeEditor from './components/CodeEditor.vue'
 import MemoryCells from './components/MemoryCells.vue'
 import type { MemoryCell } from './components/MemoryCell.ts'
 
-import { BrainduckApp } from '../../brainduck-kotlin/app/build/dist/js/productionLibrary/Brainduck-app.mjs'
+// @ts-ignore
+import { BrainduckApp } from './app/Brainduck-app.mjs'
 
-try {
-  let worker = new Worker("/worker/Brainduck-worker.mjs");
-  console.log("worker created");
-  worker.onmessage = e => {
-    console.log("MAIN:", e.data);
-  }
-  worker.postMessage(`{ type: "ping", message: "Hello world?" }`);
-  console.log("worker posted");
-} catch (e) {
-  console.log(e);
+console.log(BrainduckApp.hello)
 
+let worker = new Worker("/worker/Brainduck-worker.mjs", { type: 'module'});
+console.log("worker created");
+worker.onmessage = e => {
+  console.log("MAIN:", e.data);
 }
+worker.postMessage(`{ type: "ping", message: "Hello world?" }`);
+console.log("worker posted");
 
-
+function runCode() {
+  console.log("Run!");
+  
+}
 
 const code = ref(`++[>++<-]
 >+++++++++[<++++++++>-]<.
@@ -370,6 +371,10 @@ function findMatchingBracket(text: string, position: number): number {
   background: #fafafa;
   max-height: 200px;
   overflow-y: auto;
+}
+
+.output-section textarea {
+  width: 100%;
 }
 
 .output-title {
