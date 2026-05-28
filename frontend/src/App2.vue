@@ -2,7 +2,7 @@
 import { onMounted, reactive } from 'vue'
 // Import your compiled Kotlin library (adjust path as needed)
 
-import { Brainfuck } from '../../brainduck-kotlin/build/dist/js/productionLibrary/Brainduck.mjs'
+import { Brainfuck } from '../../brainduck-kotlin/app/build/dist/js/productionLibrary/Brainduck-app.mjs'
 /*
 const game = reactive(new Game())
 

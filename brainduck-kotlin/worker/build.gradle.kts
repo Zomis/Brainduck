@@ -1,0 +1,31 @@
+plugins {
+    kotlin("multiplatform") version "2.2.0"
+}
+
+kotlin {
+    js(IR) {
+        compilerOptions {
+            moduleKind.set(org.jetbrains.kotlin.gradle.dsl.JsModuleKind.MODULE_ES)
+            generateTypeScriptDefinitions()
+        }
+        browser()
+        binaries.library()
+    }
+    jvm { }
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                implementation(project(":shared"))
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+            }
+        }
+        val commonTest by getting {
+            dependencies {
+                implementation(kotlin("test"))
+            }
+        }
+        val jsMain by getting {}
+        val jsTest by getting {}
+    }
+}

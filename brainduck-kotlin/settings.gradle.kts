@@ -11,3 +11,7 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
+
+include(":shared")
+include(":worker")
+include(":app")

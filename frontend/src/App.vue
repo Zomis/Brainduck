@@ -70,6 +70,23 @@ import CodeEditor from './components/CodeEditor.vue'
 import MemoryCells from './components/MemoryCells.vue'
 import type { MemoryCell } from './components/MemoryCell.ts'
 
+import { BrainduckApp } from '../../brainduck-kotlin/app/build/dist/js/productionLibrary/Brainduck-app.mjs'
+
+try {
+  let worker = new Worker("/worker/Brainduck-worker.mjs");
+  console.log("worker created");
+  worker.onmessage = e => {
+    console.log("MAIN:", e.data);
+  }
+  worker.postMessage(`{ type: "ping", message: "Hello world?" }`);
+  console.log("worker posted");
+} catch (e) {
+  console.log(e);
+
+}
+
+
+
 const code = ref(`++[>++<-]
 >+++++++++[<++++++++>-]<.
 >+++++++[<++++>-]<+.
