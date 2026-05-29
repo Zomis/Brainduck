@@ -19,5 +19,6 @@ object BrainduckApp {
     fun codeUpdate(code: String): String = serialize(WorkerRequest.UpdateCode(code))
     fun runUntilEnd(): String = serialize(WorkerRequest.RunUntilEnd)
     fun runStep(): String = serialize(WorkerRequest.RunStep)
+    fun pause(): String = serialize(WorkerRequest.StopRunning)
 
 }

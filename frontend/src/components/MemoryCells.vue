@@ -11,7 +11,7 @@
       <tbody>
         <tr 
           v-for="(cell, index) in memoryCells" 
-          :key="index"
+          :key="cell.index"
           :class="{ 'selected': selectedCellIndex === index }"
           @click="selectedCellIndex = index"
         >

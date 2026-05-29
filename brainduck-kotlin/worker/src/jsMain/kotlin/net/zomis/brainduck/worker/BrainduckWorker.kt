@@ -1,10 +1,11 @@
 package net.zomis.brainduck.worker
 
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.await
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import net.zomis.brainduck.Brainfuck
@@ -20,11 +21,26 @@ import net.zomis.brainduck.runner.UntilEnd
 import net.zomis.brainduck.view.WorkerEvent
 import net.zomis.brainduck.view.WorkerRequest
 import org.w3c.dom.Worker
+import kotlin.js.Promise
+import kotlin.time.Duration.Companion.seconds
+
+val self: Worker = js("self")
+
+suspend fun yieldToWorkerEventLoop() {
+    println("yieldToWorkerEventLoop")
+    delay(2.seconds)
+    yield()
+    Promise<Unit> { resolve, _ ->
+        self.asDynamic().setTimeout({
+            resolve(Unit)
+        }, 0)
+    }.await()
+}
 
 fun main() {
     val scope = MainScope()
     var program: BrainfuckProgram = Brainfuck.code("").createProgram()
-    val self: Worker = js("self")
+    var job: Job? = null
     fun post(event: WorkerEvent) {
         self.postMessage(Json.encodeToString(event))
     }
@@ -52,11 +68,18 @@ fun main() {
     }
     self.onmessage = { e ->
         val request = Json.decodeFromString<WorkerRequest>(e.data.asDynamic())
+        println("Worker got message $request job is $job")
         fun bfRun(runner: Runner) {
-            scope.launch {
+            job?.cancel()
+            job = scope.launch {
                 post(WorkerEvent.Running(running = true))
-                program.run(runner, BrainfuckInput.NoInput, BrainfuckOutput.NoOutput, listOf(listener))
-                post(WorkerEvent.Running(running = false))
+                try {
+                    println("running with runner $runner")
+                    program.run(runner, BrainfuckInput.NoInput, BrainfuckOutput.NoOutput, listOf(listener), ::yieldToWorkerEventLoop)
+                } finally {
+                    post(WorkerEvent.Running(running = false))
+                }
+                println("job completed")
             }
         }
         when (request) {
@@ -67,6 +90,10 @@ fun main() {
             is WorkerRequest.NavigateCode -> {}
             WorkerRequest.RunStep -> {
                 bfRun(Brainfuck.Run.stepSyntax)
+            }
+            is WorkerRequest.StopRunning -> {
+                println("CANCEL JOB! $job")
+                job?.cancel()
             }
         }
     }

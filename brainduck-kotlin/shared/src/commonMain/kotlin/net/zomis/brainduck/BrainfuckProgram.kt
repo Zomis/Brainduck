@@ -1,5 +1,6 @@
 package net.zomis.brainduck
 
+import kotlinx.coroutines.yield
 import net.zomis.brainduck.analyze.AnalyzeResult
 import net.zomis.brainduck.analyze.BrainfuckAnalyzer
 import net.zomis.brainduck.analyze.BrainfuckRuntime
@@ -31,8 +32,14 @@ class BrainfuckProgram(
 
     private val syntaxStack = mutableListOf<SyntaxPosition>(SyntaxPosition(code.syntax.children))
 
-    suspend fun run(runner: Runner, input: BrainfuckInput, output: BrainfuckOutput, listeners: List<BrainfuckListener> = emptyList()) {
-        runner.run(this, input, output, listeners)
+    suspend fun run(
+        runner: Runner,
+        input: BrainfuckInput,
+        output: BrainfuckOutput,
+        listeners: List<BrainfuckListener> = emptyList(),
+        yielder: suspend () -> Unit = { yield() }
+    ) {
+        runner.run(this, input, output, listeners, yielder)
     }
 
     fun isFinished(): Boolean = syntaxStack.singleOrNull()?.isFinished() == true

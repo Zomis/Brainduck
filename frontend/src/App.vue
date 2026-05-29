@@ -11,6 +11,7 @@
     <div class="toolbar-container">
       <div class="toolbar">
         <button class="toolbar-btn" @click="runCode">Run</button>
+        <button class="toolbar-btn" @click="stopRunning" :disabled="!running">Pause</button>
         <button class="toolbar-btn">Analyze</button>
       </div>
       <div class="tabs">
@@ -73,19 +74,24 @@ import type { MemoryCell } from './components/MemoryCell.ts'
 
 // @ts-ignore
 import { BrainduckApp } from './app/Brainduck-app.mjs'
-
-console.log(BrainduckApp.hello)
+const brainduck = BrainduckApp.getInstance()
 
 let worker = new Worker("/worker/Brainduck-worker.mjs", { type: 'module'});
 console.log("worker created");
 worker.onmessage = e => {
   let type = JSON.parse(e.data).type
-  let event = BrainduckApp.getInstance().parseWorkerEvent(e.data)
+  let event = brainduck.parseWorkerEvent(e.data)
   console.log("MAIN:", type, e.data);
   switch (type) {
     case "memory":
+      // TODO: This is super slooooooooow
+      memoryCells.value[event.address].value = event.value
       break;
     case "pointer":
+      memoryPointer.value = event.address
+      break;
+    case "runStatus":
+      running.value = event.running
       break;
     case "output":
       outputText.value = outputText.value + String.fromCodePoint(event.value)
@@ -95,9 +101,19 @@ worker.onmessage = e => {
 
 function runCode() {
   outputText.value = ""
-  worker.postMessage(BrainduckApp.getInstance().codeUpdate(code.value));
-  worker.postMessage(BrainduckApp.getInstance().runUntilEnd());
+  worker.postMessage(brainduck.codeUpdate(code.value));
+  worker.postMessage(brainduck.runUntilEnd());
   console.log("worker posted");
+}
+
+function stopRunning() {
+  try {
+    console.log("posting pause");
+    worker.postMessage(brainduck.pause());
+    console.log("pause posted");
+  } catch (err) {
+    console.error("postMessage failed:", err);
+  }
 }
 
 const code = ref(`++[>++<-]
@@ -128,6 +144,9 @@ const cursorPos = ref(1028)
 const cursorCol = ref(5)
 const progressPercent = ref(60)
 
+const running = ref(false)
+
+const memoryPointer = ref(0)
 const memoryArray = new Array(30000);
 for (let i = 0; i < memoryArray.length; i++) {
   memoryArray[i] = { index: i, value: 0, name: '' }

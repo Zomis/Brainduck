@@ -18,6 +18,8 @@ sealed interface WorkerRequest {
     data object RunUntilEnd : WorkerRequest
     @Serializable
     data object RunStep : WorkerRequest
+    @Serializable
+    data object StopRunning : WorkerRequest
 }
 
 @Serializable
