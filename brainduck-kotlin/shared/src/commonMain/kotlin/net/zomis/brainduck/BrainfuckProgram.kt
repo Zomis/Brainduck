@@ -31,13 +31,13 @@ class BrainfuckProgram(
 
     private val syntaxStack = mutableListOf<SyntaxPosition>(SyntaxPosition(code.syntax.children))
 
-    fun run(runner: Runner, input: BrainfuckInput, output: BrainfuckOutput, listeners: List<BrainfuckListener> = emptyList()) {
+    suspend fun run(runner: Runner, input: BrainfuckInput, output: BrainfuckOutput, listeners: List<BrainfuckListener> = emptyList()) {
         runner.run(this, input, output, listeners)
     }
 
     fun isFinished(): Boolean = syntaxStack.singleOrNull()?.isFinished() == true
 
-    fun runSyntax(input: BrainfuckInput, output: BrainfuckOutput, listeners: List<BrainfuckListener>) {
+    suspend fun runSyntax(input: BrainfuckInput, output: BrainfuckOutput, listeners: List<BrainfuckListener>) {
         val syntax = syntaxStack.last().current()
         listeners.forEach {
             it.before(syntax, this)
@@ -79,7 +79,7 @@ class BrainfuckProgram(
     fun syntaxPositions() = syntaxStack.map { it.position }
     fun currentSyntax() = syntaxStack.last().current()
 
-    fun analyze(input: BrainfuckInput, output: BrainfuckOutput, analyzers: List<BrainfuckAnalyzer<*, *>>): List<AnalyzeResult<*, *>> {
+    suspend fun analyze(input: BrainfuckInput, output: BrainfuckOutput, analyzers: List<BrainfuckAnalyzer<*, *>>): List<AnalyzeResult<*, *>> {
         analyzers.forEach { it.beforeStart(this) }
         val adapters = analyzers.map { AnalyzeAdapter(it) }
         run(UntilEnd, input, output, adapters)

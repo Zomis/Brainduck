@@ -53,4 +53,10 @@ sealed interface WorkerEvent {
         val size: Int,
     ) : WorkerEvent
 
+    @Serializable
+    @SerialName("runStatus")
+    data class Running(
+        @JsName("running")
+        val running: Boolean
+    ) : WorkerEvent
 }

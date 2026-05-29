@@ -3,6 +3,7 @@ package net.zomis.brainduck.worker
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.yield
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -52,7 +53,11 @@ fun main() {
     self.onmessage = { e ->
         val request = Json.decodeFromString<WorkerRequest>(e.data.asDynamic())
         fun bfRun(runner: Runner) {
-            program.run(runner, BrainfuckInput.NoInput, BrainfuckOutput.NoOutput, listOf(listener))
+            scope.launch {
+                post(WorkerEvent.Running(running = true))
+                program.run(runner, BrainfuckInput.NoInput, BrainfuckOutput.NoOutput, listOf(listener))
+                post(WorkerEvent.Running(running = false))
+            }
         }
         when (request) {
             is WorkerRequest.UpdateCode -> {

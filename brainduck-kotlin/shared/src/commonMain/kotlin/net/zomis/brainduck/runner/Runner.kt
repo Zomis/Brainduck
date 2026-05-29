@@ -6,6 +6,6 @@ import net.zomis.brainduck.BrainfuckProgram
 
 interface Runner {
 
-    fun run(program: BrainfuckProgram, input: BrainfuckInput, output: BrainfuckOutput, listeners: List<BrainfuckListener>)
+    suspend fun run(program: BrainfuckProgram, input: BrainfuckInput, output: BrainfuckOutput, listeners: List<BrainfuckListener>)
 
 }

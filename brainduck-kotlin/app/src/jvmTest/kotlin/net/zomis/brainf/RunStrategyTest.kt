@@ -1,5 +1,6 @@
 package net.zomis.brainf
 
+import kotlinx.coroutines.test.runTest
 import net.zomis.brainduck.Brainfuck
 import net.zomis.brainduck.BrainfuckInput
 import net.zomis.brainduck.BrainfuckOutput
@@ -30,7 +31,7 @@ class RunStrategyTest {
     }
 
     @Test
-    fun singleSyntaxStep() {
+    fun singleSyntaxStep() = runTest {
         val program = code.createProgram()
         program.run(
             Brainfuck.Run.stepSyntax,
@@ -41,7 +42,7 @@ class RunStrategyTest {
 
     @Test
     @Ignore
-    fun singleStep() {
+    fun singleStep() = runTest {
         val program = code.createProgram()
         program.run(
             Brainfuck.Run.step,
@@ -52,7 +53,7 @@ class RunStrategyTest {
 
     @Test
     @Ignore
-    fun twoSteps() {
+    fun twoSteps() = runTest {
         val program = code.createProgram()
         program.run(
             Brainfuck.Run.step,
@@ -62,7 +63,7 @@ class RunStrategyTest {
     }
 
     @Test
-    fun loopStart() {
+    fun loopStart() = runTest {
         val program = code.createProgram()
         program.run(Brainfuck.Run.loopStart, BrainfuckInput.NoInput, BrainfuckOutput.NoOutput)
         assertEquals(listOf(5, 0), program.memory.get(0..1))
@@ -70,7 +71,7 @@ class RunStrategyTest {
     }
 
     @Test
-    fun untilEndStrategy() {
+    fun untilEndStrategy() = runTest {
         val program = code.createProgram()
         assertEquals(4, code.syntax.children.size)
         UntilEnd.run(program, BrainfuckInput.NoInput, BrainfuckOutput.NoOutput, emptyList())
