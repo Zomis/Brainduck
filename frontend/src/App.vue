@@ -26,17 +26,6 @@
         <MemoryCells
           :memory-cells="memoryCells"
         />
-        <div class="output-section">
-          <div class="output-title">Output:</div>
-          <div class="output-content">
-            <textarea
-              ref="textareaRef"
-              v-model="outputText"
-              class="editor-textarea"
-            >
-            </textarea>
-          </div>
-        </div>
       </div>
 
       <!-- Right Panel - Code Editor -->
@@ -46,6 +35,18 @@
           :highlight-function="highlightCode"
           language="brainfuck"
         />
+      </div>
+    </div>
+
+    <div class="output">
+      <div class="title">Output:</div>
+      <div class="content">
+        <textarea
+          ref="textareaRef"
+          v-model="outputText"
+          class="editor-textarea"
+        >
+        </textarea>
       </div>
     </div>
 
@@ -376,26 +377,26 @@ function findMatchingBracket(text: string, position: number): number {
   transition: width 0.2s;
 }
 
-.output-section {
+.output {
   border-top: 1px solid #ddd;
   padding: 8px;
   background: #fafafa;
-  max-height: 200px;
+  max-height: 500px;
   overflow-y: auto;
 }
 
-.output-section textarea {
+.output textarea {
   width: 100%;
 }
 
-.output-title {
+.output .title {
   font-size: 11px;
   font-weight: 600;
   margin-bottom: 4px;
   color: #666;
 }
 
-.output-content {
+.output .content {
   font-size: 12px;
   font-family: monospace;
 }
