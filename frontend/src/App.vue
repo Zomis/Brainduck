@@ -80,9 +80,9 @@ console.log("worker created");
 worker.onmessage = e => {
   let type = JSON.parse(e.data).type
   let event = BrainduckApp.getInstance().parseWorkerEvent(e.data)
+  console.log("MAIN:", type, e.data);
   switch (type) {
     case "memory":
-      event.address
       break;
     case "pointer":
       break;
@@ -90,8 +90,6 @@ worker.onmessage = e => {
       outputText.value = outputText.value + String.fromCodePoint(event.value)
       break;
   }
-
-  console.log("MAIN:", e.data);
 }
 
 function runCode() {
