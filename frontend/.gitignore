@@ -1,3 +1,6 @@
+/public/worker
+/src/app
+
 # Logs
 logs
 *.log

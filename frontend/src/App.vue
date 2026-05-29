@@ -78,14 +78,27 @@ console.log(BrainduckApp.hello)
 let worker = new Worker("/worker/Brainduck-worker.mjs", { type: 'module'});
 console.log("worker created");
 worker.onmessage = e => {
+  let type = JSON.parse(e.data).type
+  let event = BrainduckApp.getInstance().parseWorkerEvent(e.data)
+  switch (type) {
+    case "memory":
+      event.address
+      break;
+    case "pointer":
+      break;
+    case "output":
+      outputText.value = outputText.value + String.fromCodePoint(event.value)
+      break;
+  }
+
   console.log("MAIN:", e.data);
 }
-worker.postMessage(`{ type: "ping", message: "Hello world?" }`);
-console.log("worker posted");
 
 function runCode() {
-  console.log("Run!");
-  
+  outputText.value = ""
+  worker.postMessage(BrainduckApp.getInstance().codeUpdate(code.value));
+  worker.postMessage(BrainduckApp.getInstance().runUntilEnd());
+  console.log("worker posted");
 }
 
 const code = ref(`++[>++<-]
