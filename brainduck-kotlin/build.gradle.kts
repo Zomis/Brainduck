@@ -1,10 +1,4 @@
-plugins {
-    kotlin("multiplatform") version "2.2.0"
-    kotlin("plugin.serialization") version "2.2.0"
-}
-
-tasks.register<Copy>("dist") {
-    dependsOn(":app:jsBrowserProductionLibraryDistribution")
+tasks.register<Copy>("copyWorkerCode") {
     dependsOn(":worker:jsBrowserProductionLibraryDistribution")
 
     from("worker/build/dist/js/productionLibrary")
@@ -12,10 +6,15 @@ tasks.register<Copy>("dist") {
     include("*.*")
 }
 
-tasks.register<Copy>("distApp") {
-    dependsOn("dist")
+tasks.register<Copy>("copyAppCode") {
+    dependsOn(":app:jsBrowserProductionLibraryDistribution")
 
     from("app/build/dist/js/productionLibrary")
     into("../frontend/src/app")
     include("*.*")
+}
+
+tasks.register("dist") {
+    dependsOn("copyWorkerCode")
+    dependsOn("copyAppCode")
 }
