@@ -1,31 +1,18 @@
 <template>
   <div class="data-table">
-    <table>
-      <thead>
-        <tr>
-          <th class="index-col">Address</th>
-          <th class="value-col">Value</th>
-          <th class="name-col">Name</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr 
-          v-for="(cell, index) in memoryCells" 
-          :key="cell.index"
-          :class="{ 'selected': selectedCellIndex === index }"
-          @click="selectedCellIndex = index"
-        >
-          <td class="index-col">{{ cell.index }}</td>
-          <td class="value-col">{{ cell.value }}</td>
-          <td class="name-col">{{ cell.name }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <v-data-table-virtual
+      :headers="headers"
+      :items="memoryCells"
+      height="800"
+      item-value="index"
+      fixed-header
+    ></v-data-table-virtual>
+
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import type { MemoryCell } from "./MemoryCell.ts";
 
 interface Props {
@@ -35,6 +22,12 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   memoryCells: () => [],
 })
+
+const headers = [
+  { title: 'Address', align: 'start', key: 'index' },
+  { title: 'Value', align: 'start', key: 'value' },
+  { title: 'Name', align: 'start', key: 'name' },
+]
 
 const selectedCellIndex = ref<number | null>(null)
 </script>
