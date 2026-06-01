@@ -1,6 +1,8 @@
 /public/worker
 /src/app
 
+.vite
+
 # Logs
 logs
 *.log
