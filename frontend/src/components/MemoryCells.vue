@@ -1,18 +1,28 @@
 <template>
-  <div class="data-table">
+  <div ref="containerRef" class="memory-cells">
     <v-data-table-virtual
       :headers="headers"
       :items="memoryCells"
-      height="800"
+      :height="tableHeight"
+      :item-height="36"
+      class="memory-table"
+      density="compact"
       item-value="index"
       fixed-header
-    ></v-data-table-virtual>
-
+    >
+      <template v-slot:item="{ columns, internalItem, props, itemRef }">
+        <tr v-bind="props" :ref="itemRef">
+          <td v-for="column in columns" :key="column.key">
+            {{ internalItem.raw[column.key] }}
+          </td>
+        </tr>
+      </template>
+    </v-data-table-virtual>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 import type { MemoryCell } from "./MemoryCell.ts";
 
 interface Props {
@@ -23,79 +33,54 @@ const props = withDefaults(defineProps<Props>(), {
   memoryCells: () => [],
 })
 
+const containerRef = ref<HTMLElement | null>(null)
+const tableHeight = ref(1)
+let resizeObserver: ResizeObserver | null = null
+
 const headers = [
   { title: 'Address', align: 'start', key: 'index' },
   { title: 'Value', align: 'start', key: 'value' },
   { title: 'Name', align: 'start', key: 'name' },
 ]
 
-const selectedCellIndex = ref<number | null>(null)
+function updateTableHeight() {
+  tableHeight.value = Math.max(1, Math.floor(containerRef.value?.clientHeight ?? 0))
+}
+
+onMounted(() => {
+  updateTableHeight()
+
+  if (containerRef.value) {
+    resizeObserver = new ResizeObserver(updateTableHeight)
+    resizeObserver.observe(containerRef.value)
+  }
+})
+
+onBeforeUnmount(() => {
+  resizeObserver?.disconnect()
+})
 </script>
 
 <style scoped>
-.data-table {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
+.memory-cells {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
 }
 
-.data-table table {
-  width: 100%;
-  border-collapse: collapse;
+.memory-table {
+  flex: 1 1 auto;
+  min-height: 0;
   font-size: 12px;
 }
 
-.data-table thead {
-  background: #f5f5f5;
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
-
-.data-table th {
-  padding: 6px 8px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
-  font-weight: 600;
-  font-size: 11px;
-}
-
-.data-table td {
-  padding: 4px 8px;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.data-table tbody tr {
+.memory-table :deep(tbody tr) {
   cursor: pointer;
 }
 
-.data-table tbody tr:hover {
+.memory-table :deep(tbody tr:hover) {
   background: #f5f5f5;
 }
-
-.data-table tbody tr.selected {
-  background: #e3f2fd;
-}
-
-.data-table tbody tr.selected:hover {
-  background: #bbdefb;
-}
-
-.index-col {
-  width: 60px;
-  text-align: right;
-  color: #666;
-}
-
-.value-col {
-  width: 80px;
-  text-align: right;
-}
-
-.name-col {
-  flex: 1;
-  color: #0066cc;
-  font-style: italic;
-}
 </style>
-
