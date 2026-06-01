@@ -10,19 +10,13 @@
       item-value="index"
       fixed-header
     >
-      <template v-slot:item="{ columns, internalItem, props, itemRef }">
-        <tr v-bind="props" :ref="itemRef">
-          <td v-for="column in columns" :key="column.key">
-            {{ internalItem.raw[column.key] }}
-          </td>
-        </tr>
-      </template>
     </v-data-table-virtual>
   </div>
 </template>
 
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue'
+import type { DataTableHeader } from 'vuetify'
 import type { MemoryCell } from "./MemoryCell.ts";
 
 interface Props {
@@ -41,7 +35,7 @@ const headers = [
   { title: 'Address', align: 'start', key: 'index' },
   { title: 'Value', align: 'start', key: 'value' },
   { title: 'Name', align: 'start', key: 'name' },
-]
+] satisfies DataTableHeader<MemoryCell>[]
 
 function updateTableHeight() {
   tableHeight.value = Math.max(1, Math.floor(containerRef.value?.clientHeight ?? 0))
