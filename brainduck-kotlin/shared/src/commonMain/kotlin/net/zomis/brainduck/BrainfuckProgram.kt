@@ -94,6 +94,15 @@ class BrainfuckProgram(
         return adapters.map { it.createResult() }
     }
 
+    data class CodePosition(val position: Int, val size: Int)
+    fun codePosition(): CodePosition {
+        val syntax = currentSyntax()
+        val position = syntax.info.tokens.first().info.position
+        val last = syntax.info.tokens.last()
+        val size = last.info.position + last.info.length - position
+        return CodePosition(position, size)
+    }
+
     private class AnalyzeAdapter<R, C>(val analyzer: BrainfuckAnalyzer<R, C>) : BrainfuckListener {
         private val cells = mutableMapOf<Int, C?>()
 

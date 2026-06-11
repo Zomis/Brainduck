@@ -8,6 +8,7 @@ interface BrainfuckMemory {
     fun changeValue(offset: Int)
     fun set(value: Int)
     fun get(range: IntRange): List<Int>
+    fun toList(): List<Int>
 
     companion object {
         fun default(): BrainfuckMemory = LimitedMemory(0..30_000)
@@ -35,6 +36,7 @@ class LimitedMemory(range: IntRange) : BrainfuckMemory {
     }
 
     override fun get(range: IntRange): List<Int> = values.slice(range)
+    override fun toList(): List<Int> = get(indices)
 
 }
 
@@ -80,5 +82,7 @@ class InfiniteMemory(private val wrapping: Boolean) : BrainfuckMemory {
     override fun get(range: IntRange): List<Int> {
         TODO()
     }
+
+    override fun toList(): List<Int> = get(indices)
 
 }

@@ -95,6 +95,14 @@ worker.onmessage = e => {
     case "runStatus":
       running.value = event.running
       break;
+    case "state":
+      console.log("Index Code " + event.codeIndex)
+      console.log("Size " + event.codeSize)
+      for (let i = 0; i < event.memory.length; i++) {
+        memoryCells.value[i].value = event.memory[i]
+      }
+      memoryPointer.value = event.pointer
+      break;
     case "output":
       outputText.value = outputText.value + String.fromCodePoint(event.value)
       break;

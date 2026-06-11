@@ -11,6 +11,8 @@ import kotlin.js.JsName
 sealed interface WorkerRequest {
 
     @Serializable
+    data object GetState : WorkerRequest
+    @Serializable
     data class UpdateCode(val code: String) : WorkerRequest
     @Serializable
     data class NavigateCode(val pos: Int) : WorkerRequest
@@ -60,5 +62,18 @@ sealed interface WorkerEvent {
     data class Running(
         @JsName("running")
         val running: Boolean
+    ) : WorkerEvent
+
+    @Serializable
+    @SerialName("state")
+    class State(
+        @JsName("memory")
+        val memory: IntArray,
+        @JsName("pointer")
+        val pointer: Int,
+        @JsName("codeIndex")
+        val codeIndex: Int,
+        @JsName("codeSize")
+        val codeSize: Int,
     ) : WorkerEvent
 }

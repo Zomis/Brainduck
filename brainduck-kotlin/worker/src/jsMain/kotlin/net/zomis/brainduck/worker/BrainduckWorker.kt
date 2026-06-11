@@ -25,14 +25,6 @@ import kotlin.js.Promise
 
 val self: Worker = js("self")
 
-suspend fun yieldToWorkerEventLoop() {
-    yield()
-    Promise<Unit> { resolve, _ ->
-        self.asDynamic().setTimeout({
-            resolve(Unit)
-        }, 0)
-    }.await()
-}
 
 fun main() {
     val scope = MainScope()
@@ -41,6 +33,23 @@ fun main() {
     fun post(event: WorkerEvent) {
         self.postMessage(Json.encodeToString(event))
     }
+    fun postStateUpdate() {
+        val codePosition = program.codePosition()
+
+        post(WorkerEvent.State(
+            program.memory.toList().toIntArray(), program.memory.currentIndex,
+            codePosition.position, codePosition.size
+        ))
+    }
+    suspend fun yieldToWorkerEventLoop() {
+        yield()
+        Promise<Unit> { resolve, _ ->
+            self.asDynamic().setTimeout({
+                resolve(Unit)
+            }, 0)
+        }.await()
+    }
+
     val listener: BrainfuckListener = object : BrainfuckListener {
         override fun before(syntax: Syntax, runtime: BrainfuckRuntime) {
         }
@@ -48,10 +57,10 @@ fun main() {
         override fun after(syntax: Syntax, runtime: BrainfuckRuntime) {
             when (syntax.data) {
                 is SyntaxData.Advanced -> TODO()
-                is SyntaxData.ChangeValue -> post(WorkerEvent.MemoryChange(runtime.memory.currentIndex, runtime.memory.currentValue()))
+                is SyntaxData.ChangeValue -> {}// post(WorkerEvent.MemoryChange(runtime.memory.currentIndex, runtime.memory.currentValue()))
                 SyntaxData.Comment -> {}
                 SyntaxData.EndWhile -> {}
-                is SyntaxData.Move -> post(WorkerEvent.PointerUpdate(runtime.memory.currentIndex))
+                is SyntaxData.Move -> {}//post(WorkerEvent.PointerUpdate(runtime.memory.currentIndex))
                 SyntaxData.Read -> {}
                 is SyntaxData.Root -> {
                     println("Will this happen? Root after")
@@ -59,6 +68,7 @@ fun main() {
                 is SyntaxData.WhileNotZero -> {}
                 SyntaxData.Write -> {
                     post(WorkerEvent.Output(runtime.memory.currentValue()))
+                    postStateUpdate()
                 }
             }
         }
@@ -77,6 +87,7 @@ fun main() {
                     post(WorkerEvent.Running(running = false))
                 }
                 println("job completed")
+                postStateUpdate()
             }
         }
         when (request) {
@@ -91,6 +102,9 @@ fun main() {
             is WorkerRequest.StopRunning -> {
                 println("CANCEL JOB! $job")
                 job?.cancel()
+            }
+            WorkerRequest.GetState -> {
+                postStateUpdate()
             }
         }
     }
