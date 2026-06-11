@@ -1,5 +1,5 @@
 export interface MemoryCell {
-  index: string
-  value: string
+  index: number
+  value: number
   name: string
 }

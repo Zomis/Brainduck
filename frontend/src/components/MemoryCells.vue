@@ -5,11 +5,19 @@
       :items="memoryCells"
       :height="tableHeight"
       :item-height="36"
+
       class="memory-table"
       density="compact"
       item-value="index"
       fixed-header
     >
+      <template v-slot:item="{ internalItem, props, itemRef }">
+        <tr v-bind="props" :ref="itemRef" :class="{ pointer: internalItem.raw.index == memoryPointer }">
+          <td>{{ internalItem.raw.index }}</td>
+          <td>{{ internalItem.raw.value }}</td>
+          <td>{{ internalItem.raw.name }}</td>
+        </tr>
+      </template>
     </v-data-table-virtual>
   </div>
 </template>
@@ -20,12 +28,11 @@ import type { DataTableHeader } from 'vuetify'
 import type { MemoryCell } from "./MemoryCell.ts";
 
 interface Props {
-  memoryCells?: MemoryCell[]
+  memoryPointer: Number
+  memoryCells: MemoryCell[]
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  memoryCells: () => [],
-})
+defineProps<Props>()
 
 const containerRef = ref<HTMLElement | null>(null)
 const tableHeight = ref(1)
@@ -56,6 +63,10 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+.pointer td {
+  background-color: #ddd;
+}
+
 .memory-cells {
   display: flex;
   flex: 1 1 auto;

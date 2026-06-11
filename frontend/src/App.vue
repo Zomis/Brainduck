@@ -12,6 +12,7 @@
       <div class="toolbar">
         <button class="toolbar-btn" @click="runCode">Run</button>
         <button class="toolbar-btn" @click="stopRunning" :disabled="!running">Pause</button>
+        <button class="toolbar-btn" @click="test">Test</button>
         <button class="toolbar-btn">Analyze</button>
       </div>
       <div class="tabs">
@@ -25,6 +26,7 @@
       <!-- Left Panel - Data/State View -->
       <div class="left-panel">
         <MemoryCells
+          :memory-pointer="memoryPointer"
           :memory-cells="memoryCells"
         />
       </div>
@@ -99,11 +101,22 @@ worker.onmessage = e => {
   }
 }
 
+function memoryReset() {
+  for (let i = 0; i < memoryCells.value.length; i++) {
+    memoryCells.value[i].value = 0;
+  }
+}
+
 function runCode() {
+  memoryReset()
   outputText.value = ""
   worker.postMessage(brainduck.codeUpdate(code.value));
   worker.postMessage(brainduck.runUntilEnd());
   console.log("worker posted");
+}
+
+function test() {
+  memoryCells.value[2].value = Math.floor(Math.random() * 100)
 }
 
 function stopRunning() {
