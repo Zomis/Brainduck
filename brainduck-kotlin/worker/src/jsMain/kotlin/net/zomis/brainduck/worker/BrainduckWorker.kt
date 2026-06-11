@@ -22,13 +22,10 @@ import net.zomis.brainduck.view.WorkerEvent
 import net.zomis.brainduck.view.WorkerRequest
 import org.w3c.dom.Worker
 import kotlin.js.Promise
-import kotlin.time.Duration.Companion.seconds
 
 val self: Worker = js("self")
 
 suspend fun yieldToWorkerEventLoop() {
-    println("yieldToWorkerEventLoop")
-    delay(2.seconds)
     yield()
     Promise<Unit> { resolve, _ ->
         self.asDynamic().setTimeout({

@@ -1,6 +1,7 @@
 package net.zomis.brainf
 
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.yield
 import net.zomis.brainduck.Brainfuck
 import net.zomis.brainduck.BrainfuckInput
 import net.zomis.brainduck.BrainfuckOutput
@@ -74,7 +75,7 @@ class RunStrategyTest {
     fun untilEndStrategy() = runTest {
         val program = code.createProgram()
         assertEquals(4, code.syntax.children.size)
-        UntilEnd.run(program, BrainfuckInput.NoInput, BrainfuckOutput.NoOutput, emptyList())
+        UntilEnd.run(program, BrainfuckInput.NoInput, BrainfuckOutput.NoOutput, emptyList(), { yield() })
         assertEquals(listOf(0, 8), program.memory.get(0..1))
     }
 
